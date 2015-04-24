@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Q.contextmenu | QLib | Powered By PHPKIND</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- 使用QLib控件是必须包含样式表 -->
+  <link type="text/css" rel="stylesheet" href="../ui.css" />
+  <!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+  -->
+    <script type="text/javascript" src="../Q.js">
+  <!--
+  // 需要加载额外库时
+  import utils.stl;
+  import ui.contextmenu;
+
+  -->
+  </script>
+
+  <script>
+  <!--
+
+  // 全局菜单实例 class_menu
+  var g_menu = null;
+
+  Q.Ready(function() 
+  {
+    // 初始化菜单
+    g_menu = new class_menu({
+      style: "", 
+      on_popup: function(popup) {
+        if(popup) {
+          Q.$('btnMenu').style.background = "red";
+        } else {
+          Q.$('btnMenu').style.background = "blue";
+        }
+      }
+    });
+    
+    var m1 = new class_menuitem({
+      text: "菜单一",
+      callback : function(menuitem) {
+        
+      }
+    });
+
+    var m2 = new class_menuitem({
+      text: "菜单二asdfdddddddd", 
+      callback : function(menuitem) {
+        
+      }
+    });
+
+    var m3 = new class_menuitem({type: MENU_SEPERATOR, text: ""});
+    var m4 = new class_menuitem({text: "子菜单ssssssssssssssssssssssssssssssssssssssssssssssss"});
+    g_menu.addMenuItem(m1);
+    g_menu.addMenuItem(m2);
+    g_menu.addMenuItem(m3);
+    g_menu.addMenuItem(m4);
+
+    var m41 = new class_menuitem({
+      text: "子菜单一",
+      callback : function(menuitem) {
+        
+      }
+    });
+
+    var m42 = new class_menuitem({
+      text: "子菜单二asdfasdfasdf", 
+      callback : function(menuitem) {
+        alert('您点击的是子菜单二！');
+      }
+    });
+    
+    m4.addSubMenuItem(m41);
+    m4.addSubMenuItem(m42);
+
+   var m421 = new class_menuitem({
+      text: "子菜单二asdfasdfasdf", 
+      callback : function(menuitem) {
+        alert('您点击的是子菜单二！');
+      }
+    });
+
+    m42.addSubMenuItem(m421);
+
+    g_menu.hide();
+
+    
+    g_menu2 = new class_menu({
+      style: "", 
+      on_popup: function(popup) {
+        if(popup) {
+          Q.$('btnMenu').style.background = "red";
+        } else {
+          Q.$('btnMenu').style.background = "blue";
+        }
+      }
+    });
+
+    var m2_1 = new class_menuitem({
+      text: "复制", 
+      callback : function(menuitem) {
+        return 1;
+      }
+    });
+    var m2_2 = new class_menuitem({
+      text: "粘贴", 
+      callback : function(menuitem) {
+        alert('粘贴成功！');
+      }
+    });
+
+    var m2_3 = new class_menuitem({
+      text: "移动", 
+      callback : function(menuitem) {
+        alert('移动成功！');
+      }
+    });
+    g_menu2.addMenuItem(m2_1);
+    g_menu2.addMenuItem(m2_2);
+    g_menu2.addMenuItem(m2_3);
+
+    g_menu2.hide();
+
+    g_menubar = new class_menubar({container: 'q-menubar'});
+    g_menubar.append(Q.$('menu-file'), g_menu);
+    g_menubar.append(Q.$('menu-edit'), g_menu2);
+    //g_menubar.append(Q.$('btnMenu'), g_menu2);
+
+    Q.$('btnMenu').onclick = function() {
+      g_menu.showElement(this);
+    }
+    Q.$('test').onmouseup = function(evt) {
+      alert(1);
+    }
+  });
+
+  -->
+  </script>
+</head>
+<body>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="btnMenu">显示菜单</button>
+
+<hr>
+<div class="q-contextmenu" ondragstart="return false;">
+  <li class="q-item" id="test">
+    <div class="q-item-title"><button class="q-item-icon">&nbsp;</button>菜单一</div>
+  </li>
+  <li class="q-item">
+    <div class="q-item-title"><button class="q-item-icon">&nbsp;</button>菜单二</div>
+  </li>
+  <li class="q-item-seperator">
+    <div class="q-line"></div>
+  </li>
+  <li class="q-item q-more">
+    <div class="q-item-title"><button class="q-item-icon">&nbsp;</button>子菜单xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      &nbsp;&nbsp;&nbsp;
+      
+    </div>
+  </li>
+  <div style="clear:both;"></div>
+</div>
+
+
+<hr>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="q-menubar" ondragstart="return false;" style="height: 30px; width: auto;">
+<button class="q-item" id="menu-file">文件</button>
+<button class="q-item" id="menu-edit">编辑</button>
+</div>
+
+<!--div class="q-contextmenu q-contextmenu-bar" style="top: 500px;" ondragstart="return false;">
+  <li class="q-item">
+    <div class="q-item-title">菜单一</div>
+  </li>
+  <li class="q-item">
+    <div class="q-item-title"></button>菜单二</div>
+  </li>
+  <li class="q-item">
+    <div class="q-item-title">菜单xxxxxxxx</div>
+  </li>
+</div-->
+</body>
+</html>

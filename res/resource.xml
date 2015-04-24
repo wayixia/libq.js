@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource>
+  <menu id="system_menu">
+    <templates id="system_wnd_normal">
+      <item type="menuitem" caption="还原(R)"   title="Restore the window"  class="" icon="∠" popup="false" status="disabled" lpfunc="$RestoreWindow" />
+      <item type="menuitem" caption="移动(M)"   title="move the window"     class="" icon=" "  popup="false" status="enable" lpfunc="$MoveTo" />
+      <item type="menuitem" caption="最小化(N)" title="minimize the window" class="" icon="＿" popup="false" status="enable" lpfunc="$MinimizeWindow" />
+      <item type="menuitem" caption="最大化(X)" title="Max the window"      class="" icon="□" popup="false" status="enable" lpfunc="$MaxizeWindow" />
+      <item type="seperator" />
+      <item type="menuitem" caption="关闭(C)"   title="close the window"    class="" icon="×" popup="false"  status="enable" lpfunc="$DestroyWindow" />
+	  </templates>
+    <templates id="system_wnd_max">
+      <item type="menuitem" caption="还原(R)"   title="Restore the window"  class="" icon="∠" popup="false" status="enable" lpfunc="$RestoreWindow" />
+      <item type="menuitem" caption="移动(M)"   title="move the window"     class="" icon=" "  popup="false" status="disabled" lpfunc="$MoveTo" />
+      <item type="menuitem" caption="最小化(N)" title="minimize the window" class="" icon="＿" popup="false" status="enable" lpfunc="$MinimizeWindow" />
+      <item type="menuitem" caption="最大化(X)" title="Max the window"      class="" icon="□" popup="false" status="disabled" lpfunc="$MaxizeWindow" />
+      <item type="seperator" />
+      <item type="menuitem" caption="关闭(C)"   title="close the window"    class="" icon="×" popup="false"  status="enable" lpfunc="$DestroyWindow" />
+    </templates>
+    <templates id="system_wnd_min">
+      <item type="menuitem" caption="还原(R)"   title="Restore the window"  class="" icon="∠" popup="false" status="enable" lpfunc="$RestoreWindow" />
+      <item type="menuitem" caption="移动(M)"   title="move the window"     class="" icon=" "  popup="false" status="disabled" lpfunc="$MoveTo" />
+      <item type="menuitem" caption="最小化(N)" title="minimize the window" class="" icon="＿" popup="false" status="disabled" lpfunc="$MinimizeWindow" />
+      <item type="menuitem" caption="最大化(X)" title="Max the window"      class="" icon="□" popup="false" status="enable" lpfunc="$MaxizeWindow" />
+      <item type="seperator" />
+      <item type="menuitem" caption="关闭(C)"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="$DestroyWindow" />
+    </templates>
+    <templates id="musicbox_func">
+      <item type="menuitem" caption="播放清单"   title="Restore the window"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_ShowPlayerList" />
+      <item type="menuitem" caption="新增歌曲"  title="move the window"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_SingleAdd" />
+      <item type="menuitem" caption="批量新增媒体文件" title="minimize the window" class="" icon="≌" popup="false" status="enable" lpfunc="MENU_FolderAdd" />
+      <item type="menuitem" caption="音量调节" title="Max the window"      class="" icon="◎" popup="false" status="enable" lpfunc="" />-->
+      <item type="seperator" />
+      <item type="menuitem" caption="新建播放列表" title="create new play list"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_AddNewPlayList" />
+      <item type="menuitem" caption="保存列表"  title="save player list"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_SavePlayerList" />
+      <item type="menuitem" caption="列表管理" title="manage player list" class="" icon="≌" popup="false" status="enable" lpfunc="MENU_ManagePlayList" />
+      <item type="menuitem" caption="清除全部" title="clear all items"      class="" icon="◎" popup="false" status="enable" lpfunc="MENU_ClearAll" />
+			<item type="seperator" />
+      <item type="menuitem" caption="关于软件"   title="close the window"    class="" icon="☆"  popup="false" status="enable" lpfunc="AboutUs" />
+    </templates>
+    <templates id="musicbox_func_playlist">
+      <item type="menuitem" caption="新建播放列表" title="clear all items"  class="" icon="◎" popup="false" status="enable" lpfunc="MENU_AddNewPlayList" />
+      <item type="menuitem" caption="保存列表"  title="save player list"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_SavePlayerList" />
+      <item type="menuitem" caption="列表管理" title="manage player list" class="" icon="≌" popup="false" status="enable" lpfunc="MENU_SelectPlayList" />
+			<item type="seperator" />
+      <item type="menuitem" caption="清除全部" title="clear all items"      class="" icon="◎" popup="false" status="enable" lpfunc="MENU_ClearAll" />
+      <item type="seperator" />
+      <item type="menuitem" caption="退出(C)"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="$DestroyWindow" />
+    </templates>
+    <templates id="musicbox_func_item">
+      <item type="menuitem" caption="播放"   title="new item"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_PlayItem" />
+      <item type="menuitem" caption="重命名"  title="save"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_RenameItem" />
+      <item type="menuitem" caption="删除" title="select player list" class="" icon="≌" popup="false" status="enable" lpfunc="MENU_DeleteItem" />
+      <item type="menuitem" caption="清除全部" title="clear all items"      class="" icon="◎" popup="false" status="enable" lpfunc="MENU_ClearAll" />
+      <item type="seperator" />
+      <item type="menuitem" caption="属性"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="MENU_Property" />
+    </templates>
+    <templates id="xmlbook">
+      <item type="menuitem" caption="浏览此页"   title="new item"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_PlayItem" />
+      <item type="menuitem" caption="重命名"  title="save"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_RenameItem" />
+      <item type="menuitem" caption="删除" title="select player list" class="" icon="≌" popup="false" status="enable" lpfunc="MENU_DeleteItem" />
+      <item type="menuitem" caption="清除全部" title="clear all items"      class="" icon="◎" popup="false" status="enable" lpfunc="MENU_ClearAll" />
+      <item type="seperator" />
+      <item type="menuitem" caption="属性"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="MENU_Property" />
+    </templates>
+    <templates id="xmlbook_book">
+      <item type="menuitem" caption="书籍设置"   title="new item"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_BookManage_Edit" />
+      <item type="menuitem" caption="添加新章节"  title="save"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_Add" />
+      <item type="seperator" />
+      <item type="menuitem" caption="属性"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="MENU_Property" />
+    </templates>
+    <templates id="xmlbook_item">
+      <item type="menuitem" caption="编辑"   title="new item"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_Edit" />
+      <item type="menuitem" caption="重命名"   title="new item"  class="" icon="☆" popup="false" status="enable" lpfunc="MENU_ReName" />
+      <item type="menuitem" caption="删除"  title="save"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_Delete" />
+      <item type="menuitem" caption="添加新章节"  title="save"     class="" icon="┾" popup="false" status="enable" lpfunc="MENU_Add" />
+      <item type="seperator" />
+      <item type="menuitem" caption="属性"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="MENU_Property" />
+    </templates>
+  </menu>
+  <dialog>
+    <templates id="system_dialog">
+      <item id="msgbox" title="" width="353" height="210" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED|STYLE_WITHBOTTOM" />
+    </templates>
+    <templates id="user_defined_dialog">
+      <item id="dlg_video" title="video window" container="videocontainer" width="300" height="330" wstyle="STYLE_TITLE|STYLE_CLOSE" />
+      <item id="musicboxfolder" title="" container="" width="350" height="180" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED|STYLE_ICON" />
+      <item type="menuitem" caption="最大化(X)" title="Max the window"      class="" icon="□" popup="false" status="enable" lpfunc="$MaxizeWindow" />
+      <item type="menuitem" caption="关闭(C)"   title="close the window"    class="" icon="×"  popup="false" status="enable" lpfunc="$DestroyWindow" />
+    </templates>
+
+  </dialog>
+</resource>

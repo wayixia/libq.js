@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource>
+    <templates id="BookManage">
+    	<configure width="353" height="210" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED|STYLE_WITHBOTTOM" />
+    	<respanel>
+	    	<![CDATA[
+	    	<table border="0" width="100%" height="92" style="font-size:13px;">
+			<tr style="border: 2px solid #CCC;">
+				<td width="30%">书籍名称</td>
+				<td width="70%"><input type="text" id="BOOK_NAME" class="sysinput" size="32"></td>
+			</tr>
+			<tr style="border-bottom: 2px dotted #CCC;">
+				<td>作者</td>
+				<td><input type="text" id="BOOK_AUTHOR" class="sysinput" size="32"></td>
+			</tr>
+			<tr style="border-bottom: 2px dotted #CCC;">
+				<td valign="top">出版社</td>
+				<td><input type="text" id="BOOK_PRESS" class="sysinput" size="32"></td>
+			</tr>
+			<tr style="border-bottom: 2px dotted #CCC;">
+				<td valign="top">封面内容</td>
+				<td><textarea rows="7" cols="30" id="BOOK_FORWORD"></textarea></td>
+			</tr>
+			<tr style="border-bottom: 2px dotted #CCC;">
+				<td valign="top">内容简介</td>
+				<td><textarea rows="7" cols="30" id="BOOK_DESCRIPTION"></textarea></td>
+			</tr>
+			</table>
+	  		]]>
+	  	</respanel>
+    </templates>
+    <templates id="OpenFile">
+    	<configure width="653" height="450" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_WITHBOTTOM" />
+    	<respanel>
+	    	<![CDATA[
+            <div style="height: 100%; width:100%; marign:0;padding:0;">  
+	    		<div style="float: left; margin:10px; line-height: 1.5; font-size: 13px;">
+				    书籍地址: <br>
+					<!--input type="text" size="32" id="BOOK_URL" class="sysinput" />
+					<input type="button" value="浏览.." class="syscancelbtn" onclick="document.getElementById('fileurl').click() onpropertychange="document.getElementById('BOOK_URL').value=this.value;"" /-->
+					<input type="file" size="24" id="BOOK_URL" />
+					<br><br>
+					[温馨提示:]<br>
+					&nbsp;&nbsp;XMLBOOK一般是以扩展名为.xml结尾的文件！
+				</div>
+            </div>
+	    	]]>
+	    </respanel>
+    </templates>
+    <templates id="RenamePage">
+    	<configure width="353" height="210" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED|STYLE_WITHBOTTOM" />
+    	<respanel>
+	    	<![CDATA[
+	    		<style>
+					div#mydivclass {font-size: 13px;}
+				</style>
+	    		<div style="padding: 10px; height: 100%;" id="mydivclass">请输入章节名称: <br>
+					<input type="text" size="40" id="PA_NAME" class="sysinput" />
+					<br><br>
+					[温馨提示:]<br>
+					&nbsp;&nbsp;输入不能为空.<br>
+				</div>
+	    	]]>
+	    </respanel>
+    </templates>
+    
+    <templates id="Settings">
+    	<configure width="100" height="210" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED|STYLE_WITHBOTTOM" />
+    	<respanel>
+	    	<![CDATA[
+	    		<table border="0" width="100%" height="102" valign="top">
+				<tr>
+					<td width="20%">保存路径</td>
+					<td width="80%"><input type="text" id="SAVE_PATH" class="sysinput" style="width:100%;"></td>
+				</tr>
+				</table>
+	    	]]>
+    	</respanel>
+    </templates>
+    
+    <templates id="HelpDoc">
+    	<configure width="728" height="500" wstyle="STYLE_TITLE|STYLE_CLOSE|STYLE_FIXED" />
+    	<respanel>
+	    	<![CDATA[
+                <div id="helpDocument">
+                    <div id="frm_left">
+                        <div id="DirX" class="pad" style="height:100%;"></div>
+                    </div>
+                    <div id="frm_right">
+                        <div id="pageViewX" class="pad"></div>
+                    </div>
+                </div>
+	    	]]>
+	    </respanel>
+    </templates>
+</resource>

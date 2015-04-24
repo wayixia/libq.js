@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Q.KLASS | QLib | Powered By PHPKIND</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!--  
+	提示：src="{QLib目录}/Q.js" 
+	根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" -->
+    <script type="text/javascript" src="../Q.js">
+	<!--
+	// 需要加载额外库时
+	import samples.klass;
+	-->
+	</script>
+
+    <script>
+    <!--
+    Q.Ready(function() {
+
+		// 获取界面元素
+		var NumA = Q.$('idA');
+		var NumB = Q.$('idB');
+		var NumC = Q.$('idC');
+
+		// 创建klass_test对象
+		var oKlassTest = new klass_test(NumA.value, NumB.value);
+
+		// 按钮
+		var BtnAdd = Q.$('idBtnAdd');
+		var BtnTest = Q.$('idBtnTest');
+		var BtnShowMembers = Q.$('idBtnShowMembers');
+
+		// 给按钮添加onclick事件
+		BtnAdd.onclick = function() {
+			// 调用oKlassTest.add实现两个数相加
+			NumC.value = oKlassTest.add(
+				parseInt(NumA.value), 
+				parseInt(NumB.value)
+			);
+		}
+
+		BtnTest.onclick = function() {
+			// 调用oKlassTest的msgbox函数
+			oKlassTest.msgbox('调用samples.klass的msgbox函数');
+		}
+
+		BtnShowMembers.onclick = function() {
+			// 显示oKlassTest的成员变量
+			oKlassTest.showMembers();
+		}
+
+	});
+
+    -->
+    </script>
+</head>
+<body>
+<div id="myDiv">
+	<input type="text" id="idA" value="6"/>+
+	<input type="text" id="idB" value="6"/>= 
+	<input type="text" id="idC" readOnly/><br />
+	
+	<button id="idBtnAdd"> 两个数相加 </button><br />
+	<button id="idBtnTest"> 调用samples.klass类的msgbox函数 </button><br />
+	<button id="idBtnShowMembers"> 显示klass_test的成员变量和值 </button>
+</div>
+</body>
+</html>

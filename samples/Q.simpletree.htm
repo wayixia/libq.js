@@ -1,0 +1,105 @@
+<!DOCTYPE>
+<html>
+<head>
+  <title>Q.simpletree | Q.js </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- 使用QLib控件是必须包含样式表 -->
+  <link type="text/css" rel="stylesheet" href="../ui.css" />
+  <style>
+  .q-tree {
+    width: 300px;
+    height: 500px;
+    background: yellow;
+  }
+  </style>
+  <!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+  -->
+  <script type="text/javascript" src="../Q.js">
+  <!--
+  // 需要加载额外库时
+  import utils.stl;
+  import utils.xml;
+  import ui.contextmenu;
+  import ui.simpletree;
+  import ui.drag;
+  -->
+  </script>
+
+  <script>
+  <!--
+
+  var g_dirTree = null;
+  Q.Ready(function() {
+    g_dirTree = new __simpleTreeL({
+		  Render : Q.$('frame_left'),
+		  Name : "站点根目录",
+		  IsOpen : true,
+	  });
+
+	  g_dirTree.setItemData(0, '/');
+
+	  //g_dirTree.setItemIcon(0, 'treeIconFolder');
+	  g_dirTree.itemClick = function(nItem) {
+		  //var path = this.getItemData(nItem);
+		  //OnUpdateJtable(path, nItem);
+      Q.printf("item click " + nItem);
+	  }
+
+    var rootItem = g_dirTree.getRoot();
+    var child1 = g_dirTree.createNode(rootItem, "111");
+    var child11 = g_dirTree.createNode(child1, "111-1");
+    var child12 = g_dirTree.createNode(child1, "111-2");
+    var child13 = g_dirTree.createNode(child1, "111-3");
+    var child2 = g_dirTree.createNode(rootItem, "222");
+    var child21 = g_dirTree.createNode(child2, "222");
+    var child22 = g_dirTree.createNode(child2, "222");
+    var child3 = g_dirTree.createNode(rootItem, "333");
+    var child4 = g_dirTree.createNode(rootItem, "444");
+      
+  });
+  //-->
+  </script>
+</head>
+<body onselectstart="return false;" style="height: 100%;">
+
+<hr>
+<p>树形控件 - Q.simpletree</p>
+<hr>
+<div class="q-simpletree" style="height: 100px;">
+  <ul>
+    <li class="q-tree-item">
+      <div class="expand last_expand_on" style="left: 0px;"></div>
+      <a style="padding-left: 25px;">
+        <span class="icon default"></span>
+        <span class="textNode">站点根目录</span>
+      </a>
+      <ul class="">
+        <li class="q-tree-item">
+        <div class="expand child" style="left: 0px;"></div>
+        <a style="padding-left: 25px; background: rgb(194, 207, 241);">
+          <span class="icon treeIconFolder"></span>
+          <span class="textNode">关于我们</span>
+        </a>
+        <ul class=""></ul>
+        </li>
+        <li class="q-tree-item">
+          <div class="expand last_child" style="left: 0px;"></div>
+          <a style="padding-left: 25px;">
+            <span class="icon treeIconFolder"></span>
+            <span class="textNode">挖一下</span>
+          </a>
+          <ul class=""></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div id="frame_left">
+</div>
+
+
+</body>
+</html>

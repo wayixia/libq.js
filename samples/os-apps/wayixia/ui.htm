@@ -1,0 +1,211 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>wayixia app ui powered by Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+#wayixia-container, #wayixia-container * {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+#wayixia-container {
+  font-family: arial, 'helvetica neue', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  hasLayout: -1;
+  overflow:auto;
+  padding-bottom: 15px;
+}
+
+#wayixia-toolbar, #wayixia-toolbar-screenshot {
+  position:fixed;
+  top: 35px;
+  left: 0px;
+  right: 0px;
+  height: 45px;
+  background-color: rgba(255, 255, 255,0.5);
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+  -moz-box-shadow:0 1px 3px rgba(0,0,0,.3);
+  -webkit-box-shadow:0 1px 3px rgba(0,0,0,.3)
+}
+
+#wayixia-toolbar-screenshot {
+  visibility: hidden;
+}
+
+#wayixia-toolbar a, #wayixia-toolbar-screenshot a {
+  font-size: 16px;
+  color: #777;
+  height: 30px;
+  line-height: 30px;
+  text-decoration: none;
+  margin-left: 5px;
+  display:inline-block;
+}
+
+
+#wayixia-toolbar a.wayixia-ctrl-button,
+#wayixia-toolbar a:visited.wayixia-ctrl-button,
+#wayixia-toolbar-screenshot a.wayixia-ctrl-button,
+#wayixia-toolbar-screenshot a:visited.wayixia-ctrl-button
+{
+  text-indent: 0px; 
+  border: 0px solid #CCC;
+  height: 30px;
+  font-size: 16px;
+  color: #FFF;
+  padding: 0 10px;
+  outline:0;
+  background: #F90;
+  border-radius: 3px;
+  border-radius: 3px;
+}
+
+#wayixia-toolbar a:active.wayixia-ctrl-button,
+#wayixia-toolbar-screenshot a:active.wayixia-ctrl-button
+{
+  outline:0;background-image:none;-webkit-box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);
+}
+
+#wayixia-toolbar a#wayixia-qq,
+#wayixia-toolbar-screenshot a#wayixia-qq 
+{
+  float: right;
+  line-height: 30px;
+  height: 30px;
+  margin: 10px;
+  text-decoration: underline;
+}
+
+#wayixia-screenshot-image {
+  position: absolute;
+}
+
+
+
+.wayixia-box {
+  position: relative;
+  padding: 0;
+  margin: 5;
+  float: left;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  text-align: center;
+  overflow: hidden;
+  margin:15px 0px 0 15px;
+  background:#FFF;
+  text-align:center;
+  box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -moz-box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -webkit-box-shadow:0 1px 5px rgba(0,0,0,.3) 
+}
+
+.wayixia-info
+{
+  position:absolute;
+  right:0;
+  bottom:0;
+  border-top-left-radius:5px;
+  background-color:#333;
+  padding:2px 4px 0;
+  color:#FFF;
+  opacity: 0.8;
+  z-index: 1;
+  font-size: 14px;
+}
+
+.wayixia-box:hover
+{ 
+}
+
+.wayixia-box:hover .wayixia-info
+{
+  background-color:#333;
+  color:#FFF;
+}
+
+.wayixia-box .wayixia-image {
+  border: none;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.wayixia-box .wayixia-image .image {
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.wayixia-box .wayixia-image a {
+  text-align: center;
+}
+
+.wayixia-box .wing-box {
+  display: none;
+  position:absolute;
+  left:10px;
+  top:70px;
+  right:10px;
+  bottom:0px; 
+  height:50px;
+  border-radius:5px;
+  border:1px solid #F1F1F1;
+  line-height:50px;
+  font-size:14px;
+  font-family:arial;
+  text-align:left;
+}
+
+
+.wayixia-box.mouseout, .select-mask {display:none;}
+
+.wayixia-box.mouseover .select-mask {
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.5;
+  background: #FFF url(images/hover-picture.png) right top no-repeat;
+}
+
+.wayixia-box.mouseselected .select-mask 
+{
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.8;
+  background: #FFF  url(images/selected-picture.png) right top no-repeat; 
+  /#CFBAAA, #FF931E/
+}
+</style>
+
+</head>
+<body >
+
+<div id="wnd-x-icons">
+  <div id="wayixia-container" q:id="abc">
+    <div id="wayixia-list"><div data-url="http://imgs.meimeinice.com/imgs/067019b9e355b9144562b67d1876859b.jpg!big" data-width="400" data-height="600" class="wayixia-box"><span class="wayixia-info">     <span class="wh">400x600<span> </span>     </span></span><div class="wayixia-image"><a href="javscript:void(0);"><img src="http://imgs.meimeinice.com/imgs/067019b9e355b9144562b67d1876859b.jpg!big" class="image" style="margin-top: 0px; width: 133.333333333333px; height: 200px;"></a></div><div class="select-mask"></div></div><div data-url="http://www.meimeinice.com/static/common/widget/channel_nav/img/banner_new_1920_856b6da.png" data-width="1920" data-height="82" class="wayixia-box"><span class="wayixia-info">     <span class="wh">1920x82<span> </span>     </span></span><div class="wayixia-image"><a href="javscript:void(0);"><img src="http://www.meimeinice.com/static/common/widget/channel_nav/img/banner_new_1920_856b6da.png" class="image" style="margin-top: 95.7291666666667px; width: 200px; height: 8.54166666666667px;"></a></div><div class="select-mask"></div></div><div data-url="http://www.meimeinice.com/static/common/widget/top/images/to-top_f899a6b.png?__sprite&amp;t=png24" data-width="28" data-height="28" class="wayixia-box"><span class="wayixia-info">     <span class="wh">28x28<span> </span>     </span></span><div class="wayixia-image"><a href="javscript:void(0);"><img src="http://www.meimeinice.com/static/common/widget/top/images/to-top_f899a6b.png?__sprite&amp;t=png24" class="image" style="margin-top: 0px; width: 200px; height: 200px;"></a></div><div class="select-mask"></div></div></div>
+    
+    <div id="dummy-div" style="height: 0px;"></div>
+  </div>
+</div>
+
+<div id="wndx-ctrl" >
+  <div class="q-thumb" style="height:16px; width: 16px;margin:0 7px;"></div>
+</div>
+
+</body>
+</html>

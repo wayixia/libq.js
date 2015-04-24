@@ -1,0 +1,81 @@
+
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.os | QLib | Powered By Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<link type="text/css" rel="stylesheet" href="../ui.os.css" />
+<!--  
+提示：src="{QLib目录}/Q.js" 
+根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+-->
+<script type="text/javascript" src="../Q.js">
+<!--
+// 需要加载额外库时
+import utils.stl;
+import utils.xml;
+import ui.contextmenu;
+import ui.drag;
+import ui.wndx-1-0-2;
+import ui.os;
+-->
+</script>
+
+<script>
+<!--
+
+var installed_applications = [
+  {name: "MP3播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp3player/ui.htm"},
+  {name: "挖一下", src: "os-apps/wayixia/app.js", ui: "os-apps/wayixia/ui.htm", single: true},
+];
+
+
+Q.Ready(function() {
+  new Q.os({
+    window_list_bar: Q.$("q-task-list"),
+    task_bar: Q.$("q-task-bar"),
+    start_button: Q.$("q-start-button"),
+    apps : installed_applications,
+    on_logout: function() {
+      var box = new Q.MessageBox({
+        parent: $GetDesktopWindow(),
+        title: "Simple.OS",
+        wstyle: "simpleos",
+        content: "Are you sure to logout",
+        on_ok : function() {
+          setTimeout(function() {
+            location.href="{$app:module}&action=logout";}, 1000);
+          return true;
+        },
+        on_no: function() {  return true; }
+      });
+      //Q.$("wndx-logout").style.visibility = "visible";
+      //box.set_zindex(100001);
+    }
+  });
+});
+  -->
+  </script>
+</head>
+<body onselectstart="return false;" style="background: #f7f5f5 url(http://s1.wayixia.com/64e05114-553c-4b34-97b5-a7f1082e1698) no-repeat;height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+<div id="wayixia-overlay">
+  <div id="wayixia-container">
+    <div id="wayixia-list"></div>
+    <div id="dummy-div" style="height: 0px;"></div>
+  </div>
+</div>
+
+<div id="q-task-bar">
+  <div id="q-start-button">START</div> 
+  <div id="q-task-list">
+  </div> 
+</div>
+
+</body>
+</html>
+
+
+
+

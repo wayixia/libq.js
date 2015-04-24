@@ -1,0 +1,45 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>Q.select | Q.js</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- 使用QLib控件是必须包含样式表 -->
+  <link type="text/css" rel="stylesheet" href="../ui.css" />
+  <!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+  -->
+    <script type="text/javascript" src="../Q.js">
+  <!--
+  // 需要加载额外库时
+  import utils.stl;
+  import utils.xml;
+  import ui.contextmenu;
+  import ui.select;
+  -->
+  </script>
+
+  <script>
+  <!--
+  var g_test_window;
+    Q.Ready(function() {
+    // 提示对话框
+    Q.$('btnOpenMessageBox').onclick = function() {
+      alert('test');
+    }
+
+  });
+  -->
+  </script>
+</head>
+<body onselectstart="return false;" style="height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+
+<p>提示对话框</p>
+<button id="btnOpenMessageBox">MessageBox</button>
+
+<br>
+<div id='debug_window' style='width:100%;height: 300px;overflow: auto;'>
+
+</div>
+</body>
+</html>

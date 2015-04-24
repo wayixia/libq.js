@@ -1,0 +1,51 @@
+<!DOCTYPE>
+<html>
+<head>
+  <title>Q.editor | Q.js </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- 使用QLib控件是必须包含样式表 -->
+  <link type="text/css" rel="stylesheet" href="../ui.css" />
+  <style>
+  .q-tree {
+    width: 300px;
+    height: 500px;
+    background: yellow;
+  }
+  </style>
+  <!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+  -->
+  <script type="text/javascript" src="../Q.js">
+  <!--
+  // 需要加载额外库时
+  import utils.stl;
+  import utils.xml;
+  import ui.contextmenu;
+  import ui.simpletree;
+  import ui.editor;
+  -->
+  </script>
+
+  <script>
+  <!--
+
+  var g_editor = null;
+  Q.Ready(function() {
+    g_editor = Q.editor();
+  });
+  //-->
+  </script>
+</head>
+<body onselectstart="return false;" style="height: 100%;">
+
+<hr>
+<p>编辑器 - Q.editor</p>
+<hr>
+
+<div id="frame_left">
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<XMLBOOK><BOOKNAME>QLib &#x53C2;&#x8003;&#x624B;&#x518C;</BOOKNAME><AUTHOR>LovelyLife</AUTHOR><PRESS>qlibs.com</PRESS><FORWARD/><DESCRIPTION/><PAGES><PAGE><TITLE>&#x7B80;&#x4ECB;</TITLE><CONTEXT><![CDATA[
+<div style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-family: Arial, Verdana, sans-serif; font-size: 12px; ">
+<p>QLib不仅仅是个轻量级的框架也是个重量级的框架，QLib主要任务就是快速建立丰富的Web应用程序界面， 封装了很多常用的类，例如XML，Ajax等等。</p>
+<p>但是QLib所作的事情远远不止这些，如果你想创建一个类似windows一样的窗口web程序， 你可以使用WndX； 如果你想使用一个有好的表格程序，你可以使用jtable； 如果你想拥有一美观的树形控件，你可以使用simpletree；如果你想节约宝贵的时间，你可以使用QLib。</p>
+<p><span style="color: rgb(255, 255, 255); "><span style="background-color: rgb(153, 204, 0); ">QLib不遵循任何协议，只要标明作者出处即可，商业非商业用途不限制。</span></span></p>
+<div><span style="color: rgb(255, 255, 255); "><span style="background-color: rgb(153, 204, 0); "><br />
+</span></span></div>
+</div>]]></CONTEXT><PAGES/></PAGE><PAGE><TITLE>&#x793A;&#x4F8B;</TITLE><CONTEXT><![CDATA[<p>示例中包括以下：</p><ol><li>&quot;hello world&quot; 程序</li><li>引用自定义js文件</li><li>Ajax</li><li>XML</li><li>对话框 WndX</li><li>树形控件 simptree</li><li>表格控件 jtable</li></ol><p>&nbsp;</p><p>每个示例都是经过反复测试验证， 建议刚开始入门javascript的同学手写代码，有益于理解javascript和加深印象。</p>]]></CONTEXT><PAGES><PAGE><TITLE>Q.Ready</TITLE><CONTEXT><![CDATA[<p><span style="color: rgb(153, 204, 0); "><span style="font-size: larger; ">我想说，Q.Ready其实很简单！</span></span></p> <hr /> <p style="line-height: 26px; ">用一个实例来说明Q.Ready是如何使用的, 刚入门的同学可以跟着实现，相信完成之后，会觉得真的很简单。</p> <h3>实例：创建演示网页demo.html,&nbsp;网页内容如下：</h3> <pre class="brush: javascript">
+&lt;!DOCTYPE&nbsp;HTML&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;HTML&nbsp;4.01//EN&quot;&quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Q.Ready&nbsp;|&nbsp;QLib&nbsp;|&nbsp;Powered&nbsp;By&nbsp;PHPKIND&lt;/title&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta&nbsp;http-equiv=&quot;Content-Type&quot;&nbsp;content=&quot;text/html;&nbsp;charset=utf-8&quot;&nbsp;/&gt;
+	&lt;!--&nbsp;&nbsp;
+	提示：src=&quot;{QLib目录}/Q.js&quot;&nbsp;
+	根据实际存放路径，&nbsp;测试代码都是在QLib目录的samples文件夹下，所以这里用的是&quot;../Q.js&quot;&nbsp;
+	--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;../Q.js&quot;&gt;
+	&lt;!--
+	//&nbsp;需要加载额外库时
+	//&nbsp;import&nbsp;xx.yy;
+	--&gt;
+	&lt;/script&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--
+
+&nbsp;&nbsp;&nbsp;&nbsp;Q.Ready(function()&nbsp;{
+	
+		//&nbsp;修改id为myDiv标签的内容
+		//&nbsp;获得myDiv对象
+		var&nbsp;oDiv&nbsp;=&nbsp;Q.$('myDiv');
+		//&nbsp;修改前的内容
+		alert(oDiv.innerHTML);
+		//&nbsp;修改内容
+		oDiv.innerHTML&nbsp;=&nbsp;'~~~~~~~~~~~~~~~~~~~~我是修改后的myDiv内容;';
+
+	});
+
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div&nbsp;id=&quot;myDiv&quot;&gt;
+
+我是修改前的myDiv内容.&nbsp;~~~
+
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre> <p>&nbsp;1. 加载Q.js，初始化QLib， 使用import命令加载自己需要的库</p> <pre class="brush: javascript" style="font-family: Arial, Verdana, sans-serif; font-size: 12px; ">
+&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;../Q.js&quot;&gt;
+&lt;!--
+//&nbsp;需要加载额外库时，例如导入QLib目录下的xx/yy.js
+import&nbsp;xx.yy;
+--&gt;
+&lt;/script&gt;
+</pre> <p>&nbsp;</p><p>&nbsp;<span class="Apple-style-span" style="font-family: Arial, SimSun; font-size: 14px; line-height: 26px; ">2. &nbsp;网页内容初始化，示例中修改myDiv的内容:</span></p><pre class="brush: javascript">
+&lt;script&gt;
+&lt;!--
+
+&nbsp;&nbsp;&nbsp;&nbsp;Q.Ready(function()&nbsp;{
+	
+		//&nbsp;修改id为myDiv标签的内容
+		//&nbsp;获得myDiv对象
+		var&nbsp;oDiv&nbsp;=&nbsp;Q.$('myDiv');
+		//&nbsp;修改前的内容
+		alert(oDiv.innerHTML);
+		//&nbsp;修改内容
+		oDiv.innerHTML&nbsp;=&nbsp;'~~~~~~~~~~~~~~~~~~~~我是修改后的myDiv内容;';
+	});
+
+--&gt;
+&lt;/script&gt;</pre><p><span class="Apple-style-span" style="font-family: Arial, SimSun; font-size: 14px; line-height: 26px; ">最后说明，通过Q.Ready方式执行初始化可以调用网页的任何元素而不必担心这个元素是否已经被加载。</span></p>]]></CONTEXT><PAGES/></PAGE><PAGE><TITLE>&#x5F15;&#x7528;&#x81EA;&#x5B9A;&#x4E49;js&#x6587;&#x4EF6;</TITLE><CONTEXT><![CDATA[<p>除了QLib自带的组件库，还可以使用import加载非QLib库的js文件，当然可以使用script标签加载。代码如下：</p>
+<pre class="brush: javascript">
+&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;非QLib库的javascript文件&quot;&gt;&lt;/script&gt;<br /></pre>
+<p>上面这段代码就不用多说了，地球人都知道，下面一步步介绍QLib是如何加自定义js文件的。</p>
+<p><span style="color: rgb(51, 51, 51); ">1. 创建testlib.js文件</span>（<span style="color: rgb(128, 0, 0); ">重要提示： 文件名除了&quot;.js&quot;之外，其他位置不能使用&quot;.&quot;, 否则不能识别</span>）：</p>
+<pre class="brush: javascript">
+//&nbsp;测试函数
+function&nbsp;Testlib_test(str)&nbsp;{
+	alert(str);
+}
+
+//&nbsp;实现两个数相加
+function&nbsp;Testlib_add(a,&nbsp;b)&nbsp;{
+	return&nbsp;a b;
+}</pre>
+<p><span style="color: rgb(51, 51, 51); ">2. 将该文件存放到QLib的samples目录下，然后使用下面脚本导入testlib.js文件</span></p>
+<pre class="brush: javascript">
+&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;../Q.js&quot;&gt;
+&lt;!--
+	//&nbsp;导入testlib库
+	import&nbsp;samples.testlib;
+--&gt;
+&lt;/script&gt;</pre>
+<p><span style="color: rgb(51, 51, 51); ">3. 完整网页实例代码</span></p>
+<pre class="brush: javascript">
+&lt;!DOCTYPE&nbsp;HTML&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;HTML&nbsp;4.01//EN&quot;&quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;import&nbsp;|&nbsp;QLib&nbsp;|&nbsp;Powered&nbsp;By&nbsp;PHPKIND&lt;/title&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta&nbsp;http-equiv=&quot;Content-Type&quot;&nbsp;content=&quot;text/html;&nbsp;charset=utf-8&quot;&nbsp;/&gt;
+	&lt;!--&nbsp;&nbsp;
+	提示：src=&quot;{QLib目录}/Q.js&quot;&nbsp;
+	根据实际存放路径，&nbsp;测试代码都是在QLib目录的samples文件夹下，所以这里用的是&quot;../Q.js&quot;&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;../Q.js&quot;&gt;
+	&lt;!--
+	//&nbsp;需要加载额外库时
+	import&nbsp;samples.testlib;
+	--&gt;
+	&lt;/script&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--
+&nbsp;&nbsp;&nbsp;&nbsp;Q.Ready(function()&nbsp;{
+		//&nbsp;获取界面元素
+		var&nbsp;NumA&nbsp;=&nbsp;Q.$('idA');
+		var&nbsp;NumB&nbsp;=&nbsp;Q.$('idB');
+		var&nbsp;NumC&nbsp;=&nbsp;Q.$('idC');
+
+
+		//&nbsp;&quot;添加&quot;和&quot;测试&quot;按钮
+		var&nbsp;BtnAdd&nbsp;=&nbsp;Q.$('idBtnAdd');
+		var&nbsp;BtnTest&nbsp;=&nbsp;Q.$('idBtnTest');
+		
+		//&nbsp;给两个按钮添加onclick事件
+		BtnAdd.onclick&nbsp;=&nbsp;function()&nbsp;{
+			//&nbsp;调用Testlib_add实现两个数相加
+			NumC.value&nbsp;=&nbsp;Testlib_add(
+				parseInt(NumA.value),&nbsp;
+				parseInt(NumB.value)
+			);
+		}
+
+		BtnTest.onclick&nbsp;=&nbsp;function()&nbsp;{
+			//&nbsp;调用samples.testlib的函数
+			Testlib_test('调用Testlib_test函数');
+		}
+
+	});
+
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&nbsp;id=&quot;myDiv&quot;&gt;
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idA&quot;&nbsp;value=&quot;6&quot;/&gt; 
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idB&quot;&nbsp;value=&quot;6&quot;/&gt;=&nbsp;
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idC&quot;&nbsp;readOnly/&gt;
+	&lt;button&nbsp;id=&quot;idBtnAdd&quot;&gt;&nbsp;两个数相加&nbsp;&lt;/button&gt;
+	&lt;button&nbsp;id=&quot;idBtnTest&quot;&gt;&nbsp;调用Testlib_test函数&nbsp;&lt;/button&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>&nbsp;</p>]]></CONTEXT><PAGES/></PAGE><PAGE><TITLE>Q.KLASS</TITLE><CONTEXT><![CDATA[<p><span style="color: rgb(255, 255, 255); "><span style="background-color: rgb(153, 204, 0); ">题外话：</span></span>众所周知Javascript是一种面向的脚本语言，但是不支持类，例如继承，多态等等C  类的特性。虽然如此，但是也是有很多人去模拟实现类，实现的原理大多数都是一样的，而且不是这一节的重点，所以暂忽略之，有兴趣的同学可以参考jquery和extjs的代码。</p>
+<p>什么是 Q.KLASS?</p>
+<p>简单来说就是QLib的一种类，使用起来跟类差不多。例如下面的代码</p>
+<pre class="brush: javascript">
+
+//&nbsp;创建klass_test类
+var&nbsp;klass_test&nbsp;=&nbsp;Q.KLASS();
+
+//&nbsp;类定义
+klass_test.prototype&nbsp;=&nbsp;{
+	//&nbsp;成员变量
+	m1&nbsp;:&nbsp;1,
+	m2&nbsp;:&nbsp;2,
+
+	//&nbsp;构造函数，带两个参数
+	_initialize&nbsp;:&nbsp;function(arg1,&nbsp;arg2)&nbsp;{
+		var&nbsp;_this&nbsp;=&nbsp;this;
+		_this.m1&nbsp;=&nbsp;arg1;
+		_this.m2&nbsp;=&nbsp;arg2;
+	},
+
+	//&nbsp;实现两个数的相加
+	add&nbsp;:&nbsp;function(a,&nbsp;b)&nbsp;{
+		return&nbsp;a b;
+	},
+
+	//&nbsp;弹出提示框
+	msgbox&nbsp;:&nbsp;function(str)&nbsp;{
+		alert(str);
+	},
+
+	//&nbsp;显示成员变量
+	showMembers&nbsp;:&nbsp;function()&nbsp;{
+		var&nbsp;_this&nbsp;=&nbsp;this;
+		var&nbsp;str&nbsp;=&nbsp;'members:\n';
+
+		str&nbsp;=&nbsp;'m1&nbsp;=&nbsp;'&nbsp; &nbsp;_this.m1&nbsp; &nbsp;'\n';
+		str&nbsp; ='m2&nbsp;=&nbsp;'&nbsp; &nbsp;_this.m2;
+
+		_this.msgbox(str);
+	}
+};
+</pre>
+<p>&nbsp;</p>
+<p>将上面代码保存到QLib的samples的目录下，保存文件名为klass.js, 然后再import samples.klass，这样就可以在Q.Ready中使用了，完整网页实例代码如下：</p>
+<pre class="brush: javascript">
+&lt;!DOCTYPE&nbsp;HTML&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;HTML&nbsp;4.01//EN&quot;&quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Q.KLASS&nbsp;|&nbsp;QLib&nbsp;|&nbsp;Powered&nbsp;By&nbsp;PHPKIND&lt;/title&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta&nbsp;http-equiv=&quot;Content-Type&quot;&nbsp;content=&quot;text/html;&nbsp;charset=utf-8&quot;&nbsp;/&gt;
+	&lt;!--&nbsp;&nbsp;
+	提示：src=&quot;{QLib目录}/Q.js&quot;&nbsp;
+	根据实际存放路径，&nbsp;测试代码都是在QLib目录的samples文件夹下，所以这里用的是&quot;../Q.js&quot;&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&nbsp;type=&quot;text/javascript&quot;&nbsp;src=&quot;../Q.js&quot;&gt;
+	&lt;!--
+	//&nbsp;需要加载额外库时
+	import&nbsp;samples.klass;
+	--&gt;
+	&lt;/script&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;script&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--
+&nbsp;&nbsp;&nbsp;&nbsp;Q.Ready(function()&nbsp;{
+
+		//&nbsp;获取界面元素
+		var&nbsp;NumA&nbsp;=&nbsp;Q.$('idA');
+		var&nbsp;NumB&nbsp;=&nbsp;Q.$('idB');
+		var&nbsp;NumC&nbsp;=&nbsp;Q.$('idC');
+
+		//&nbsp;创建klass_test对象
+		var&nbsp;oKlassTest&nbsp;=&nbsp;new&nbsp;klass_test(NumA.value,&nbsp;NumB.value);
+
+		//&nbsp;按钮
+		var&nbsp;BtnAdd&nbsp;=&nbsp;Q.$('idBtnAdd');
+		var&nbsp;BtnTest&nbsp;=&nbsp;Q.$('idBtnTest');
+		var&nbsp;BtnShowMembers&nbsp;=&nbsp;Q.$('idBtnShowMembers');
+
+		//&nbsp;给按钮添加onclick事件
+		BtnAdd.onclick&nbsp;=&nbsp;function()&nbsp;{
+			//&nbsp;调用oKlassTest.add实现两个数相加
+			NumC.value&nbsp;=&nbsp;oKlassTest.add(
+				parseInt(NumA.value),&nbsp;
+				parseInt(NumB.value)
+			);
+		}
+
+		BtnTest.onclick&nbsp;=&nbsp;function()&nbsp;{
+			//&nbsp;调用oKlassTest的msgbox函数
+			oKlassTest.msgbox('调用samples.klass的msgbox函数');
+		}
+
+		BtnShowMembers.onclick&nbsp;=&nbsp;function()&nbsp;{
+			//&nbsp;显示oKlassTest的成员变量
+			oKlassTest.showMembers();
+		}
+
+	});
+
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&nbsp;id=&quot;myDiv&quot;&gt;
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idA&quot;&nbsp;value=&quot;6&quot;/&gt; 
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idB&quot;&nbsp;value=&quot;6&quot;/&gt;=&nbsp;
+	&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;idC&quot;&nbsp;readOnly/&gt;&lt;br&nbsp;/&gt;
+	
+	&lt;button&nbsp;id=&quot;idBtnAdd&quot;&gt;&nbsp;两个数相加&nbsp;&lt;/button&gt;&lt;br&nbsp;/&gt;
+	&lt;button&nbsp;id=&quot;idBtnTest&quot;&gt;&nbsp;调用samples.klass类的msgbox函数&nbsp;&lt;/button&gt;&lt;br&nbsp;/&gt;
+	&lt;button&nbsp;id=&quot;idBtnShowMembers&quot;&gt;&nbsp;显示klass_test的成员变量和值&nbsp;&lt;/button&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>&nbsp;</p>]]></CONTEXT><PAGES/></PAGE><PAGE><TITLE>Q.XML / Q.XMLFile</TITLE><CONTEXT><![CDATA[<p>Q.XML 和 Q.XMLFile 是QLib针对XML操作的一种简单封装， 返回的都是document文档对象，唯一的区别就是前者是加载XML字符串后者是加载XML文件。</p><p><strong>1. Q.XML</strong></p><p>示例代码：</p><pre class="brush: javascript">
+//&nbsp;加载XML字符串
+var&nbsp;xmlDoc&nbsp;=&nbsp;Q.XML('&lt;mybook&gt;&lt;page&gt;文章一&lt;/page&lt;/mybook&gt;');
+
+//&nbsp;获得根节点
+var&nbsp;rootElement&nbsp;=&nbsp;xmlDoc.documentElement;
+
+//&nbsp;获得page节点
+var&nbsp;page&nbsp;=&nbsp;rootElement.firstChild;
+
+//&nbsp;弹出page的内容,&nbsp;page的子节点是个TEXT类型的，所以要用page.firstChild.nodeValue取值
+alert(page.firstChild.nodeValue);</pre><p>&nbsp;</p><p><strong>2. Q.XMLFile</strong></p><pre class="brush: javascript">
+//&nbsp;加载指定的XML文件
+var&nbsp;xmlDoc&nbsp;=&nbsp;Q.XMLFile('xml文件');
+
+//&nbsp;获得根节点
+var&nbsp;rootElement&nbsp;=&nbsp;null;
+
+if(xmlDoc)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;rootElement&nbsp;=&nbsp;xmlDoc.documentElement;
+}
+
+</pre><p>XML操作请参考DOM相关文档。</p>]]></CONTEXT><PAGES/></PAGE><PAGE><TITLE>Q.FileDialog</TITLE><CONTEXT><![CDATA[<p>&nbsp;FileDialog类似于文件浏览器， 可以选择指定的文件进行操作，或者保存文件到某个路径， 路径都是通过配置来实现的，所以不容易暴露文件的具体路径，防止别人恶意的攻击</p> <p>Q.FileDialog的类型有两种，一个是默认的选择文件的，还有一种就是保存文件用的</p> <p><span style="color: rgb(255, 255, 255); "><span style="background-color: rgb(153, 204, 0); "><strong>调用方法：</strong></span></span></p> <pre class="brush: javascript">
+Q.FileDialog({
+	Type&nbsp;:&nbsp;'类型'
+	App&nbsp;:&nbsp;'应用程序&nbsp;名称',&nbsp;
+	Extension:&nbsp;'扩展名',
+	OnOK&nbsp;:&nbsp;function(fName)&nbsp;{&nbsp;
+		//&nbsp;单击确定
+		return&nbsp;true;
+	},
+	//&nbsp;取消
+	OnCancel&nbsp;:&nbsp;function()&nbsp;{&nbsp;return&nbsp;true;&nbsp;}
+});</pre> <p><strong><span style="color: rgb(255, 255, 255); "><span style="background-color: rgb(153, 204, 0); ">&nbsp;参数说明：</span></span></strong></p> <table style="background: #ccc" border="0" cellspacing="1" cellpadding="5" width="100%">     <tbody>         <tr style="COLOR:#99cc00;font-weight: bold; " bgcolor="#0099ff">             <td width="30%"><span style="color: rgb(255, 255, 255); ">参数名称</span></td>             <td><span style="color: rgb(255, 255, 255); ">说明</span></td>         </tr>         <tr bgcolor="white">             <td>Type</td>             <td>对话框类型,默认为文件选择，文件保存为<strong>&quot;saveas&quot;</strong></td>         </tr>         <tr bgcolor="white">             <td>App</td>             <td>QLib的文件管理器应用程序配置({QLib目录}/php/config.php)，可以根据相应的需求设置指定的目录为文件管理器的根目录</td>         </tr>         <tr bgcolor="white">             <td>Extension</td>             <td>文件扩展名，改参数是&quot;saveas&quot;类型设置的 如果有多个扩展名则使用&ldquo;|&rdquo;分隔符， 如&quot;XML|TXT|js&quot;&nbsp;</td>         </tr>         <tr bgcolor="white">             <td>OnOK</td>             <td>点击&quot;确定&quot;时触发的回调， return false 不关闭对话框， 否则关闭</td>         </tr>         <tr bgcolor="white">             <td>Extension</td>             <td>点击&quot;取消&quot;时触发的回调， return false 不关闭对话框， 否则关闭</td>         </tr>     </tbody> </table>]]></CONTEXT><PAGES/></PAGE></PAGES></PAGE><PAGE><TITLE>&#x5173;&#x4E8E;</TITLE><CONTEXT><![CDATA[<p><font class="Apple-style-span" size="6"><b><br /></b></font></p>]]></CONTEXT><PAGES/></PAGE></PAGES></XMLBOOK>

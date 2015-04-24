@@ -1,0 +1,12 @@
+{
+"header":0,
+
+"data" : [
+	{"uid":"1","uname":"admin","pwd":"21232f297a57a5a743894a0e4a801fc3","nickname":"","rights":"","group_id":"\u7cfb\u7edf\u7ba1\u7406\u5458","tel":"","loginip":"127.0.0.1","logintime":"2011-04-10 01:45:01","email":"life.qm@gmail.com","createtime":"1970-01-01 00:33:30"},
+	{"uid":"4","uname":"ccc","pwd":"d41d8cd98f00b204e9800998ecf8427e","nickname":"","rights":"","group_id":"BBB","tel":"","loginip":"","logintime":"","email":"","createtime":"2010-07-03 13:39:54"},
+	{"uid":"5","uname":"asdfasd","pwd":"d41d8cd98f00b204e9800998ecf8427e","nickname":"","rights":"","group_id":"AAA","tel":"","loginip":"","logintime":"","email":"","createtime":"2010-08-06 15:30:38"}
+],
+
+"extra" : null
+
+}

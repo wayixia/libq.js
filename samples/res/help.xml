@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?><XMLBOOK>
+	<BOOKNAME>About Help Contents</BOOKNAME>
+	<AUTHOR>LovelyLife</AUTHOR>
+	<PRESS>ONLYAA.COM</PRESS>
+	<NAVIGATE></NAVIGATE>
+	<PAGES>
+		<PAGE PAGENO="0">
+			<TITLE>前言</TITLE>
+			<CONTEXT><![CDATA[<p>XML BOOK Editor 是一个基于WndX的简单应用软件，采用XML文件存储文档数据。同时本版集成了FCKEditor编辑器， 可以制作出各式各样的文档， 使用也很方面。 因为时间的问题，没有将其精简出来而是把所有的内容都加上了， 所以打出来的包体积庞大。只是提取了几个有用的文件， 设下的部分只能从fckeditor的官方下载编辑器的zip压缩包，并将其目录下的editor文件夹拷贝到本软件的根目录下即可。 以后也会出其他版的XMLBOOKEditor， 敬请期待!</p><p>什么是WndX?</p><p>WndX 是一款由js开发的窗口管理程序，本编辑器的窗口操作全部是在这个基础上完成的。</p><p>什么是FCKEditor？</p><p>FCKEditor是一款时下很流行的文本编辑器， 功能丰富， 具体的可以去官方<a href="http://www.fckeditor.net/">http://www.fckeditor.net/</a>去了解， 编辑器的包也可以从官方的网站下载到。</p>]]></CONTEXT>
+			<PAGES>
+			</PAGES>
+		</PAGE>
+		<PAGE PAGENO="1">
+			<TITLE>更新日志</TITLE>
+			<CONTEXT><![CDATA[<ul style="line-height: 2"><li><span style="font-family: Times New Roman"><span style="color: #ffffff"><span style="background-color: #99cc00"><span style="font-size: medium"><span>2008-12-13</span></span></span></span></span><span style="color: #ffffff"><span style="background-color: #99cc00"><br /></span></span>1. 新增[新增项目]功能.<br />2. 原本用XMLDocument文件处理xmlbook, 现在新增了XMLBookDocument类, 专门处理xmlbook. 主要目的是将大部分xml操作封装起来, 在编辑器中用一个bookHandle实例提供所有接口.</li><li><span style="font-family: Times New Roman"><span style="color: #ffffff"><span style="background-color: #99cc00"><span style="font-size: medium"><span>2008-12-14</span></span></span></span></span><span style="color: #ffffff"><span style="background-color: #99cc00"><br /></span></span>1. 以前的模板常量（在程序中定义对话框资源的字符串）， 使得程序整体看起来很臃肿。现在新增模板类templates，处理这些问题变得非常轻松。</li><li><span style="font-family: Times New Roman"><span style="color: #ffffff"><span style="background-color: #99cc00"><span style="font-size: medium"><span>2008-12-18<br /></span></span></span></span></span>1. 改进对话框（__DIALOG类）的DataExchanger， 使得对话框中的控件和对话框的成员变量交换数据更简单。<br />2. 修改WndX窗口管理程序的__DIALOG对话框类， 支持创建带有按钮操作区域的对话框（只要在窗口样式中增加CONST['STYLE_WITHBOTTOM']样式接口，一定要在创建对话框之前，以后会增加ModifyStyle接口，可以及时修改对话框/窗口的样式以满足不同的需求）， 并且新增__DIALOG对话框接口addBottomButton。</li><li><span style="font-family: Times New Roman"><span style="color: #ffffff"><span style="background-color: #99cc00"><span style="font-size: medium"><span>2008-12-21</span></span></span></span></span>&nbsp;<br />1. 对编辑视图做了一些调整，同时增加了容错处理（不符合结构的xmlbook将被过滤掉），如果系统不支持html application应用程序，本软件会自动关闭。<br />2.&nbsp;修正了书籍工程的设置功能的bug<br />3. 增加基于WndX窗口管理框架的__DIALOG类的模式对话框的功能</li></ul>]]></CONTEXT>
+			<PAGES>
+			</PAGES>
+		</PAGE>
+		<PAGE PAGENO="2">
+			<TITLE>功能简介</TITLE>
+			<CONTEXT><![CDATA[<p>目前新增了以下几个功能，也是核心功能：</p><ol><li>创建新项目</li><li>创建子文档</li><li><p>系统配置</p></li></ol>]]></CONTEXT>
+			<PAGES>
+				<PAGE><TITLE>创建新项目</TITLE><CONTEXT><![CDATA[<p>如果需要增加新的XMLBOOK， 你可能需要通过这个功能来生成新XMLBOOK。 点击菜单【新增项目】, 弹出的新增项目对话框， 填写好相关内容后确认提交，随后会弹出保存路径对话框。选择好保存路径。您就可以对XMLBOOK进行编辑，包括新增子文档等等...</p>]]></CONTEXT></PAGE><PAGE><TITLE>创建子文档</TITLE><CONTEXT><![CDATA[<p>如果某章节分几个小节，则可以通过菜单【新增文档】创建该章节的子节点， 当然首先必须得选中该章节所在节点。在弹出的对话框中输入子节点的名称即可， 在该章节的子节点下找到刚才新增的子节点，双击对该新增文档进行编辑。</p>]]></CONTEXT></PAGE><PAGE><TITLE>系统配置</TITLE><CONTEXT><![CDATA[<p>此功能待开发中...</p>]]></CONTEXT></PAGE></PAGES>
+		</PAGE>
+		<PAGE>
+			<TITLE>XMLBook APIs</TITLE>
+			<CONTEXT><![CDATA[<p><strong><span>1. 如何创建新的XMLBOOK？</span></strong><span style="color: #99cc00"><br /></span>&nbsp;&nbsp;&nbsp; 在菜单中选择【新增项目】，填充好书名，作者，确认后选择保存路径即可。接着可以编辑该XMLBOOK。</p><p><strong><span>2. 旧版的XMLBOOK是否可以用此版本编辑？</span></strong><br />&nbsp;&nbsp;&nbsp; 可以，此版兼容以前的XMLBOOK文档。</p><p><strong><span>3. 编辑器不好用或者体积很大，有没有其他版本的?</span></strong><br />&nbsp;&nbsp;&nbsp; 目前可能由于没有找到合适的功能强大的编辑器，如果您发现有更好的编辑器，可以告之我们， 在审核通过，我们会将你推荐的编辑器集成到XMLBOOKEditor中。</p>]]></CONTEXT>
+			<PAGES/></PAGE>
+		<PAGE>
+			<TITLE>FAQ</TITLE>
+			<CONTEXT><![CDATA[<p><strong><span>1. 如何创建新的XMLBOOK？</span></strong><span style="color: #99cc00"><br /></span>&nbsp;&nbsp;&nbsp; 在菜单中选择【新增项目】，填充好书名，作者，确认后选择保存路径即可。接着可以编辑该XMLBOOK。</p><p><strong><span>2. 旧版的XMLBOOK是否可以用此版本编辑？</span></strong><br />&nbsp;&nbsp;&nbsp; 可以，此版兼容以前的XMLBOOK文档。</p><p><strong><span>3. 编辑器不好用或者体积很大，有没有其他版本的?</span></strong><br />&nbsp;&nbsp;&nbsp; 目前可能由于没有找到合适的功能强大的编辑器，如果您发现有更好的编辑器，可以告之我们， 在审核通过，我们会将你推荐的编辑器集成到XMLBOOKEditor中。</p>]]></CONTEXT>
+			<PAGES/></PAGE>
+		<PAGE>
+			<TITLE>版权声明和关于我们</TITLE>
+			<CONTEXT><![CDATA[<p><span style="font-size: x-small"><span style="color: #99cc00"><span><span><strong><font face="Times New Roman"><span style="color: #0000ff"><span style="font-family: Times New Roman"><strong>XML</strong></span></span><span style="font-family: Times New Roman"><strong><font color="#000000"> </font><span style="color: #99cc00">BOOK</span><font color="#000000"> </font><span style="color: #ff0000">Editor <span style="color: #ff6600">App</span></span><font color="#000000">&nbsp;v.1.1.20081214</font></strong></span> </font></strong></span></span></span></span><span style="font-family: Arial">版权声明</span><hr /></p><p><span>本软件是在 WndX 的基础上完成的。WndX 是由ONLYAA(Javascript经典专区)研制开发，未经&nbsp;ONLYAA 的授权许可不得擅自发布该软件。<br /><br />本软件所使用的编辑器FCKEditor是由&nbsp;<a href="http://www.fckeditor.net/">www.fckeditor.net</a>&nbsp;开发, 保留版权。<br />警告: <font face="Times New Roman">请勿擅自修改版权和作者</font>。</span></p><p><span><span style="font-size: larger"><span style="font-family: Times New Roman"><span><strong><br /><br /><br /><br />联系方式：&nbsp;</strong></span></span></span></span><br /><span><span style="font-size: larger"><span style="font-family: Times New Roman"><span><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>E-Mail: <a href="mailto:master@onlyaa.com">master@onlyaa.com</a></span></span></span></span><br /><span><span style="font-size: larger"><span style="font-family: Times New Roman"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QQ: 3988592<strong><br /><br /><br /></strong><hr /><strong>$ powered by <a href="http://onlyaa.com">Javascript 经典专区</a></strong></span></span></span><span style="color: #333333"><span style="color: #0000ff"><span style="color: #333300"><span style="font-size: larger"><span style="font-family: Times New Roman"><span><strong> All rights reservered.</strong></span></span></span></span></span></span></span></p>]]></CONTEXT></PAGE></PAGES>
+	<APPENDIX>附录</APPENDIX>
+	<FORWARD>dte</FORWARD><DESCRIPTION/></XMLBOOK>

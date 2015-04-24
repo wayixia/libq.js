@@ -1,0 +1,74 @@
+
+html {width:100%; height:100%;}
+body { margin:0; padding:0; min-height: 200px; min-width: 300px; height:100%; font-family:Arial, SimSun}
+
+#frame {width:100%;height:100%;padding:0;margin:0; font-size:13px; background:#003060 url(images/headbg.gif) repeat-x top left;}
+
+#header { height: 80px; width:100%; padding:0; margin:0; position: relative; }
+    #debug { display:none; width: auto; position: relative; top: 0; left:0; border: 1px solid #000; background: yellow;}
+    #header_title{ margin-right:400px; height:100%; /*background-color:#00FF66;*/ overflow:hidden; color:white;}
+    #header_menus{ position:absolute; width:400px; height:100%; display:none;/*background:#fd3500;*/ top:0;right:0;}
+
+#menusbar { height: 30px; background: #fbfaf7 url(images/urlbg.gif) repeat-x left bottom;margin:0;line-height:30px; }
+
+#content { position: relative; height:100%; width:100%; background: yellow; padding:0; margin:0; overflow:hidden;}
+    /*
+    #frame_left { width:199px; height:100%; overflow:auto; background:#F8F8F8; border-right:1px solid #93A0C4;}
+    #frame_right {position:absolute; margin-left: 200px; height:100%; top:0; right:0;  background:#DBEFFF; overflow: auto;}
+    */
+    
+    #frame_left {float:left; width:200px; height:100%; overflow:auto; background:#F8F8F8; border-right:1px solid #93A0C4;}
+    #frame_right {float:none;height:100%; background:#DBEFFF; overflow: auto;}
+    
+        #workspace {background:none; margin: 10px;}
+        
+.titleStyle {white-space:nowrap; text-align:right; width:100%; border:0px solid yellow; margin:0px;	padding:0px; height: 100%;}
+.titleStyle li {list-style: none;display: inline;margin-right: 30px; }
+.titleStyle li a {text-decoration: none;color: white;white-space: nowrap;border-width:0px;border-style: solid;border-color: transparent;padding: 2px;}
+.titleStyle li a:hover {text-decoration: underline;border-width: 2px;border-style: outset;padding: 0px;color: yellow;}
+.titleStyle li a img{width: 50px;height: 50px;border: 0px solid red;}
+
+#helpDocument {position:relative; height:100%; width:100%; background: yellow; padding:0; margin:0; overflow:hidden;}
+    #frm_left {position:absolute;top:0; left:0; width:199px; height:100%; overflow:hidden; background:#F8F8F8; border-right:1px solid #93A0C4;}
+    #frm_right { margin-left:200px; height:100%; background:#FFF; overflow: auto;}
+    .pad {margin:3px; font-size: 13px; line-height: 20px; }    
+
+
+/*
+samples:
+
+<div id="frame">
+
+<!-- frame -->
+<div id="header">
+    <div id="debug"></div>
+    <div id="header_title">
+		...
+    </div>
+    <div id="header_menus"> 
+		...
+    </div>
+    
+</div>
+<div id="menusbar"></div>
+<div id="content"> 
+    <div id="frame_left">
+		...
+    </div>
+    <div id="frame_right">
+        <div id="workspace">WorkSpace</div>
+    </div>
+</div>
+
+<!-- frame end -->
+</div>
+
+*/
+
+.treeIconFile {
+	background-image: url(images/file.gif);
+}
+
+.treeIconFolder {
+	background-image: url(images/folder.gif);
+}

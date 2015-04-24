@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>import | QLib | Powered By PHPKIND</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!--  
+	提示：src="{QLib目录}/Q.js" 
+	根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" -->
+    <script type="text/javascript" src="../Q.js">
+	<!--
+	// 需要加载额外库时
+	import samples.testlib;
+	-->
+	</script>
+
+    <script>
+    <!--
+    Q.Ready(function() {
+		// 获取界面元素
+		var NumA = Q.$('idA');
+		var NumB = Q.$('idB');
+		var NumC = Q.$('idC');
+
+
+		// "添加"和"测试"按钮
+		var BtnAdd = Q.$('idBtnAdd');
+		var BtnTest = Q.$('idBtnTest');
+		
+		// 给两个按钮添加onclick事件
+		BtnAdd.onclick = function() {
+			// 调用Testlib_add实现两个数相加
+			NumC.value = Testlib_add(
+				parseInt(NumA.value), 
+				parseInt(NumB.value)
+			);
+		}
+
+		BtnTest.onclick = function() {
+			// 调用samples.testlib的函数
+			Testlib_test('调用Testlib_test函数');
+		}
+
+	});
+
+    -->
+    </script>
+</head>
+<body>
+<div id="myDiv">
+	<input type="text" id="idA" value="6"/>+
+	<input type="text" id="idB" value="6"/>= 
+	<input type="text" id="idC" readOnly/>
+	<button id="idBtnAdd"> 两个数相加 </button>
+	<button id="idBtnTest"> 调用Testlib_test函数 </button>
+</div>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+<TITLE>File Manager for QLib - Javascript经典专区 </TITLE>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<link type="text/css" rel="stylesheet" href="style.css" />
+<style>
+	a {color: #333; text-decoration: none;}
+	a:hover {color: #333; text-decoration: underline;}
+</style>
+<script language="javascript" id="js-loader" src="../Q.js">
+<!--
+
+import utils.stl;
+import utils.xml;
+import utils.templates-1-0-1;
+import utils.json2;
+import utils.ajax;
+
+import ui.button;
+import ui.wndx-1-0-2;
+import ui.jtable;
+import ui.simpletree;
+
+-->
+</script>
+<script language="javascript">
+<!--
+
+// 
+var g_tbl = null;
+var g_dirTree = null;
+var g_currentPath = '/';
+
+//! resize event handler
+function lpResizeHandler (evt) {
+    //var h = Q.$('header');
+    //var m = Q.$('menusbar');
+    var c = Q.$('content');
+    var d = Q.$('debug');
+    // if((!c) || (!h)) return;
+	if((!c) || (!d)) return;
+	c.style.display = 'none';
+	c.style.height = (document.body.scrollHeight /*- h.offsetHeight - m.offsetHeight*/)+'px';
+    // d.innerHTML = 'body('+document.body.scrollHeight+') - header('+h.offsetHeight+') - menubar('+m.offsetHeight+') = ' + c.style.height; 
+	c.style.display = '';
+}
+
+
+function getfile_ext(fileName) {
+	var fileName = fileName + '';
+	var pos = fileName.lastIndexOf('.');
+	if(pos == -1) {	return -1; }
+	
+	return fileName.substring(pos+1, fileName.length);
+}
+
+function renderer_name(record) {
+	var icon = "";
+	var href = "";
+	var target = "_self";
+	var p = "";
+	
+	if((!Q.GET("p")) || Q.GET("p") == '/') {
+		p = '/';
+	} else {
+		p = Q.GET("p") + "/"+record["name"];
+	}
+	if(record["isfolder"]) {
+		icon = "dir";
+		if(!Q.GET('p')) {
+			location.search
+			href = document.location.href
+					+(location.search?'':'?')
+					+'&p=/'+record['name'];
+		} else {
+			//href=(document.location.href+'').replace(/p=(.*)&/, '&p=$1');
+			href = ""
+		}
+		target = "_self";
+	} else {
+		href = "javascript: selectFile(); void(0);";
+		icon = 	getfile_ext(record["name"]);
+		if((icon == "txt") || (icon == "php") || (icon == "htm") || (icon == "html") || (icon == "js")) {
+			
+		} else {
+			icon = "txt";
+		}
+	}
+	
+	var spec = parseInt(record["special"],10);
+	var fPath;
+	
+	
+	if(spec == 0 || spec == 1) {
+		fPath = record["path"];
+	} else {
+		fPath = record["path"]+'/'+record["name"];
+	}
+
+	var onclick = ' onclick="OnUpdateJtable(\''+fPath+'\');"';
+	var ondblclick='';
+	if(!record['isfolder']) {
+		onclick = 'onclick="SelectFile(\''+fPath+'\');"';
+		ondblclick=' ondblclick=""';
+	}
+
+	var render = '<a href="javascript:void(0);" target="'+target+'" style="background:url(files/'+icon+'.gif) no-repeat left center;padding-left:20px;" '+onclick+ondblclick+'>'+record["name"]+'</a>';
+	return render;
+}
+
+function row_onclick(row) {
+	// this -> jtable
+	// alert(row);
+}
+
+function row_onmouseover(row) {
+	// this -> jtable
+	// alert(row);
+	row.style.background = '#EEE';
+}
+
+function row_onmouseout(row) {
+	// this -> jtable
+	// alert(row);
+	row.style.background = 'none';
+}
+
+window.GetSelectedFileName = function() {
+	if(g_tbl) {
+		var arr = g_tbl.get_rows_selected();
+		if(arr.length > 0) {
+			var row = arr[0];
+			var sName = g_tbl.get_text(row,'name');
+			var sPath = g_tbl.get_text(row,'path');
+			var spec = parseInt(g_tbl.get_text(row, 'special'),10);
+			var fPath = '';
+			if(spec == 0 || spec == 1) {
+				fPath = sPath;
+			} else {
+				fPath = sPath+'/'+sName;
+			}			
+			return fPath;
+		}
+	}
+	return '';
+}
+
+window.GetCurrentDir = function() {
+	var sDir = g_currentPath;
+	if(g_tbl) {
+		var arr = g_tbl.get_rows_selected();
+		if(arr.length > 0) {
+			var row = arr[0];
+			var sName = g_tbl.get_text(row,'name');
+			var sPath = g_tbl.get_text(row,'path');
+			var spec = parseInt(g_tbl.get_text(row, 'special'),10);
+			var isFolder = parseInt(g_tbl.get_text(row, 'isfolder'),10);
+			var fPath = '';
+			if(isFolder) {
+				if(spec == 0 || spec == 1) {
+					fPath = sPath;
+				} else {
+					fPath = sPath+'/'+sName;
+				}			
+				sDir = fPath
+			}
+			
+		}
+	}
+	return sDir;
+}
+
+function compare0(r1, r2, key) {
+	//alert(json2str(r1));
+	//alert(r1["isfolder"] == "true")
+	var special1 = parseInt(r1["special"],10);
+	var special2 = parseInt(r2["special"],10);
+	if(special1 ==  special2) {
+		var isFolder1 = r1["isfolder"];
+		var isFolder2 = r2["isfolder"];
+		if(isFolder1 == isFolder2) {
+			return r1[key].localeCompare(r2[key]);
+		} else {
+			if(isFolder1) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
+	} else {
+		if(special1 <  special2) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+}
+
+
+// DOM ready
+Q.Ready(function() {
+    //! add resize handler
+    Q.addEvent(window, 'resize', lpResizeHandler);
+    
+    lpResizeHandler();
+    Q.$('frame').onselectstart = function(evt) {
+        evt = evt | window.event;
+        evt.returnValue = false;
+		return false;
+    }
+
+	var cfg = Q.GET('cfg');
+	if(!cfg) {
+		alert('无效的配置参数.');
+		return;
+	}
+
+	// alert(Q.Ajax);
+	var u = 'filemgr.php?'+Q.querystring(['p'])+'&p='+Q.GET('p');
+		
+	var cols = [
+		{name: 'name', title: '文件名', width: 300, align: 'left', issortable: true, renderer: renderer_name, isHTML : true, fixedWidth: false},
+		{name: 'lastupdated', title: '最后修改时间', width: 130, align: 'center', issortable: true, fixedWidth: true}
+	];
+
+	var jstore_group = new jstore({
+		datasource: []
+	});
+	g_tbl = new jtable({ 
+		container: 'jtable_containergroup', 
+		title:   '  请选择: ',
+		wstyle :  'WS_FITWIDTH',
+		row_height: 26,
+		auto_height : true,
+		columns : cols,
+		jstore : jstore_group,
+		row_onclick : row_onclick,
+		row_onmouseover : row_onmouseover,
+		row_onmouseout : row_onmouseout,
+	});
+	g_tbl.setSortFunc(0, compare0);
+	g_tbl.setStyle();
+	g_tbl.autosize();
+	g_tbl.sortTable(0, false, compare0);
+
+	g_dirTree = new __simpleTreeL({
+		Render : Q.$('frame_left'),
+		Name : "站点根目录",
+		IsOpen : true,
+	});
+
+	g_dirTree.setItemData(0, '/');
+
+	g_dirTree.setItemIcon(0, 'treeIconFolder');
+	g_dirTree.itemClick = function(nItem) {
+		var path = this.getItemData(nItem);
+		OnUpdateJtable(path, nItem);
+	}
+	
+	OnUpdateJtable('/', g_dirTree.getRoot());
+	
+});
+
+function OnUpdateJtable(path, nodeid) {
+	
+	g_currentPath = path;
+
+	Q.Ajax({
+		command: 'filemgr.php?'+Q.querystring(['p'])+'&p='+path,
+		oncomplete : function(xmlhttp) {
+			// alert(xmlhttp.responseText);
+			
+			g_tbl.loadData(eval(xmlhttp.responseText), true);
+			g_tbl.render();
+			g_tbl.sortTable(0, true, compare0);
+		},
+		onerror : function(xmlhttp) {}
+	});
+	
+	Q.Ajax({
+		command: 'filemgr.php?'+Q.querystring(['p'])+'&p='+path+'&f=2',
+		oncomplete : function(xmlhttp) {
+			// alert(this.command);
+			// alert(xmlhttp.responseText);
+			var dirs = eval(xmlhttp.responseText);
+			if(!nodeid) {
+				var node = g_dirTree.getItemByData(path);
+				if(node) {
+					nodeid = node.idx;
+				}
+			}
+			//g_dirTree.removeChildren(node.idx);
+			for(var i=0; i<dirs.length; i++) {
+				dir = dirs[i];
+				var newpath = dir.path+"/"+dir.name;
+				// alert(g_dirTree.getItemByData(newpath));
+				if(!g_dirTree.getItemByData(newpath)) {
+					var nItem = g_dirTree.createNode(nodeid, dirs[i].name, false);
+					g_dirTree.setItemIcon(nItem, 'treeIconFolder');
+					g_dirTree.setItemData(nItem, newpath);
+				}
+			}
+			
+			g_dirTree.setItemSelected(nodeid);
+		},
+		onerror : function(xmlhttp) {}
+	});
+}
+
+-->
+</script>
+
+</head>
+
+<body style="margin: 0; padding: 0; border: 0px;" scroll="no">
+<div id="frame" style="background: none;">
+
+<!-- frame -->
+<!--div id="header">
+    <div id="debug"></div>
+    <div id="header_title">
+        <br/><font color="yellow">&nbsp;☆ 欢迎使用</font>
+        <br/><font style="font-family: Times New Roman;font-size: 24px; color: white;">
+        &nbsp;&nbsp;&nbsp;&nbsp;Javascript经典专区 XML BOOK Reader v.1.1.20081220</font>
+        <br/><br/>
+    </div>
+    <div id="header_menus"> 
+        <!--ul class="titleStyle">
+            <li><a href="#" HIDEFOCUS><img src="images/icon/1.gif">打开</a></li>
+            <li><a href="#" HIDEFOCUS><img src="images/icon/2.gif">搜索</a></li>
+            <li><a href="#" HIDEFOCUS><img src="images/icon/3.gif">帮助</a></li>
+        </ul>
+    </div>
+    
+</div>
+<div id="menusbar"></div-->
+<div id="content">
+    <div id="frame_left">
+		
+    </div>
+    <div id="frame_right" style="margin:0;">
+        <div id="workspace" style="margin:0;width: 100%; height: 100%;">
+		<div id="jtable_containergroup" style="width: 100%; height: 100%; background: red;"></div>
+		</div>
+    </div>
+</div>
+
+<!-- frame end -->
+</div>
+</body>
+</html>
