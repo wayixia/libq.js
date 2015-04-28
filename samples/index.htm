@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<TITLE>XML BOOK Document Reader | QLib </TITLE>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<link type="text/css" rel="stylesheet" href="style.css" />
+<script language="javascript" id="js-loader" src="../Q.js">
+<!--
+
+import utils.stl;
+import utils.xml;
+import utils.templates-1-0-1;
+
+import ui.button;
+import ui.wndx-1-0-2;
+import ui.simpletree;
+
+-->
+</script>
+<script language="javascript" src="samples.js"></script>
+<script language="javascript">
+<!--
+//! resize event handler
+function lpResizeHandler (evt) {
+    var h = Q.$('header');
+    var m = Q.$('menusbar');
+    var c = Q.$('content');
+    var d = Q.$('debug');
+    if((!c) || (!h)) return;
+	c.style.display = 'none';
+	c.style.height = (document.body.scrollHeight - h.offsetHeight - m.offsetHeight)+'px';
+    d.innerHTML = 'body('+document.body.scrollHeight+') - header('+h.offsetHeight+') - menubar('+m.offsetHeight+') = ' + c.style.height; 
+	c.style.display = '';
+}
+
+var xmlBookInstance;
+// DOM ready
+Q.Ready(function() {
+    //! add resize handler
+    Q.addEvent(window, 'resize', lpResizeHandler);
+    
+    lpResizeHandler();
+    Q.$('frame').onselect = function(evt) {
+        evt = evt | window.event;
+        evt.returnValue = false;
+    }
+//	var searchText = location.search.toString();
+    xmlBookInstance = new __xmlBookL(document.body); // , 'res/regular.xml');
+});
+
+//-->
+</script>
+</head>
+
+<body style="margin: 0; padding: 0; border: 0px;" scroll="no">
+<div id="frame">
+
+<!-- frame -->
+<div id="header">
+    <div id="debug"></div>
+    <div id="header_title">
+        <br/><font color="yellow">&nbsp;☆ 欢迎使用</font>
+        <br/><font style="font-family: Times New Roman;font-size: 24px; color: white;">
+        &nbsp;&nbsp;&nbsp;&nbsp;Javascript经典专区 XML BOOK Reader v.1.1.20081220</font>
+        <br/><br/>
+    </div>
+    <div id="header_menus"> 
+        <ul class="titleStyle">
+            <li><a href="#" HIDEFOCUS><img src="images/icon/1.gif">打开</a></li>
+            <li><a href="#" HIDEFOCUS><img src="images/icon/2.gif">搜索</a></li>
+            <li><a href="#" HIDEFOCUS><img src="images/icon/3.gif">帮助</a></li>
+        </ul>
+    </div>
+    
+</div>
+<div id="menusbar"></div>
+<div id="content"> 
+    <div id="frame_left">
+    
+    </div>
+    <div id="frame_right">
+        <div id="workspace">WorkSpace</div>
+    </div>
+</div>
+
+<!-- frame end -->
+</div>
+</body>
+</html>
