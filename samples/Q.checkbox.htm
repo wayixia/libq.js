@@ -1,0 +1,120 @@
+
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.checkbox | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<style>
+#mycontainer {
+  position:relative;
+  width: 698px;
+  height: 298px;
+  background: blue;
+  padding: 1px;
+}
+
+#box-container {
+  position:relative;
+  width: 698px;
+  height: 298px;
+  background: blue;
+  padding: 1px;
+}
+
+
+
+/* start menu */
+.q-contextmenu.os-start-menu {
+  border-width: 0;
+  box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -moz-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -webkit-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  min-width: 200px;
+
+  background-color: #FFF;
+  background-image: none;
+  background-repeat: repeat-y;
+  background-position: left top;
+  z-index: 910000;
+}
+
+.q-contextmenu.os-start-menu .q-item {
+  height: 30px;
+  line-height: 30px;
+}
+
+.q-contextmenu.os-start-menu .q-item.q-seperator,
+.q-contextmenu.os-start-menu .q-item.q-seperator:hover
+{
+  height: 15px;
+  background-color: none;
+}
+
+
+.q-contextmenu.os-start-menu .q-item .q-item-title {
+  line-height: 30px;
+  font-size: 15px;
+}
+
+.q-contextmenu.os-start-menu .q-item:hover, 
+.q-contextmenu.os-start-menu .q-item.q-active 
+{
+  background-color: #;
+}
+
+</style>
+<!--  
+提示：src="{QLib目录}/Q.js" 
+根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+-->
+<script type="text/javascript" src="../Q.js">
+<!--
+// 需要加载额外库时
+import utils.stl;
+import utils.xml;
+import ui.contextmenu;
+import ui.checkbox;
+-->
+</script>
+
+<script>
+<!--
+
+Q.Ready(function() {
+  new Q.checkbox({id: Q.$('item-1'), 
+    checked: true,
+    onchange: function(checked) {
+      Q.printf(":::" + checked);
+    }
+  });
+  new Q.checkbox({id: Q.$('item-2')});
+  new Q.checkbox({id: Q.$('item-3')});
+  new Q.checkbox({id: Q.$('item-4')});
+});
+
+-->
+</script>
+</head>
+<body onselectstart="return false;" style="overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+<h3>Q.checkbox samples </h3>
+<hR>
+
+
+<a class="q-checkbox" id="item-1"> 项目1 </a>
+<a class="q-checkbox" id="item-2"> 项目2 </a>
+<a class="q-checkbox" id="item-3"> 项目3 </a>
+<a class="q-checkbox" id="item-4"> 项目4 </a>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body>
+</html>
+
+
+
+

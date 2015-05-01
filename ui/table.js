@@ -416,8 +416,9 @@ autosize : function() {
   frame_height = fullHeight 
     - _this.wndTitleBar.offsetHeight 
     - _this.wndToolbar.offsetHeight
-    - parseInt(currentstyle['borderTopWidth'],10)
-    - parseInt(currentstyle['borderBottomWidth'],10);
+    //- parseInt(currentstyle['borderTopWidth'],10)
+    //- parseInt(currentstyle['borderBottomWidth'],10)
+    ;
   _this.wndFrame.style.height = frame_height+'px';
   _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
   _this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';

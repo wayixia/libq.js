@@ -23,14 +23,9 @@
   <!--
   var g_table = null;
   Q.Ready(function() {
-    // 提示对话框
-    Q.$('btnOpenMessageBox').onclick = function() {
-      alert('test');
-    }
-
     var columns = [
     { name: 'url', title: '地址', align:'left', width: 540, isHTML: true, renderer : function(record) {return record['url'];}, },
-    { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {return record['date'];}, },
+    { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {return record['date'];}, }
     ];
     
     var store = new Q.store({
@@ -53,13 +48,13 @@
         {url: 'abc', date: '2014-12-11'},
         {url: 'abc', date: '2014-12-11'},
         {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
+        {url: 'abc', date: '2014-12-11'}
       ] 
     });
     //init Q.table
     g_table = new Q.table({ 
       title: "Q.table标题栏",
-      wstyle: "q-attr-border q-attr-toolbar q-attr-no-title",
+      wstyle: "q-attr-border q-attr-toolbar q-attr-title",
       container: Q.$('table_container'),
       columns: columns,  
       store: store,
@@ -75,13 +70,9 @@
 </head>
 <body onselectstart="return false;" style="height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
 
-<p>提示对话框</p>
-<button id="btnOpenMessageBox">MessageBox</button>
-
+<p>Q.table示例</p>
+<hr>
 <br>
-<div id='debug_window' style='width:100%;height: 100px;overflow: auto;'>
-
-</div>
 
 <div id="table_container" style="width: 800px; height: 400px; position:relative; background:red;">
 

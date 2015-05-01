@@ -5,74 +5,6 @@
  
  $ bugs Fixed:
 --------------------------------------------------------------------------------------*/
-/*
-// ui template class 
-Q.ui = Q.extend({
-ui_iframe: null,
-__init__: function(json) {
-  json = json || {};
-  this.ui_iframe = document.createElement("IFRAME");
-  this.ui_iframe.src=json.src;
-  this.ui_iframe.onload = function() {    
-    json.oncomplete(true);
-  }
-  
-  this.ui_iframe.onerror= function() {
-    json.oncomplete(false);
-    document.body.removeChild(this);
-  }
-  this.ui_iframe.style.display = "none";
-  this.ui_iframe.src=json.src;
-  document.body.appendChild(this.ui_iframe);
-},
-
-template: function(id) {
-  var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
-  var tpl = doc.getElementById(id);
-  if(tpl)
-    return tpl.cloneNode(true);
-
-  return null;
-},
-
-bind_css : function() {
-  // get ui style
-	var heads = document.getElementsByTagName("head");
-  var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
-  for(var i=0; i < doc.styleSheets.length; i++) {
-    var sheet =doc.styleSheets[i];
-    if(!sheet) // no <style>
-      return;
-    var style;
-    if(sheet.ownerNode.innerHTML == "" && (!!sheet.href)) {
-      // link
-      style=document.createElement("link");
-	    style.setAttribute("type", "text/css");
-	    style.setAttribute("rel", "stylesheet");
-	    style.setAttribute("href", sheet.href);
-    } else {
-      var cssText = sheet.ownerNode.innerHTML;
-      style=document.createElement("style");
-	    style.setAttribute("type", "text/css");
-	    if(style.styleSheet){// IE
-		    style.styleSheet.cssText = cssText;
-	    } else {// w3c
-		    var textNode = doc.createTextNode(cssText);
-		    style.appendChild(textNode);
-	    }
-    }
-	  if(heads.length)
-		  heads[0].appendChild(style);
-	  else
-		  document.documentElement.appendChild(style);
-  } // for
-
-},
-
-})
-
-*/
-
 
 var g_simple_os = null;
 var g_os_start_menu;
@@ -257,9 +189,9 @@ destroy_instance : function(id) {
 
 create_instance : function(app) { 
   var instance = null;
-  if(app.single && app.class) {
+  if(app.single && app.klass) {
     this.each_apps(function(a) {
-      if(a instanceof app.class) {
+      if(a instanceof app.klass) {
         instance = a;
         a.__active__();
         return false;
@@ -270,7 +202,7 @@ create_instance : function(app) {
   
   if(!instance) {
     var _this = this;
-    instance = new app.class({ui: app.ui_runtime});
+    instance = new app.klass({ui: app.ui_runtime});
     instance.__exit__ = function() {
       Q.printf("app "+ app.name + " is exit.");
       _this.destroy_instance(this.id);
@@ -286,7 +218,7 @@ create_instance : function(app) {
 run :function (app) {
   var _this = this;
   var err = "Application [" + app.name + "] is run failed.";
-  if(app.class) {
+  if(app.klass) {
     // app class have loaded
     try {
       _this.create_instance(app);
@@ -304,7 +236,7 @@ run :function (app) {
       }
       
       Q.printf("load from file and create app ok");
-      app.class = app_class;
+      app.klass = app_class;
       // load ui
       app.ui_runtime = new Q.ui({src: app.ui, oncomplete: function(ok) {
         // init app instance

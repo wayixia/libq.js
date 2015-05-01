@@ -221,8 +221,8 @@
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
 　　var t =rect.top+document.documentElement.scrollTop;
-    var w =rect.width;
-    var h =rect.height;
+    var w =rect.right-rect.left;
+    var h =rect.bottom-rect.top;
 
     return { width : w, height : h,  left : l,  top : t  };
   }

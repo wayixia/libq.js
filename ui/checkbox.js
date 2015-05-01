@@ -14,6 +14,7 @@ Q.checkbox = Q.extend({
     this.hwnd = Q.$(json.id);
     this.onchange = json.onchange || function(id) {}
     this.hwnd.onclick = function() {  _this.set_checked(!_this.checked()); }
+    this.set_checked(!!json.checked);
   },
 
   checked : function() {
