@@ -326,7 +326,16 @@
 .q-table { background: #99bbe8; overflow:hidden; position:absolute; left:0; top:0; right:0; bottom:0;}
 .q-table.q-attr-border {left:1; top:1; right:1; bottom:1;}
 .q-table TD {CURSOR: default;}
-.q-table TR.q-selected { background-color:#DFE8F6; }
+.q-table TR.q-selected
+{ 
+  background-color:#DFE8F6; 
+}
+
+.q-table TR.mouseover
+{ 
+  background-color:#F3F3F8; 
+}
+
 .q-table .q-table-titlebar 
 {
   background: white URL(images/table/grid_title.gif) repeat-x left -1px; 
@@ -345,22 +354,40 @@
   display: none;
 }
 
-.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background:white URL(images/table/grid-col.gif) repeat-x left top; border: 0x solid red;}
+.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background:white URL(images/table/grid-col.gif) repeat-x left top; border: 0px solid red;}
 .q-table .q-group-header  {position:relative;overflow:hidden;height:24px;}
-.q-table .q-column-header {position:relative;height:24px; line-height:24px; PADDING:0;margin:0; OVERFLOW:hidden; background: url(images/table/header_spliter.gif) no-repeat right bottom; text-indent:2px;text-overflow:ellipsis;WHITE-SPACE:nowrap;}
-.q-table .q-column-header a { display:block; margin-right: 2px;}
-.q-table .q-column-header a:hover {text-decoration: none; background: #ebf3fd URL(images/table/grid_col_over.gif) repeat-x left bottom;margin-right:2px;}
-.q-table .q-column-header a input { margin: 6px 0 5px 0; margin: 4px 0 3px 0\9; }
+.q-table .q-column-header {
+  position:relative;
+  OVERFLOW:hidden; 
+  height:24px;
+  line-height:24px; 
+  PADDING:0;
+  margin:0;
+  border-RIGHT: #ddd 1px solid; 
+  background: url(images/table/header_spliter.gif) no-repeat right bottom; 
+  text-indent:2px;
+  font-size: 13px;
+  text-overflow:ellipsis;
+  WHITE-SPACE:nowrap;
+}
+.q-table .q-column-header a { display:block; margin-right: 1px;}
+.q-table .q-column-header a:hover {text-decoration: none; background: #ebf3fd URL(images/table/grid_col_over.gif) repeat-x left bottom;}
 .q-table .q-group-body {position:relative; overflow: auto; border: 0px solid green;}
 
 .q-table .q-table-cdata {
   PADDING:0; 
   OVERFLOW: hidden;
-  BORDER-BOTTOM: #ddd 0px solid; 
-  border-RIGHT: #ddd 0px solid; 
+  BORDER-BOTTOM: #EEE 1px solid; 
+  border-RIGHT: #EEE 1px solid; 
   WHITE-SPACE: nowrap;
   text-indent:5px;
   text-overflow:ellipsis;
+}
+
+.q-table TR.q-selected .q-table-cdata,
+.q-table TR.q-mouseover .q-table-cdata
+{
+  border-bottom: #EEE 1px solid;
 }
 
 .q-table .q-table-toolbar {

@@ -58,23 +58,27 @@
       container: Q.$('table_container'),
       columns: columns,  
       store: store,
+      row_onclick : function(row) {
+        var url = this.get_text(row, "url");
+      },
+      row_onmouseover: function(row) {
+        //row.style.backgroundColor = "#F1F1F1"; 
+      },
+      row_onmouseout: function(row) {
+        //row.style.backgroundColor = "transparent"; 
+      }      
     });
-     
-    g_table.row_onclick = function(row) {
-      var url = this.get_text(row, "url");
-      //alert(url);
-    }
   });
   -->
   </script>
 </head>
-<body onselectstart="return false;" style="height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+<body onselectstart="return false;" style="height: auto;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
 
 <p>Q.table示例</p>
 <hr>
 <br>
 
-<div id="table_container" style="width: 800px; height: 400px; position:relative; background:red;">
+<div id="table_container" style="width: 800px; height: 400px; position:relative;background-color:#99bbe8;">
 
 </div>
 
