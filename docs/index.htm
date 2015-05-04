@@ -10,8 +10,8 @@
 
 import utils.stl;
 import utils.xml;
-import utils.templates-1-0-1;
 
+import ui.drag;
 import ui.wndx-1-0-2;
 import ui.simpletree;
 
@@ -23,14 +23,15 @@ import ui.simpletree;
 <!--
 //! resize event handler
 function lpResizeHandler (evt) {
-    var h = Q.$('header');
-    var m = Q.$('menusbar');
-    var c = Q.$('content');
-    var d = Q.$('debug');
-    if((!c) || (!h)) return;
+  var h = Q.$('header');
+  var m = Q.$('menusbar');
+  var c = Q.$('content');
+  var d = Q.$('debug');
+  if((!c) || (!h)) 
+    return;
 	c.style.display = 'none';
 	c.style.height = (document.body.scrollHeight - h.offsetHeight - m.offsetHeight)+'px';
-    d.innerHTML = 'body('+document.body.scrollHeight+') - header('+h.offsetHeight+') - menubar('+m.offsetHeight+') = ' + c.style.height; 
+  d.innerHTML = 'body('+document.body.scrollHeight+') - header('+h.offsetHeight+') - menubar('+m.offsetHeight+') = ' + c.style.height; 
 	c.style.display = '';
 }
 
@@ -46,7 +47,7 @@ Q.Ready(function() {
         evt.returnValue = false;
     }
 //	var searchText = location.search.toString();
-    xmlBookInstance = new __xmlBookL(document.body); // , 'res/regular.xml');
+    xmlBookInstance = new Q.XMLBook(document.body); // , 'res/regular.xml');
 });
 
 //-->

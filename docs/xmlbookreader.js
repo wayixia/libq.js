@@ -6,7 +6,7 @@
  $ 2015@wayixia.com
 ----------------------------------------------------------------------------------*/
 
-var __xmlBookL = Q.extend({
+Q.XMLBook = Q.extend({
   tplInstance: null,
   hwnd: null,
   // 窗口Table
@@ -77,41 +77,28 @@ var __xmlBookL = Q.extend({
 
     //! 加载资源
     // initial template instance
-    var tfile = Q.__DIR__() + '/res/templates.xml';
-    _this.tplInstance = Q.TemplatesFactory.createTemplate(tfile);
-
-    //$LoadResource(tfile);
-    // 载入全局资源
-    //__GLOBALS['templatesHandle'] = ITemplatesFactory.createTemplate(tfile);
-    if (fileName) {
-      if (!_this.loadfile(fileName)) {
-        alert('加载' + fileName + '失败!');
-      }
-    } else {
-      _this.tree = new __simpleTreeL(_this.wndFrameLeft, '未打开任何文档', true);
-      //var root = _this.tree.getRoot();
-      _this.tree.setItemIcon(0, 'treeIconFolder');
-    }
+    _this.tree = new Q.simpletree({
+      id : _this.wndFrameLeft, 
+      title: '未打开任何文档',
+      open: true
+    });
+    //var root = _this.tree.getRoot();
+    _this.tree.setItemIcon(0, 'treeIconFolder');
   },
 
   open: function() {
 
     var _this = this;
-    if ($IsWindow($GetWindow(_this.dlgFile))) {
-      $GetWindow(this.dlgFile).style.display = '';
-      return;
-    } else {
-      this.dlgFile = new __DIALOG('OpenFile', null);
-      var hwnd = $GetWindow(this.dlgFile);
-      $SetTitleText(hwnd, '打开文件 - XMLBook Reader Powered By ONLYAA.COM')
-      // alert(hwnd);
-      $GetClient(hwnd).innerHTML = '<iframe frameborder="no" src="' + Q.libDir() + '/php/iframe.htm" width="100%" height="100%" scrolling="no"></iframe>'; //_this.tplInstance.load('OpenFile');
-      this.dlgFile.doModal();
-      $FitWindow(hwnd);
-      $CenterWindow(hwnd);
+    this.dlgFile = new Q.Dialog({
+      title: '打开文件 - XMLBook Reader Powered By ONLYAA.COM',
+      content: '<iframe frameborder="no" src="' + Q.__DIR__() + '/php/iframe.htm" width="100%" height="100%" scrolling="no"></iframe>'
+      
+    });
+    this.dlgFile.domodal();
 
+    /*
       // do data exchange
-      _this.dlgFile.url = new __DDXITEM('BOOK_URL', _this.dlgFile.DataExchanger);
+    //  _this.dlgFile.url = new __DDXITEM('BOOK_URL', _this.dlgFile.DataExchanger);
 
       _this.dlgFile.addBottomButton(' 确 定 ', 'sysbtn',
       function() {
@@ -129,6 +116,7 @@ var __xmlBookL = Q.extend({
         $EndDialog(_this.dlgFile);
       });
     }
+    */
   },
 
   loadfile: function(fname) {
