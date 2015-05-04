@@ -5,7 +5,7 @@
 
 
 ## 说明文档
-暂缺
+暂缺， 正在制作中...(有好的工具可以推荐一个，谢谢)
 
 
 ## 示例
@@ -18,24 +18,19 @@
 
 ## 功能
 ```
-├── calendar.js
-├── checkbox.js
-├── contextmenu.js
-├── drag.js
-├── dropdownlist.js
-├── images-box.js
-├── jtable.js
-├── os.js
-├── placeholder.js
-├── progressbar.js
-├── property.js
-├── select.js
-├── simpletable.js
-├── simpletree.js
-├── slider.js
-├── table.js
-├── tabs.js
-└── wndx-1-0-2.js
+├── calendar.js (日历)
+├── checkbox.js (复选框)
+├── contextmenu.js (右键菜单和菜单栏)
+├── drag.js  (拖拽)
+├── dropdownlist.js (模拟下拉框)
+├── images-box.js  (图片展示)
+├── os.js (SimpleOs模拟操作系统)
+├── placeholder.js (输入框默认提示)
+├── simpletree.js (简单树形控件)
+├── slider.js  (滑动条)
+├── table.js (简单表格)
+├── tabs.js (选项卡)
+└── wndx-1-0-2.js (视窗库，支持Window, 模态和非模态Dialog)
 ```
 
 ##使用协议
