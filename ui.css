@@ -201,27 +201,27 @@
 }
 
 .q-simpletree .expand.child {
-  background: url(images/tree/child.png) no-repeat top left; 
+  backgrounds: url(images/tree/child.png) no-repeat top left; 
 }
 
 .q-simpletree .expand.last_child {
-  background: url(images/tree/lastchild.png) no-repeat top left; 
+  backgrounds: url(images/tree/lastchild.png) no-repeat top left; 
 }
 
 .q-simpletree .expand.expand_on {
-  background: url(images/tree/expand_on.png) no-repeat top left; 
+  background: url(images/tree/expand_on.png) no-repeat center center; 
 }
 
 .q-simpletree .expand.expand_off {
-  background: url(images/tree/expand_off.png) no-repeat top left; 
+  background: url(images/tree/expand_off.png) no-repeat center center; 
 }
 
 .q-simpletree .expand.last_expand_on {
-  background: url(images/tree/lastexpand_on.png) no-repeat top left; 
+  background: url(images/tree/expand_on.png) no-repeat center center; 
 }
 
 .q-simpletree .expand.last_expand_off {
-  background: url(images/tree/lastexpand_off.png) no-repeat top left; 
+  background: url(images/tree/expand_off.png) no-repeat center center; 
 }
 
 .q-simpletree .icon {
