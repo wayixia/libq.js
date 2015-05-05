@@ -2,7 +2,7 @@
 
 return array(
   'xmlbook' => dirname(__FILE__).'/../../applications/wayixia/data',
-  'wayixia-images' => "D:"
+  'wayixia-images' => dirname(__FILE__).'/..'
 
 );
 

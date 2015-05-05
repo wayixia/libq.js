@@ -6,6 +6,140 @@
  $ 2015@wayixia.com
 ----------------------------------------------------------------------------------*/
 
+var docs_ui_wndx = null;
+
+function ui(f) {
+  if(docs_ui_wndx) {
+    f(docs_ui_wndx);
+  } else {
+    docs_ui_wndx = new Q.ui({src: 'wndx_template.htm', oncomplete:  function(ok) {
+      if(ok) {
+        // bind css style from template file
+        docs_ui_wndx.bind_css();
+        f(docs_ui_wndx);
+      } else
+        Q.printf('Load template of wndx failed. File is not exists.');
+    }});
+  }
+}
+
+var filemgr_window;
+
+Q.Ready(function() {
+
+filemgr_window = Q.Dialog.extend({
+doc_listctrl: null,
+category_tree: null,
+context_menu : null,
+__init__ : function(json) {
+  var _this = this;
+  json = json || {};
+  this.app = json.app;
+  json.wstyle = "simpleos";
+  json.width = 780;
+  json.height = 550;
+  json.on_create = Q.bind_handler(this, this.on_create);
+  json.on_size = Q.bind_handler(this, this.on_size);
+  //json.on_close = Q.bind_handler(this, this.on_close);
+  Q.Dialog.prototype.__init__.call(this, json);
+  //this.remove_style('q-attr-fixed|q-attr-no-max|q-attr-no-min');
+},
+
+on_create : function() {
+  var _this = this;
+  this.init_ui_table();
+  this.init_ui_tree();
+  this.remove_style('q-attr-fixed q-attr-no-max q-attr-no-min');
+  this.app.service.category_list(function(r, data) {
+    if(r == 0) {
+      function get_childs(cid, items, tid, f) {
+        for(var i=0; i < items.length; i++) {
+          if(items[i].category_pid == cid) {
+            var new_tid = f(tid, items[i]);
+            get_childs(items[i].category_id, items, new_tid, f); 
+          }
+        }
+      }
+      // save category data
+      for(var i=0; i < data.length; i++) {
+        _this.app.categories[data[i].category_id] = data[i];
+      }
+
+      get_childs(0, data, _this.category_tree.getRoot(), (function(thiz) { 
+        return function(tid, obj) {
+          var new_tid = thiz.createNode(tid, "[id:"+obj.category_id+"]["+obj.orders+"]" + obj.category_name, false);
+          thiz.setItemData(new_tid, obj.category_id);
+          return new_tid;
+        } 
+      })(_this.category_tree));
+    }
+  });
+},
+
+on_size: function(w, h) {
+  this.doc_listctrl.autosize(); 
+},
+
+init_ui_tree: function() {
+  var _this = this;
+ // init tree ui
+  this.category_tree = new Q.simpletree({
+    Render : _this.item("frame-left"),
+    Name : "站点根目录",
+    IsOpen : true,
+    onContextMenu : function(nItem, evt) {
+      var cid = this.getItemData(nItem) || 0;
+      if(cid < 1) {
+        _this.show_root_menu(cid, evt);
+      } else {
+        _this.show_normal_menu(cid, evt);
+      }
+    }
+  });
+
+  this.category_tree.itemClick = function(nItem) {
+    var cid = this.getItemData(nItem);
+    _this.update_ui_table(cid);
+  }
+},
+
+init_ui_table: function() {
+  var _this = this;
+  var frame_right = this.item("frame-right");
+  this.doc_listctrl = new Q.table({
+    container: frame_right, 
+    wstyle :  'q-attr-no-title q-attr-border',
+    row_height: 22,
+    auto_height : true,
+    columns : [ 
+      { name: 'id', title: 'ID', width: 30, align: 'center', issortable: true, fixedWidth: true}, 
+      { name: 'title', title: '标题', width: 300, align: 'left', issortable: true, isHTML : true, fixedWidth: false},
+    ],
+    store : new Q.store({datasource: []}),
+    row_ondblclick : function(row) {
+      var did = this.get_text(row, "id");
+      _this.app.service.document_content(did, function(r, data) {
+        _this.app.document_editor(r, data);
+      });
+    },
+  });
+  setTimeout(function() { _this.doc_listctrl.autosize(); }, 300);
+},
+
+update_ui_table : function(cid) {
+  var _this = this;
+  this.app.service.document_list(cid, function(r, data) {
+    _this.doc_listctrl.loadData(data, true);
+    _this.doc_listctrl.render();
+    //g_tbl.sortTable(0, true, compare0);
+  });
+}
+
+});
+});
+
+
+
 Q.XMLBook = Q.extend({
   tplInstance: null,
   hwnd: null,
@@ -86,16 +220,22 @@ Q.XMLBook = Q.extend({
     _this.tree.setItemIcon(0, 'treeIconFolder');
   },
 
-  open: function() {
-
-    var _this = this;
-    this.dlgFile = new Q.Dialog({
-      title: '打开文件 - XMLBook Reader Powered By ONLYAA.COM',
-      content: '<iframe frameborder="no" src="' + Q.__DIR__() + '/php/iframe.htm" width="100%" height="100%" scrolling="no"></iframe>'
+open: function() {
+  var _this = this;
+  ui(function(t) {    
+    _this.dlgFile = new filemgr_window({
+      title: '打开文件 - XMLBook Reader',
+      content: t.template('wnd-x-filemgr'),   //'<iframe frameborder="no" src="' + Q.__DIR__() + '/filemgr/iframe.htm?cfg=wayixia-images" width="100%" height="100%" scrolling="no"></iframe>'
+      on_create : function() {
       
-    });
-    this.dlgFile.domodal();
+      },
 
+      buttons: [
+        { text: '打开', onclick : function() { return true; }}
+      ]
+    });
+    _this.dlgFile.domodal();
+  });
     /*
       // do data exchange
     //  _this.dlgFile.url = new __DDXITEM('BOOK_URL', _this.dlgFile.DataExchanger);

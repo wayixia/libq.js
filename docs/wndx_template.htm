@@ -1,0 +1,119 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>docs app ui powered by Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+.q-tabs.property {
+  background: #CCC;
+}
+
+.q-tabs.property .q-panel {
+  line-height: 30px;
+  font-family: 'Segoe UI', Arial, 'Microsoft Yahei', Simsun, sans-serif;
+	padding: 10px 20px;
+	background: #FFF;
+}
+
+.q-tabs.property input,
+.q-tabs.property select
+{
+  height: 25px;
+}
+
+.q-tabs.property h3 {
+  background: none;
+  height: 29px;
+  margin-top: 2px;
+}
+
+.q-tabs.property h3 a {
+  color: #000;
+  text-decoration: none;
+  margin-left: 10px;
+  padding: 0 10px;
+}
+
+.q-tabs.propertyn h3 a:hover {
+  color: #FFF;
+}
+
+.q-tabs.property h3 a.q-selected {
+  background: #FFF;
+	z-index: 1px;
+  font-weight: bold;
+}
+
+.wndx-container {
+  position: relative;
+  width: 500px; 
+  height: 300px;
+}
+
+.q-frame {
+  background: #FFF;
+  overflow: auto;
+  position:absolute;
+  top: 0px;
+  bottom: 0;
+}
+
+.q-frame.q-frame-left {
+  position:absolute;
+  left: 0;
+  width: 160px;
+}
+
+.q-frame.q-frame-right {
+  position:absolute;
+  left: 160px;
+  right: 0;
+  background-color: #CCC;
+}
+
+
+</style>
+</head>
+<body >
+
+<div class="wndx-container">
+<div id="wnd-x-icons" style="position:absolute; left:0; top:0;right:0;bottom:0;">
+  <div class="q-list-ctrl" q:id="abc">
+    <div class="q-list-container">
+      <div id="dummy-div" style="height: 0px;"></div>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+
+<div class="wndx-container">
+<div style="width: 300px; height: 300px;background:#CCC;">
+  <div class="q-list-ctrl" q:id="abc">
+    <div class="q-list-container">
+    <!-- template -->
+      <div class="q-box folder" id="wnd-x-icons-item">
+        <div class="q-box-title" q:id="title">title</div>
+    <!--div class="select-mask"></div-->
+      </div>
+      <div id="dummy-div" style="height: 0px;"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<br>
+
+<div class="wndx-container">
+<div id="wnd-x-filemgr" style="position:absolute; left:0; top:0; right:0; bottom:0;" >
+  <!--div class="menu-bar" q:id="menu-bar"></div-->
+  <div class="q-frame q-frame-left" q:id="frame-left">
+  </div>
+  <div class="q-frame q-frame-right" q:id="frame-right"></div>
+</div>
+</div>
+<br>
+
+</body>
+</html>
+
