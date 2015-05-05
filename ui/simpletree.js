@@ -123,7 +123,7 @@ var __InitDragItem = Q.extend(
 });
 
 
-var __simpleTreeL = Q.extend(
+Q.simpletree = Q.extend(
 {
 //! hwnd 树的主窗口容器， hwndTree： 树窗口
 //! 结构 
@@ -163,7 +163,7 @@ __init__ : function(json) {
   _this.hwndMoveLine = document.createElement('fieldset');
   document.body.appendChild(_this.hwndMoveLine);
 
-  var nRootItem = this.createNode(-1, json.Name, !!json.IsOpen);
+  var nRootItem = this.createNode(-1, json.name, !!json.open);
   var node = this.getItemNode(nRootItem);
   Q.addClass(node.hwnd, "q-root");  
   //! 隐藏根节点的expand
@@ -174,8 +174,10 @@ __init__ : function(json) {
   _this.hwndMoveLine.className = 'moveline';
   _this.hwndMoveLine.style.display = 'none';
     //! 渲染树
-  if(json.Render) { json.Render.appendChild(_this.hwnd); }
-  else { alert('invalid render'); }
+  var render = Q.$(json.id);
+  if(render)
+    render.appendChild(_this.hwnd);
+ 
 },
 
 //! 渲染整个树
