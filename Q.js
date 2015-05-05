@@ -28,9 +28,15 @@
   var _delayDOMReady = [];
 
   // string prototype
-  String.prototype.trim      = function() { return this.replace(/(^\s*)|(\s*$)/g, ""); }
-　String.prototype.trim_left = function() { return this.replace(/(^\s*)/g,""); }
-  String.prototype.trim_right= function() { return this.replace(/(\s*$)/g,""); }
+  String.prototype.trim      = function() { 
+    return this.replace(/(^\s*)|(\s*$)/g, ""); 
+  }
+　String.prototype.trim_left = function() { 
+    return this.replace(/(^\s*)/g,""); 
+  }
+  String.prototype.trim_right= function() { 
+    return this.replace(/(\s*$)/g,""); 
+  }
 
   // fix Object.create not defined error 
   if (!Object.create) {
@@ -280,8 +286,18 @@
 
   // current Q.js所在路径
   Q.__DIR__ = function() {
-    var js=document.scripts;
-    js=js[js.length-1].src.substring(0,js[js.length-1].src.lastIndexOf("/")+1);
+    var js = "";
+    var scripts = document.getElementsByTagName("script");  
+    // 判断指定的文件是否已经包含，如果已包含则触发onsuccess事件并返回  
+    for (i = 0; i < scripts.length; i++) {
+      if(scripts[i].src) {
+        var src = scripts[i].src;
+        if(/\/Q\.js$/.test(src)) {
+          js = src.substring(0, src.lastIndexOf('/'));
+          break;
+        }
+      }
+    }
     return js;
   };
 
@@ -320,10 +336,11 @@
     var libscript = null;
     for (i = 0; i < scripts.length; i++) {
       if(scripts[i].src) {
-        var pos = -1;
-        if((pos=scripts[i].src.indexOf('/Q.js')) >= 0) {
-           _libdir = scripts[i].src.substring(0, pos);
-           libscript = scripts[i];
+        var src = scripts[i].src;
+        if(/\/Q\.js$/.test(src)) {
+          _libdir = src.substring(0, src.lastIndexOf('/'));
+          libscript = scripts[i];
+          break;
         }
       }
     }
@@ -362,18 +379,35 @@
   }
 
   // get Browser
-  Q.agent   = function() { return navigator.userAgent.toLowerCase(); }
-  Q.isW3C   = function() { return document.getElementById ? true:false; }
-  Q.isIE    = function() { var a = Q.agent(); return ((a.indexOf("msie") != -1) && (a.indexOf("opera") == -1) && (a.indexOf("omniweb") == -1)); }
-  Q.isOpera = function() { return Q.agent().indexOf("opera") != -1; }
-  Q.isNS6   = function() { return Q.isW3C() && (navigator.appName=="Netscape"); }
+  Q.agent   = function() { 
+    return navigator.userAgent.toLowerCase(); 
+  }
+  Q.isW3C   = function() { 
+    return document.getElementById ? true:false; 
+  }
+  Q.isIE    = function() { 
+    var a = Q.agent(); 
+    return ((a.indexOf("msie") != -1) && (a.indexOf("opera") == -1) && (a.indexOf("omniweb") == -1)); 
+  }
+  Q.isOpera = function() { 
+    return Q.agent().indexOf("opera") != -1; 
+  }
+  Q.isNS6   = function() { 
+    return Q.isW3C() && (navigator.appName=="Netscape"); 
+  }
 
   // get Browser
   //为Firefox下的DOM对象增加innerText属性
   if(Q.isNS6()) { //firefox innerText define
-    HTMLElement.prototype.__defineGetter__("innerText",    function() { return this.textContent; });
-    HTMLElement.prototype.__defineSetter__("innerText",    function(sText) { this.textContent=sText; });
-    HTMLElement.prototype.__defineGetter__("currentStyle", function () { return this.ownerDocument.defaultView.getComputedStyle(this, null); });
+    HTMLElement.prototype.__defineGetter__("innerText",    function() { 
+      return this.textContent; 
+    });
+    HTMLElement.prototype.__defineSetter__("innerText",    function(sText) { 
+      this.textContent=sText; 
+    });
+    HTMLElement.prototype.__defineGetter__("currentStyle", function () { 
+      return this.ownerDocument.defaultView.getComputedStyle(this, null); 
+    });
     // 兼容ff，ie的鼠标按键值
     Q.LBUTTON  = 0;
     Q.MBUTTON  = 1;

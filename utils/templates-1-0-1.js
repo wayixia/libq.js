@@ -38,7 +38,7 @@ Q.TemplatesFactory = {
 		var xmlDoc = XMLDocument(tFileName);
 		var ret = false;
 		if(!xmlDoc) {
-			alert('加载模板文件' + fname + '失败！请查看文件是否存在！');
+			alert('加载模板文件' + tFileName + '失败！请查看文件是否存在！');
 			return false;	
 		}
 		return new __templatesL(xmlDoc);
