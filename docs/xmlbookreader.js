@@ -23,18 +23,13 @@ function ui(f) {
   }
 }
 
-var filemgr_window;
-
-Q.Ready(function() {
-
-filemgr_window = Q.Dialog.extend({
+var filemgr_window = Q.Dialog.extend({
 doc_listctrl: null,
 category_tree: null,
 context_menu : null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
-  this.app = json.app;
   json.wstyle = "simpleos";
   json.width = 780;
   json.height = 550;
@@ -50,6 +45,7 @@ on_create : function() {
   this.init_ui_table();
   this.init_ui_tree();
   this.remove_style('q-attr-fixed q-attr-no-max q-attr-no-min');
+  /*
   this.app.service.category_list(function(r, data) {
     if(r == 0) {
       function get_childs(cid, items, tid, f) {
@@ -73,7 +69,7 @@ on_create : function() {
         } 
       })(_this.category_tree));
     }
-  });
+  }); */
 },
 
 on_size: function(w, h) {
@@ -84,9 +80,9 @@ init_ui_tree: function() {
   var _this = this;
  // init tree ui
   this.category_tree = new Q.simpletree({
-    Render : _this.item("frame-left"),
-    Name : "站点根目录",
-    IsOpen : true,
+    id : _this.item("frame-left"),
+    name : "站点根目录",
+    open : true,
     onContextMenu : function(nItem, evt) {
       var cid = this.getItemData(nItem) || 0;
       if(cid < 1) {
@@ -135,7 +131,6 @@ update_ui_table : function(cid) {
   });
 }
 
-});
 });
 
 
@@ -364,39 +359,41 @@ function MENU_Edit(_this) {
 }
 
 function MENU_Help(_this) {
-    _this.dlgHelp = new Q.Dialog({title: '帮助文档 - XMLBook Reader Powered By ONLYAA.COM'});
-    //$GetClient(hwnd).innerHTML = _this.tplInstance.load('HelpDoc');
+  ui(function(t) {    
+    _this.dlgHelp = new Q.Dialog({
+      title: '帮助文档 - XMLBook Reader | Q.js',
+      content: t.template('wnd-x-browser'),
+      on_create: function() {
+        var d = this;
+        // load tree
+        var tfile = 'res/help.xml';
+        var xmlDoc = XMLDocument(tfile);
+        if (!xmlDoc) {
+          msgbox('帮助文档: [' + tfile + '\']\r\n不存在或者已经被删除！');
+          $EndDialog(_this.dlgHelp);
+          return;
+        }
+        var booknameNode = selectSingleNode(xmlDoc, '/XMLBOOK/BOOKNAME');
+        if (booknameNode) name = booknameNode.firstChild.nodeValue;
+        else name = 'About Help Contents';
+
+        var tree = new Q.simpletree({
+          id: d.item('frame-left'), 
+          name: name,
+          open: true});
+        tree.itemClick = function(nItem) {
+          var page = this.getItemData(nItem);
+          if (page) {
+            pageview(page, d.item("frame-right"));
+          }
+        }
+
+        var  XQL = '/XMLBOOK/PAGES';
+        var pages = selectSingleNode(xmlDoc, XQL); //xmlDoc.selectSingleNode(XQL);
+        if (pages) 
+          loadpages(0, pages, tree);
+      } // on_create
+    }); // Q.Dialog
     _this.dlgHelp.domodal();
-
-    /*
-    // load tree
-    var tfile = 'res/help.xml';
-    var xmlDoc = XMLDocument(tfile);
-    if (!xmlDoc) {
-      msgbox('帮助文档: [' + tfile + '\']\r\n不存在或者已经被删除！');
-      $EndDialog(_this.dlgHelp);
-      return;
-    }
-
-    var booknameNode = xmlDoc.selectSingleNode('/XMLBOOK/BOOKNAME');
-    //alert(__PANELWORK.__display(booknameNode));
-    //alert(booknameNode.firstChild.nodeValue);
-    if (booknameNode) name = booknameNode.firstChild.nodeValue;
-    else name = 'About Help Contents';
-
-    var tree = new __simpleTreeL(document.getElementById('DirX'), name, true);
-
-    tree.itemClick = function(nItem) {
-      var page = this.getItemData(nItem);
-      if (page) {
-        pageview(page, pageViewX);
-      }
-    }
-
-    var XQL = '/XMLBOOK/PAGES';
-    var pages = xmlDoc.selectSingleNode(XQL); //xmlDoc.selectSingleNode(XQL);
-    // initial tree ctrl
-    if (pages) loadpages(0, pages, tree);
-  }
-  */
+  }); // ui
 }
