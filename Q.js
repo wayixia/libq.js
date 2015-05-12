@@ -1,11 +1,10 @@
 
 /**
- * Simple wrapper of common function and async load js module
+ * 常用dom操作和异步加载javascript模块的封装, 支持继承
  * @namespace Q
  * @author Q
  */
 
-// 初始化 Javascript Loader
 (function() {
   window.undefined = window.undefined;
   // check the name is used
@@ -14,23 +13,23 @@
     return;
   }
     
-  /** QLib base dir */
-  var _libdir = null;
-  // dom elements cache
-  var _domcache = {};    
-  // on_page_load Message Queue
-  var _on_page_load = [];
-  // QueryString
-  var _querystring = {};
   /** 调试输出 */
   var _debug = null;
-
-  // LoadCompleted
-  var _LoadCompleted = false;
-  var _delayDOMReady = [];
+  /** QLib base dir */
+  var _libdir = null;
+  /** dom elements cache */
+  var _domcache = {};    
+  /** QueryString */
+  var _querystring = {};
+  /** _load_completed */
+  var _load_completed = false;
+  /** _delay_dom_ready */
+  var _delay_dom_ready = [];
+  /**  on_page_load Message Queue */
+  var _on_page_load = [];
 
   // string prototype
-  String.prototype.trim      = function() { 
+  String.prototype.trim = function() { 
     return this.replace(/(^\s*)|(\s*$)/g, ""); 
   }
 　String.prototype.trim_left = function() { 
@@ -96,11 +95,11 @@
 
   /** 开启关闭调试功能
    *
-   * @function Q.setdebug
+   * @function Q.setDebug
    * @param output {dom} - 调试信息输出容器, 如果为null，则关闭调试
    * @return 无
    */
-  Q.setdebug = function(output) { _debug = output; }
+  Q.setDebug = function(output) { _debug = output; }
 
   /** 打印调试日志信息
    * 
@@ -122,15 +121,14 @@
    *
    * @function Q.$
    * @param id {string|dom} - 网页元素id或者dom对象
-   * @param override {bool} - 是否覆盖缓存，一般情况这个参数可以忽略
    * @return element {dom} - 网页元素或者null
    */
-  Q.$ = function(id, override) {
+  Q.$ = function(id) {
     if(typeof(id) != 'string') { return id; }
     if(id && id.nodeType === Q.ELEMENT_NODE)
       return id;
     var element = _domcache[id];
-    if(!element || bOverride || (element.parentElement === null)) {
+    if(!element || (element.parentElement === null)) {
       element = document.getElementById(id);
       if(element) {
         _domcache[id] = element;
@@ -153,8 +151,8 @@
   };
 
   Q.registerDelayDOMReady = function(f) {
-    if(!_LoadCompleted) {
-      _delayDOMReady.push(f);
+    if(!_load_completed) {
+      _delay_dom_ready.push(f);
     }
   };
 
@@ -162,7 +160,7 @@
    *
    * @function Q.addEvent
    * @param element {dom} - 绑定事件的网页元素 id或者dom对象
-   * @param evtName {string} - 绑定事件名称，不需要'on'前缀
+   * @param evtName {string} - 事件名称，不需要'on'前缀
    * @param fnHandler {function} - 事件处理回调函数
    * @param useCapture {bool} -  是否使用捕捉, 一般使用false
    * @return 无
@@ -178,8 +176,16 @@
     }
   };
 
-  Q.removeEvent = function(obj, evtName, fnHandler) {
-    obj = Q.$(obj); 
+  /** 删除网页元素的绑定事件
+   *
+   * @function Q.removeEvent
+   * @param element {dom|string} - 网页元素
+   * @param evtName {string} - 事件名称，不需要'on'前缀
+   * @param fnHandler {function} - 事件处理回调函数
+   * @return 无
+   */
+  Q.removeEvent = function(element, evtName, fnHandler) {
+    obj = Q.$(element); 
     if (obj.removeEventListener) {
       obj.removeEventListener(evtName, fnHandler, false);
     } else if (obj.detachEvent) {
@@ -250,6 +256,14 @@
     return false;
   }
 
+  /** 网页元素绑定click和dblclick事件， 解决click和dblclick同时触发的冲突
+   *
+   * @function Q.click
+   * @param element {dom} - 网页元素
+   * @param click {function} - 单击事件处理函数
+   * @param dblclick {function} - 双击事件处理函数
+   * @return 无
+   */
   Q.click = function(element, click, dblclick) {
     element = Q.$(element);
     element.onclick = (function(r) { return function(evt) {
@@ -279,7 +293,9 @@
    * @return {string} - 多语言值
    */
   Q.locale_text = function(message_id, default_value) {
-  
+    return default_value;
+  }
+
   /** i18n 设置多语言适配接口 
    *
    * @function Q.set_locale_text
@@ -292,7 +308,13 @@
     }
   }
 
-  // 获取element的绝对位置
+  /** 获取element的绝对位置 
+   * 
+   * @function Q.absPosition
+   * @param element {dom} - 网页元素对象
+   * @return {object} width 宽度, height 高度, left 绝对位置的水平定点位置， top 绝对位置的垂直定点位置
+   * 
+   */
   Q.absPosition = function(element) {
     var w = element.offsetWidth;
     var h = element.offsetHeight;
@@ -305,6 +327,14 @@
     return { width : w, height : h,  left : l,  top : t  };
   };
 
+  
+  /** 获取element的绝对位置, 包含边框宽度
+   * 
+   * @function Q.absPositionEx
+   * @param element {dom} - 网页元素对象
+   * @return {object} width 宽度, height 高度, left 绝对位置的水平定点位置， top 绝对位置的垂直定点位置
+   * 
+   */
   Q.absPositionEx = function(element) {
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
@@ -314,7 +344,13 @@
 
     return { width : w, height : h,  left : l,  top : t  };
   }
-  // get scroll info
+
+  /** 获取滚动条信息 
+   *
+   * @function Q.scrollInfo
+   * @return {object} - t 垂直滚动条top位置，l 水平滚动条left位置， w 网页宽度包含隐藏部分， h 网页高度包含隐藏部分
+   * 
+   */
   Q.scrollInfo = function() {
     var t, l, w, h;
     if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft) ) { 
@@ -331,6 +367,12 @@
     return { t: t, l: l, w: w, h: h };
   };
 
+  /** Object对象拷贝
+   * 
+   * @function Q.copy
+   * @param src_object {object} - 源对象
+   * @return {object} - 目标对象
+   */
   Q.copy = function(src_object) {
     var target_object = {}; 
     for(var name in src_object) {
@@ -339,24 +381,26 @@
     return target_object;
   };
 
-  // get querystring
+  /** 获取url查询字段
+   * 
+   * @function Q.GET
+   * @return {string} - 字段值
+   */
   Q.GET = function(key) { return _querystring[key]; };
   
-  // OnLoad
-  Q.DOMReady = function(evt) {
-    if(!_LoadCompleted) {
-      Q.registerDelayDOMReady(Q.delayDOMReady);
-    } else {
-      Q.delayDOMReady();
-    }        
-  };
-  
-  // 当所有脚本都加载后开始执行Ready回调
+  /** 当所有脚本都加载后开始执行Ready回调 */
   Q.delayDOMReady = function() {
     while(_on_page_load.length > 0) { _on_page_load.shift()(); }
   };
 
-  // push event when document loaded
+  /**
+   * 注册函数，当文档加载完成后依次执行
+   * 
+   * @function Q.Ready
+   * @param f {function} - 函数对象
+   * @param push_front {bool} - 追加或者置顶 
+   * @return 无
+   */
   Q.Ready = function(f, push_front) {
     var back = !push_front;
     if(back)
@@ -365,13 +409,24 @@
       _on_page_load.unshift(f); 
   };
 
-  // current Q.js所在路径
+  /** current Q.js所在路径 
+   *
+   * @function Q.__DIR__
+   * @return {string} - Q.js的所在路径
+  */
   Q.__DIR__ = function() {
     var js=document.scripts;
     js=js[js.length-1].src.substring(0,js[js.length-1].src.lastIndexOf("/")+1);
     return js;
   };
 
+  /** 加载js模块
+   *
+   * @function Q.load_module
+   * @param src {string} - javascript模块地址
+   * @param oncomplete(bool ok) {function} - 加载完成调用， ok 为true 加载成功，否则失败
+   * @return 无
+   */
   Q.load_module = function(src, oncomplete) {
     var header = document.getElementsByTagName("head")[0];
     var s = document.createElement("script");  
@@ -400,7 +455,8 @@
     // 获取head结点，并将<script>插入到其中  
     header.appendChild(s);
   }
-  // Javascript Loader
+
+  /** Javascript Loader */
   function jsloader() {
     var scripts = document.getElementsByTagName("script");  
     // 判断指定的文件是否已经包含，如果已包含则触发onsuccess事件并返回  
@@ -424,12 +480,12 @@
     async_load_js(document.getElementsByTagName("head")[0], arr);        
   };
 
-  // 顺序加载js文件
+  /** 异步顺序加载js文件 */
   function async_load_js(header, ar) {
     ar = ar||[];
     if(ar.length<=0) { 
-      _LoadCompleted = true;
-      while(_delayDOMReady.length > 0) { _delayDOMReady.shift()(); }
+      _load_completed = true;
+      while(_delay_dom_ready.length > 0) { _delay_dom_ready.shift()(); }
       return;
     }
     
@@ -448,20 +504,49 @@
     }
   }
 
-  // get Browser
+  /** 获取浏览器客户端版本信息 
+   *
+   * @function Q.agent
+   * @return {string} - 浏览器版本信息
+   */
   Q.agent   = function() { 
     return navigator.userAgent.toLowerCase(); 
   }
+
+  /** 客户端是不是标准的W3C客户端 
+   *
+   * @function Q.isW3C
+   * @return bool
+   */
   Q.isW3C   = function() { 
     return document.getElementById ? true:false; 
   }
+
+  /** 客户端是否是Internet Explorer 
+   *
+   * @function Q.isIE
+   * @return bool 
+   */
   Q.isIE    = function() { 
     var a = Q.agent(); 
     return ((a.indexOf("msie") != -1) && (a.indexOf("opera") == -1) && (a.indexOf("omniweb") == -1)); 
   }
+
+
+  /** 客户端是否是Opera 
+   *
+   * @function Q.isOpera
+   * @return bool 
+   */
   Q.isOpera = function() { 
     return Q.agent().indexOf("opera") != -1; 
   }
+  
+  /** 客户端是否是Netscape 
+   *
+   * @function Q.isNS6
+   * @return bool 
+   */
   Q.isNS6   = function() { 
     return Q.isW3C() && (navigator.appName=="Netscape"); 
   }
@@ -491,5 +576,11 @@
   }
 
   jsloader();
-  Q.addEvent(window, 'load', Q.DOMReady);  
+  Q.addEvent(window, 'load', function(evt) {
+    if(!_load_completed) {
+      Q.registerDelayDOMReady(Q.delayDOMReady);
+    } else {
+      Q.delayDOMReady();
+    }
+  });
 })();
