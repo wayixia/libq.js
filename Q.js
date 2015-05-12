@@ -1,9 +1,9 @@
-/*-------------------------------------------------------
- $ name:  loader
- $ function: Q frame work do some initialize
- $ date: 2011-4-6
- $ author: lovelylife
----------------------------------------------------------*/
+
+/**
+ * Simple wrapper of common function and async load js module
+ * @namespace Q
+ * @author Q
+ */
 
 // 初始化 Javascript Loader
 (function() {
@@ -14,7 +14,7 @@
     return;
   }
     
-  // QLib base dir
+  /** QLib base dir */
   var _libdir = null;
   // dom elements cache
   var _domcache = {};    
@@ -22,6 +22,8 @@
   var _on_page_load = [];
   // QueryString
   var _querystring = {};
+  /** 调试输出 */
+  var _debug = null;
 
   // LoadCompleted
   var _LoadCompleted = false;
@@ -70,7 +72,12 @@
 
     return this_class;
   }
-
+  
+  /** 类继承方法 
+   * @function Q.extend
+   * @param props {object} - 派生类的属性
+   * @return {CLASS} 返回派生类
+   */
   CLASS.extend = function(props) {
     return this.prototype.extend.call(this, props);
   }
@@ -87,28 +94,36 @@
   Q.RBUTTON  = 2;
   Q.MBUTTON  = 4;
 
-  // debug
-  Q._DEBUG    = {
-    enable: false,    // 开启debug功能
-    stdoutput: null    // 输出
-  };
+  /** 开启关闭调试功能
+   *
+   * @function Q.setdebug
+   * @param output {dom} - 调试信息输出容器, 如果为null，则关闭调试
+   * @return 无
+   */
+  Q.setdebug = function(output) { _debug = output; }
 
-  // enable/disable debug
-  Q.setdebug = function(output) { Q._DEBUG.stdoutput = output; }
-
-  // print debug info to 'stdoutput' element
+  /** 打印调试日志信息
+   * 
+   * @function Q.printf
+   * @param message {string} - 日志消息
+   * @return 无
+   */ 
   Q.printf = function(message) {
-    if(Q._DEBUG.stdoutput) {
-      Q._DEBUG.stdoutput.innerHTML += '<br/>'+message;
-      Q._DEBUG.stdoutput.scrollTop = Q._DEBUG.stdoutput.scrollHeight;
+    if(_debug && _debug.nodeType === Q.ELEMENT_NODE) {
+      _debug.innerHTML += '<br/>'+message;
+      _debug.scrollTop = _debug.scrollHeight;
     } else {
-      //if(console && console.log)
-      //  console.log(message);
     }
   };
 
-  // get Element from dom cache if exists
-  Q.$ = function(id, bOverride) {
+  /** 获取网页元素DOM对象
+   *
+   * @function Q.$
+   * @param id {string|dom} - 网页元素id或者dom对象
+   * @param override {bool} - 是否覆盖缓存，一般情况这个参数可以忽略
+   * @return element {dom} - 网页元素或者null
+   */
+  Q.$ = function(id, override) {
     if(typeof(id) != 'string') { return id; }
     var element = null;
     if(!_domcache[id] || bOverride) {
@@ -122,9 +137,15 @@
     return element;
   };
 
-  Q.bind_handler = function(object, func) {
+  /** 调用类实例和类函数绑定，返回新的函数对象
+   *
+   * @function Q.bind_handler
+   * @param object {object} - 类实例 
+   * @param fn {function} - 类方法
+   */
+  Q.bind_handler = function(object, fn) {
     return function() {
-      return func.apply(object, arguments);
+      return fn.apply(object, arguments);
     };
   };
 
@@ -134,9 +155,17 @@
     }
   };
 
-  // 兼容ff的attachEvent接口
-  Q.addEvent = function(obj, evtName, fnHandler, useCapture) {
-    obj = Q.$(obj);
+  /** 兼容ff的attachEvent接口
+   *
+   * @function Q.addEvent
+   * @param element {dom} - 绑定事件的网页元素 id或者dom对象
+   * @param evtName {string} - 绑定事件名称，不需要'on'前缀
+   * @param fnHandler {function} - 事件处理回调函数
+   * @param useCapture {bool} -  是否使用捕捉, 一般使用false
+   * @return 无
+   */
+  Q.addEvent = function(element, evtName, fnHandler, useCapture) {
+    var obj = Q.$(element);
     if(obj.addEventListener) {
       obj.addEventListener(evtName, fnHandler, !!useCapture);
     } else if(obj.attachEvent) {
@@ -157,6 +186,13 @@
     }
   };
 
+  /** 动态添加网页元素的CSS样式
+   *
+   * @function Q.addClass
+   * @param element {dom} - 网页元素
+   * @param new_class {string} - 新的CSS样式，使用空格分割多个样式
+   * @return element {dom} - 返回当前网页元素
+   */
   Q.addClass = function(element, new_class) {
     var arr = (element.className+" "+new_class).trim().split(/\s+/);
     var class_name = '';
@@ -169,6 +205,13 @@
     return element;
   }
 
+  /** 动态删除网页元素的CSS样式
+   *
+   * @function Q.removeClass
+   * @param element {dom} - 网页元素
+   * @param remove_class {string} - 删除的CSS样式，使用空格分割多个样式
+   * @return element {dom} - 返回当前网页元素
+   */
   Q.removeClass = function(element, remove_class) {
     var arr = (element.className+'').split(/\s+/);
     var arr2= (remove_class+'').split(/\s+/);
@@ -186,6 +229,13 @@
     return element;
   }
 
+  /** 网页元素是否包含CSS样式
+   *
+   * @function Q.hasClass
+   * @param element {dom} - 网页元素
+   * @param class_name {string} - CSS样式名称，单个名称
+   * @return exists {bool} - true 存在， false 不存在
+   */
   Q.hasClass = function(element, class_name) {
     var class_names = (element.className+" ").split(/\s+/);
     for(var i=0;i < class_names.length; i++) {
@@ -197,11 +247,23 @@
     return false;
   }
 
-  // default locale_text
-  Q.locale_text = function(lang, default_value) {
+  /** i18n 多语言实现默认实现，直接返回默认值
+   *
+   * @function Q.locale_text
+   * @param message_id {string} - 多语言消息标识
+   * @param default_value {string} - 默认值 
+   * @return {string} - 多语言值
+   */
+  Q.locale_text = function(message_id, default_value) {
     return default_value;
   }
-  
+ 
+  /** i18n 设置多语言适配接口 
+   *
+   * @function Q.set_locale_text
+   * @param fn {function} - 适配函数
+   * @return 无
+   */
   Q.set_locale_text = function(fn) {
     if(typeof fn == 'function') {
       Q.locale_text = fn;

@@ -9,7 +9,7 @@ Q.images_box = Q.extend({
 hwnd: null,
 __init__ : function(json) {
   json = json || {};
-  var container = Q.$(json.container);
+  var container = Q.$(json.id);
   this.hwnd = document.createElement('div');
   container.appendChild(this.hwnd);
   this.hwnd.className = "q-images-box";
