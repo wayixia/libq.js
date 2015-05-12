@@ -39,19 +39,19 @@
   String.prototype.trim_right= function() { 
     return this.replace(/(\s*$)/g,""); 
   }
-
-  // fix Object.create not defined error 
+ 
+  // fix Object.create not defined error
   if (!Object.create) {
     Object.create = function(proto, props) {
       if (typeof props !== "undefined") {
-        throw "The multiple-argument version of Object.create is not provided by this browser and cannot be shimmed.";
+        throw "The multiple-argument version of Object.create is not provided";
     }
     function ctor() { }
       ctor.prototype = proto;
       return new ctor();
     };
   }
- 
+
   // 基于prototype的继承实现
   // 警告：调用父类的（被重载的）同名函数调用需要借助parent_class.prototype.method.call(this, arguments);
   var CLASS = function() {};
@@ -113,6 +113,8 @@
       _debug.innerHTML += '<br/>'+message;
       _debug.scrollTop = _debug.scrollHeight;
     } else {
+      if(console)
+        console.log(message);
     }
   };
 
@@ -125,15 +127,16 @@
    */
   Q.$ = function(id, override) {
     if(typeof(id) != 'string') { return id; }
-    var element = null;
-    if(!_domcache[id] || bOverride) {
+    if(id && id.nodeType === Q.ELEMENT_NODE)
+      return id;
+    var element = _domcache[id];
+    if(!element || bOverride || (element.parentElement === null)) {
       element = document.getElementById(id);
       if(element) {
         _domcache[id] = element;
       }
-    } else {
-      element = _domcache[id];
     }
+    
     return element;
   };
 
@@ -247,6 +250,27 @@
     return false;
   }
 
+  Q.click = function(element, click, dblclick) {
+    element = Q.$(element);
+    element.onclick = (function(r) { return function(evt) {
+    if(r.__clickonce__) {
+      r.__clickonce__ = false;
+      clearTimeout(r.t);
+      if(dblclick)
+        dblclick(r);
+    } else {
+      r.__clickonce__ = true;
+      r.t = setTimeout((function(b) { return function() { 
+      b.__clickonce__ = false; 
+      if(click) 
+        click(r); 
+    }})(r), 200);
+    }
+    return false;
+  }})(element);
+ 
+  }
+ 
   /** i18n 多语言实现默认实现，直接返回默认值
    *
    * @function Q.locale_text
@@ -255,9 +279,7 @@
    * @return {string} - 多语言值
    */
   Q.locale_text = function(message_id, default_value) {
-    return default_value;
-  }
- 
+  
   /** i18n 设置多语言适配接口 
    *
    * @function Q.set_locale_text
@@ -272,29 +294,26 @@
 
   // 获取element的绝对位置
   Q.absPosition = function(element) {
-    var left = 0;
-    var top = 0;
-    var width = element.offsetWidth;
-    var height = element.offsetHeight;
-    do{
-      top += element.offsetTop || 0;
-      left += element.offsetLeft || 0;
-      element = element.offsetParent;
-    } while (element);
-    
-    return { width : width, height : height,  left : left,  top : top  };
-  }
+    var w = element.offsetWidth;
+    var h = element.offsetHeight;
+    var t = element.offsetTop;
+    var l = element.offsetLeft;
+    while( element = element.offsetParent) {
+      t+=element.offsetTop;
+      l+=element.offsetLeft;
+    }
+    return { width : w, height : h,  left : l,  top : t  };
+  };
 
   Q.absPositionEx = function(element) {
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
 　　var t =rect.top+document.documentElement.scrollTop;
-    var w =rect.right-rect.left;
-    var h =rect.bottom-rect.top;
+    var w =rect.width;
+    var h =rect.height;
 
     return { width : w, height : h,  left : l,  top : t  };
   }
-
   // get scroll info
   Q.scrollInfo = function() {
     var t, l, w, h;
@@ -348,18 +367,8 @@
 
   // current Q.js所在路径
   Q.__DIR__ = function() {
-    var js = "";
-    var scripts = document.getElementsByTagName("script");  
-    // 判断指定的文件是否已经包含，如果已包含则触发onsuccess事件并返回  
-    for (i = 0; i < scripts.length; i++) {
-      if(scripts[i].src) {
-        var src = scripts[i].src;
-        if(/\/Q\.js$/.test(src)) {
-          js = src.substring(0, src.lastIndexOf('/'));
-          break;
-        }
-      }
-    }
+    var js=document.scripts;
+    js=js[js.length-1].src.substring(0,js[js.length-1].src.lastIndexOf("/")+1);
     return js;
   };
 
@@ -398,11 +407,10 @@
     var libscript = null;
     for (i = 0; i < scripts.length; i++) {
       if(scripts[i].src) {
-        var src = scripts[i].src;
-        if(/\/Q\.js$/.test(src)) {
-          _libdir = src.substring(0, src.lastIndexOf('/'));
-          libscript = scripts[i];
-          break;
+        var pos = -1;
+        if((pos=scripts[i].src.indexOf('/Q.js')) >= 0) {
+           _libdir = scripts[i].src.substring(0, pos);
+           libscript = scripts[i];
         }
       }
     }
@@ -461,10 +469,10 @@
   // get Browser
   //为Firefox下的DOM对象增加innerText属性
   if(Q.isNS6()) { //firefox innerText define
-    HTMLElement.prototype.__defineGetter__("innerText",    function() { 
+    HTMLElement.prototype.__defineGetter__("innerText", function() { 
       return this.textContent; 
     });
-    HTMLElement.prototype.__defineSetter__("innerText",    function(sText) { 
+    HTMLElement.prototype.__defineSetter__("innerText", function(sText) { 
       this.textContent=sText; 
     });
     HTMLElement.prototype.__defineGetter__("currentStyle", function () { 

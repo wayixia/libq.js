@@ -175,9 +175,7 @@ __init__ : function(json) {
   _this.hwndMoveLine.style.display = 'none';
     //! 渲染树
   var render = Q.$(json.id);
-  if(render)
-    render.appendChild(_this.hwnd);
- 
+  render.appendChild(_this.hwnd);
 },
 
 //! 渲染整个树

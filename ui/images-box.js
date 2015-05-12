@@ -14,9 +14,10 @@ __init__ : function(json) {
   container.appendChild(this.hwnd);
   this.hwnd.className = "q-images-box";
 
-  Q.$(json.container);
   this.on_item_changed = json.on_item_changed || function(item, checked) {};
   this.is_item_enabled = json.is_item_enabled || function(item) { return true; };
+  if(typeof json.on_item_dblclick == 'function') 
+    this.on_item_dblclick= json.on_item_dblclick;
 },
 
 create_element: function(config, init) {
@@ -29,7 +30,7 @@ create_element: function(config, init) {
   this.hwnd.appendChild(box);
   // init box
   box.innerHTML = '<span class="q-box-info"> \
-    <span class="wh">'+config.width+'x'+config.height+'<span> </span> \
+    <span class="wh">'+config.width+'x'+config.height+' </span> \
     </span>';
   // image container
   var img_container = document.createElement('div');
@@ -74,7 +75,14 @@ create_element: function(config, init) {
   box.onclick = function() {
     _this.set_check(this, !Q.hasClass(this, 'mouseselected'));
   }
-  
+
+  Q.click(box, 
+    function(o) {
+      _this.set_check(o, !Q.hasClass(o, 'mouseselected'));
+    },
+    
+    this.on_item_dblclick
+  );
   init(box);
 },
   
