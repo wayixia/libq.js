@@ -1,9 +1,3 @@
-/*-------------------------------------------------------
-  function XMLDocument
-  function: 创建XML文档实例
-  date: 2008-06-12
-  author: lovelylife
----------------------------------------------------------*/
 // 解决ff下XML的selectNodes和selectSingleNode的实现问题
 if (!window.ActiveXObject) {
 	Element.prototype.selectNodes = function(sXPath) {
@@ -75,8 +69,13 @@ function XMLDocument(xmlfile) {
 	return xmlDoc;
 }
 
-// 读取XML字符串并解析成DOM对象
-Q.XML = function(xmlString){
+/**
+ * 读取XML字符串并解析成DOM对象
+ * @constructor Q.xml
+ * @param xmlString {string} - XML字符串 
+ * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
+ */
+Q.xml = function(xmlString){
 	var doc;
 	if (window.ActiveXObject) {
 		doc = new ActiveXObject("MSXML2.DOMDocument");
@@ -85,29 +84,42 @@ Q.XML = function(xmlString){
 		doc = (new DOMParser()).parseFromString(xmlString, "text/xml").documentElement;
 	}
 
-	// IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
 	return doc.ownerDocument?doc.ownerDocument:doc;
 }
 
-// 读取XML文件并解析成DOM对象
-Q.XMLFile = function(xmlFile) {
-	return XMLDocument(xmlFile);
+/**
+ * 读取XML文件并解析成DOM对象
+ * @constructor Q.xmlfile
+ * @param filename {string} - XML文件
+ * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
+ */
+Q.xmlfile = function(filename) {
+	return XMLDocument(filename);
 }
 
-function selectSingleNode(xmlDoc, elementPath)  {	
+
+/**
+ * XPATH选择器
+ * @function Q.selectSingleNode
+ * @param xmlDoc {document} - XML文档对象
+ * @param elementPath {string} - XPATH路径
+ * @return {dom} - XPATH指定的元素
+ */ 
+Q.selectSingleNode = function(xmlDoc, elementPath)  {	
 	if(window.ActiveXObject) {
 		return xmlDoc.selectSingleNode(elementPath);
 	} else {
 		var xpe = new XPathEvaluator();
 		var nsResolver = xpe.createNSResolver( xmlDoc.ownerDocument == null ? xmlDoc.documentElement : xmlDoc.ownerDocument.documentElement);
 		var results = xpe.evaluate(elementPath,xmlDoc,nsResolver,XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-		//alert(results);
-        return results.singleNodeValue; 
+    return results.singleNodeValue; 
 	}
 }
 
 
-/* 
+
+/**
+ * @example
 // IE only
 //var ret = xmlDoc.loadXML("<?xml version=\"1.0\" encoding = \"GB2312\" ?><html>sdfasdfasdf</html>");
 //var d = xmlDoc.load(fileName);
