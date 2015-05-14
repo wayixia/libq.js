@@ -1,8 +1,8 @@
 
 /**
  * 常用dom操作和异步加载javascript模块的封装, 支持继承
- * @namespace Q
  * @author Q
+ * @version 1.0
  */
 
 (function() {
@@ -15,14 +15,10 @@
     
   /** 调试输出 */
   var _debug = null;
-  /** QLib base dir */
-  var _libdir = null;
   /** dom elements cache */
   var _domcache = {};    
   /** QueryString */
   var _querystring = {};
-  /** _load_completed */
-  var _load_completed = false;
   /** _delay_dom_ready */
   var _delay_dom_ready = [];
   /**  on_page_load Message Queue */
@@ -51,10 +47,13 @@
     };
   }
 
-  // 基于prototype的继承实现
-  // 警告：调用父类的（被重载的）同名函数调用需要借助parent_class.prototype.method.call(this, arguments);
-  var CLASS = function() {};
-  CLASS.prototype.extend = function(props) {
+  /** 
+   * 基于prototype的继承实现
+   * @warn 调用父类的（被重载的）同名函数调用需要借助parent_class.prototype.method.call(this, arguments);
+   * @namespace Q
+   */
+  var Q = function() {};
+  Q.prototype.extend = function(props) {
     var parent_class = this.prototype;  
     var this_class = function() {
       this.__init__.apply(this, arguments);
@@ -73,22 +72,24 @@
   }
   
   /** 类继承方法 
-   * @function Q.extend
+   * @static Q.extend
    * @param props {object} - 派生类的属性
    * @return {CLASS} 返回派生类
    */
-  CLASS.extend = function(props) {
+  Q.extend = function(props) {
     return this.prototype.extend.call(this, props);
   }
 
-  var Q = CLASS;
   window.Q = Q;
-  
-  Q.Browser = {};
+ 
+  /*! DOM elemet type */
   Q.ELEMENT_NODE = 1;
   Q.ELEMENT_TEXTNODE = 3;
 
-  // default ie mouse button
+  /*!
+   * default is ie mouse button define
+   * @const Q.LBUTTON 1
+   */
   Q.LBUTTON  = 1;
   Q.RBUTTON  = 2;
   Q.MBUTTON  = 4;
@@ -148,12 +149,6 @@
     return function() {
       return fn.apply(object, arguments);
     };
-  };
-
-  Q.registerDelayDOMReady = function(f) {
-    if(!_load_completed) {
-      _delay_dom_ready.push(f);
-    }
   };
 
   /** 兼容ff的attachEvent接口
@@ -383,10 +378,11 @@
 
   /** 获取url查询字段
    * 
-   * @function Q.GET
+   * @function Q.query
+   * @param key {string} - 字段名称
    * @return {string} - 字段值
    */
-  Q.GET = function(key) { return _querystring[key]; };
+  Q.query = function(key) { return _querystring[key]; };
   
   /** 当所有脚本都加载后开始执行Ready回调 */
   Q.delayDOMReady = function() {
@@ -407,17 +403,6 @@
       _on_page_load.push(f); 
     else 
       _on_page_load.unshift(f); 
-  };
-
-  /** current Q.js所在路径 
-   *
-   * @function Q.__DIR__
-   * @return {string} - Q.js的所在路径
-  */
-  Q.__DIR__ = function() {
-    var js=document.scripts;
-    js=js[js.length-1].src.substring(0,js[js.length-1].src.lastIndexOf("/")+1);
-    return js;
   };
 
   /** 加载js模块
@@ -454,54 +439,6 @@
         
     // 获取head结点，并将<script>插入到其中  
     header.appendChild(s);
-  }
-
-  /** Javascript Loader */
-  function jsloader() {
-    var scripts = document.getElementsByTagName("script");  
-    // 判断指定的文件是否已经包含，如果已包含则触发onsuccess事件并返回  
-    var libscript = null;
-    for (i = 0; i < scripts.length; i++) {
-      if(scripts[i].src) {
-        var pos = -1;
-        if((pos=scripts[i].src.indexOf('/Q.js')) >= 0) {
-           _libdir = scripts[i].src.substring(0, pos);
-           libscript = scripts[i];
-        }
-      }
-    }
-
-    // 解析script import
-    var sImports = libscript.innerHTML;
-    var re = /\n/ig;
-    var arr = sImports.split(re);
-
-    // 异步顺序加载
-    async_load_js(document.getElementsByTagName("head")[0], arr);        
-  };
-
-  /** 异步顺序加载js文件 */
-  function async_load_js(header, ar) {
-    ar = ar||[];
-    if(ar.length<=0) { 
-      _load_completed = true;
-      while(_delay_dom_ready.length > 0) { _delay_dom_ready.shift()(); }
-      return;
-    }
-    
-    // 加载lib
-    var url = ar.shift();
-    // 解析格式，并自动加载库文件
-    var re2 = /^\s*import\s+(.+);/i;
-    if(re2.test(url)) {
-      url = RegExp.$1 + '';
-      url = url.replace(/\./g, '/')+'.js';
-      Q.load_module(_libdir+'/'+url, function(isok) {
-        async_load_js(header, ar);
-      });
-    } else {
-      async_load_js(header, ar);
-    }
   }
 
   /** 获取浏览器客户端版本信息 
@@ -575,12 +512,7 @@
     _querystring[values[0]] = values[1];
   }
 
-  jsloader();
   Q.addEvent(window, 'load', function(evt) {
-    if(!_load_completed) {
-      Q.registerDelayDOMReady(Q.delayDOMReady);
-    } else {
-      Q.delayDOMReady();
-    }
+    Q.delayDOMReady();
   });
 })();
