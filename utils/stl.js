@@ -1,35 +1,96 @@
+/**
+ * 常用的数据结构封装， 双向链表和哈希表
+ */
 
-/*--------------------------------------------------------------------------------
- $ basic  type list definition
-----------------------------------------------------------------------------------*/
-//列表节点结构
-Q.NODE = Q.extend({
-  next : null,
-  prev : null,
-  data  : null,
-  __init__ : function(data) { this.data = data; }
-});
 
-Q.LIST = Q.extend({
-
-head : null,  // 链表的头部
+/**
+ * 双向链表
+ * @constructor 
+ * @property {Q.list.node} head -  链表的头部
+ * @property {number} length -  链表长度
+ */
+Q.list = Q.extend({
+head : null,  
 length : 0,
 __init__ : function() {},
-begin :    function() {  return this.head; },  // not head  use as STL
-end :      function() {  return null;  },
-len :      function() {  return this.length;  },
-item :     function() {  return this.current.data; },
+/**
+ * 节点结构
+ * @class Q.list.node
+ * @property {Q.list.node} next - 下一个节点
+ * @property {Q.list.node} prev - 上一个节点
+ * @property {any} next  - 绑定的数据
+ * @param data {any} - 绑定的数据
+ */
+node : function(data) {
+  this.next = null;
+  this.prev = null;
+  this.data = data;
+},
 
-each : function(callback) {
-  if(typeof callback == 'function') {
+/** 
+ * 获取链表开始节点 
+ * @memberof Q.list.prototype
+ * @type {Q.list.node}
+ * @return {Q.list.node} - head节点， 如果为null，则说明链表为空
+ */
+begin : function() {  
+  return this.head; 
+}, 
+
+/** 
+ * 获取链表结尾节点， 返回默认null 
+ * @memberof Q.list.prototype
+ * @return {null} 总是返回空节点
+ */
+end : function() {  
+  return null;  
+},
+
+/** 
+ * 返回链表长度 
+ * @memberof Q.list.prototype
+ * @type {number}
+ * @return {number}  链表长度 
+ */
+len : function() {
+  return this.length;
+},
+
+/**
+ * 获取当前遍历位置的节点数据
+ * @memberof Q.list.prototype
+ */
+item : function() {
+  return this.current.data; 
+},
+
+/**
+ * 遍历链表元素回调函数
+ * @callback fn_list_each
+ * @param data {any} - 节点的data
+ * @return {bool} 返回结果决定是否继续遍历: true 继续遍历,  false 停止遍历
+ */
+
+/** 
+ * 遍历链表元素
+ * @memberof Q.list.prototype
+ * @param fn {fn_list_each} - 回调函数
+ */
+each : function(fn) {
+  if(typeof fn == 'function') {
     for(var node = this.begin(); node != this.end(); node = node.next) {
-      if(!callback(node.data)) break;
+      if(!fn(node.data)) break;
     }
   }
 },
 
-append : function(data){
-  var node = new Q.NODE(data);
+/**
+ * 在链表末尾追加一个{@link Q.list.node}节点
+ * @memberof Q.list.prototype
+ * @param data {any} - 绑定的数据
+ */
+append : function(data) {
+  var node = new Q.list.node(data);
   if(!this.head) {
     this.head = node;
   } else {
@@ -41,7 +102,12 @@ append : function(data){
 
   this.length++;
 },
-  
+
+/**
+ * 删除链表的一个节点
+ * @memberof Q.list.prototype
+ * @param data {any} - 指定的数据
+ */
 erase : function(data){
   var node = this.find(data);
   if( node ) { 
@@ -61,100 +127,161 @@ erase : function(data){
     this.length--;
   }
 },
-  
+
+/**
+ * 清空链表
+ * @memberof Q.list.prototype
+ */
 clear : function(){
   for(var node = this.begin(); node != this.end(); node = node.next){
     this.removeNode(node);
   }
 },
-  
+
+/**
+ * 查找data所在的节点
+ * @type {Q.list.node}
+ * @memberof Q.list.prototype
+ * @param data {any} - 指定查询的数据
+ * @return {Q.list.node} 节点不存在则返回null
+ */
 find : function(data){
   for(var node = this.begin(); node != this.end(); node = node.next){
     if( node.data == data )  return node;
   }
   return null;
-},
-  
-toString : function(){
-  var i = 0;
-  var str = "";
-  for(var node = this.begin(); node != this.end(); node = node.next){
-    str += "Node["+i+"]: " + node.data + "\n";
-    i++;
-  }
-  return str;
 }
-
+  
 });
 
+/**
+ * 哈希表类封装，提供添加删除遍历查找等操作
+ * @constructor
+ * @property base {Object} - 存储对象
+ * @property length {number} - 元素个数
+ * @property dataIndex {number} - 数据项索引, 初始值 0
+ */
+Q.hashmap = Q.extend({
+base : null,
+length : 0,
+index : 0,
+__init__ : function() {
+  this.base = new Object();
+},
+  
+/**
+ * 遍历哈希表元素回调函数
+ * @callback fn_hashmap_each
+ * @param data {any} - 节点的data
+ * @param key  {any} - 节点索引关键字
+ * @return {bool} 返回结果决定是否继续遍历: true 继续遍历,  false 停止遍历
+ */
 
-var STRUCT_HASMAP = Q.extend({
-  base : null,
-  length : 0,
-  dataIndex : 0,
-  __init__ : function() {
-    this.base = new Object();
-  },
-  
-  each : function(callback) {
-    if(typeof callback != 'function') {
-      return;
-    }
-    for(var key in this.base) {
-      if(callback(this.base[key], key) == 0) { break; }
-    }
-  },
-  
-  item : function(key) {
-    return this.base[key];
-  },
-  
-  add    : function(key, value) {
-    this.base[key] = value;
-    this.length++;
-  },
-  
-  remove : function(key) {
-    //alert('is have')
-    if(!this.has(key)) { return; }
-    //alert('yes')
-    delete this.base[key];
-    this.length--;
-  },
-  
-  clear : function() {
-    var _this = this;
-    _this.each(function(item, key){
-      _this.remove(key);
-    });
-    this.length = 0;
-  },
-  
-  push : function(value) {
-    this.base[this.dataIndex] = value;
-    this.length++;
-    this.dataIndex++;
-  },
-  
-  pop : function() {
-    var re = this.base[this.dataIndex];
-    delete this.base[this.dataIndex];
-    this.length--;
-    return re;
-  },
-  
-  find : function(value) {
-    var vkey = null;
-    this.each(function(item, key){
-      if(item == value) {
-        vkey = key;
-        return 0;
-      }
-    });
-    return vkey;
-  },
-  
-  has : function(key) {
-    return !(typeof this.base[key] == 'undefined');
+/** 
+ * 遍历哈希表元素
+ * @memberof Q.hashmap.prototype
+ * @param fn {fn_hashmap_each} - 回调函数
+ */
+each : function(fn) {
+  if(typeof fn != 'function') 
+    return;
+  for(var key in this.base) {
+    if(fn(this.base[key], key) == 0) 
+      break;
   }
+},
+
+/**
+ * 获取指定索引的对象
+ * @memberof Q.hashmap.prototype
+ * @param index {number|string} 索引
+ * @return {any} 返回指定索引项的值
+ */
+item : function(index) {
+  return this.base[index];
+},
+
+/**
+ * 添加项
+ * @memberof Q.hashmap.prototype
+ * @param index {number|string} 索引
+ * @param value {any} 值
+ * @return 无
+ */
+add : function(index, value) {
+  this.base[index] = value;
+  this.length++;
+},
+ 
+/**
+ * 删除指定索引项
+ * @memberof Q.hashmap.prototype
+ * @param index {number|string} 索引
+ */
+remove : function(key) {
+  if(!this.has(key)) { return; }
+  delete this.base[key];
+  this.length--;
+},
+
+/**
+ * 清空哈希表
+ * @memberof Q.hashmap.prototype
+ */
+clear : function() {
+  var _this = this;
+  this.each(function(item, key){
+    _this.remove(key);
+  });
+  this.length = 0;
+},
+  
+/**
+ * 添加项，自动索引
+ * @memberof Q.hashmap.prototype
+ * @param value {any} 数据
+ */
+push : function(value) {
+  this.base[this.index] = value;
+  this.length++;
+  this.index++;
+},
+  
+/**
+ * 删除最后一个数字索引项
+ * @memberof Q.hashmap.prototype
+ */
+pop : function() {
+  var re = this.base[this.dataIndex];
+  delete this.base[this.dataIndex];
+  this.length--;
+  return re;
+},
+  
+/**
+ * 查找value对应的索引
+ * @memberof Q.hashmap.prototype
+ * @param value {value} 值
+ * @return {number|string} 索引
+ */
+find : function(value) {
+  var vkey = null;
+  this.each(function(item, key){
+    if(item == value) {
+      vkey = key;
+      return 0;
+    }
+  });
+  return vkey;
+},
+  
+/**
+ * 查找索引项是否存在
+ * @memberof Q.hashmap.prototype
+ * @param index {number|string} 索引
+ * @return {bool} 该项是否存在
+ */
+has : function(key) {
+  return !(typeof this.base[key] === 'undefined');
+}
 });

@@ -48,8 +48,11 @@
   }
 
   /** 
-   * 基于prototype的继承实现
-   * @warn 调用父类的（被重载的）同名函数调用需要借助parent_class.prototype.method.call(this, arguments);
+   * 基于prototype的继承实现, 调用父类的（被重载的）同名函数调用需要借助
+   * 
+   ```
+   parent_class.prototype.method.call(this, arguments);
+   ```
    * @namespace Q
    */
   var Q = function() {};
@@ -71,10 +74,11 @@
     return this_class;
   }
   
-  /** 类继承方法 
-   * @static Q.extend
+  /**
+   * 类继承方法 
+   * @function Q.extend
    * @param props {object} - 派生类的属性
-   * @return {CLASS} 返回派生类
+   * @return {class} 返回派生类
    */
   Q.extend = function(props) {
     return this.prototype.extend.call(this, props);
@@ -82,16 +86,35 @@
 
   window.Q = Q;
  
-  /*! DOM elemet type */
+  /** 
+   * DOM 元素节点类型 
+   * @const {number} Q.ELEMENT_NODE
+   */
   Q.ELEMENT_NODE = 1;
+
+  /** 
+   * DOM 文本节点类型 
+   * @const {number} Q.ELEMENT_TEXTNODE
+   */
   Q.ELEMENT_TEXTNODE = 3;
 
-  /*!
-   * default is ie mouse button define
-   * @const Q.LBUTTON 1
+
+  /** 
+   * 鼠标左键
+   * @const {number} Q.LBUTTON
    */
   Q.LBUTTON  = 1;
+  
+  /** 
+   * 鼠标右键 
+   * @const {number} Q.RBUTTON
+   */
   Q.RBUTTON  = 2;
+  
+  /** 
+   * 鼠标滚轮 
+   * @const {number} Q.MBUTTON
+   */
   Q.MBUTTON  = 4;
 
   /** 开启关闭调试功能
@@ -142,6 +165,7 @@
   /** 调用类实例和类函数绑定，返回新的函数对象
    *
    * @function Q.bind_handler
+   * @type {function}
    * @param object {object} - 类实例 
    * @param fn {function} - 类方法
    */
@@ -392,12 +416,12 @@
   /**
    * 注册函数，当文档加载完成后依次执行
    * 
-   * @function Q.Ready
+   * @function
    * @param f {function} - 函数对象
-   * @param push_front {bool} - 追加或者置顶 
+   * @param front {bool} - 追加或者置顶 
    * @return 无
    */
-  Q.Ready = function(f, push_front) {
+  Q.ready = function(f, front) {
     var back = !push_front;
     if(back)
       _on_page_load.push(f); 
@@ -408,6 +432,7 @@
   /** 加载js模块
    *
    * @function Q.load_module
+   * @type void
    * @param src {string} - javascript模块地址
    * @param oncomplete(bool ok) {function} - 加载完成调用， ok 为true 加载成功，否则失败
    * @return 无
@@ -444,7 +469,7 @@
   /** 获取浏览器客户端版本信息 
    *
    * @function Q.agent
-   * @return {string} - 浏览器版本信息
+   * @return {string} 浏览器版本信息
    */
   Q.agent   = function() { 
     return navigator.userAgent.toLowerCase(); 
@@ -453,7 +478,7 @@
   /** 客户端是不是标准的W3C客户端 
    *
    * @function Q.isW3C
-   * @return bool
+   * @type {boolean}
    */
   Q.isW3C   = function() { 
     return document.getElementById ? true:false; 
@@ -462,7 +487,7 @@
   /** 客户端是否是Internet Explorer 
    *
    * @function Q.isIE
-   * @return bool 
+   * @return  {bool} - true 是， false 否 
    */
   Q.isIE    = function() { 
     var a = Q.agent(); 
@@ -473,7 +498,7 @@
   /** 客户端是否是Opera 
    *
    * @function Q.isOpera
-   * @return bool 
+   * @return  {bool} - true 是， false 否 
    */
   Q.isOpera = function() { 
     return Q.agent().indexOf("opera") != -1; 
@@ -482,7 +507,7 @@
   /** 客户端是否是Netscape 
    *
    * @function Q.isNS6
-   * @return bool 
+   * @return  {bool} - true 是， false 否 
    */
   Q.isNS6   = function() { 
     return Q.isW3C() && (navigator.appName=="Netscape"); 

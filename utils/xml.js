@@ -27,7 +27,6 @@ if (!window.ActiveXObject) {
 	};
 }
 
-
 function XMLDocument(xmlfile) {
 	var xmlDoc = null;
 	
@@ -71,7 +70,7 @@ function XMLDocument(xmlfile) {
 
 /**
  * 读取XML字符串并解析成DOM对象
- * @constructor Q.xml
+ * @function Q.xml
  * @param xmlString {string} - XML字符串 
  * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
  */
@@ -89,7 +88,7 @@ Q.xml = function(xmlString){
 
 /**
  * 读取XML文件并解析成DOM对象
- * @constructor Q.xmlfile
+ * @function Q.xmlfile
  * @param filename {string} - XML文件
  * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
  */
