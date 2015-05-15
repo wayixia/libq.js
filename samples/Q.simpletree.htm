@@ -33,9 +33,9 @@
   var g_dirTree = null;
   Q.Ready(function() {
     g_dirTree = new Q.simpletree({
-		  Render : Q.$('frame_left'),
-		  Name : "站点根目录",
-		  IsOpen : true,
+		  id : Q.$('frame_left'),
+		  name : "站点根目录",
+		  open : true,
 	  });
 
 	  g_dirTree.setItemData(0, '/');
