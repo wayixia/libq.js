@@ -80,8 +80,7 @@
    * @param props {object} - 派生类的属性
    * @return {class} 返回派生类
    * 
-   * @example
-// 派生一个新的class
+   * @example <caption>派生一个新的class</caption>
 var subclass = Q.extend({
   __init__ : function(json) {
    // 构造函数

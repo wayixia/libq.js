@@ -61,7 +61,7 @@
       this.add_drag_handler(obj, obj);
     var init_drag_objects = config.objects || [];
     for(var i=0; i < init_drag_objects.length; i++) {
-      this.add_drag_handler(obj, init_drag_objects[i]);
+      this.add_drag_handler(obj, Q.$(init_drag_objects[i]));
     }
   },
 
@@ -147,9 +147,27 @@
 var instance;
 
 /**
- * 初始化拖拽元素
+ * 初始化一个拖拽元素，同时可以指定多个子节点触发当前拖动对象的移动
  * @function
  * @param json {json_drag} - 初始化拖拽参数
+ *
+ * @example <caption> 元素自身可拖拽初始化</caption>
+Q.ready(function() {
+   Q.drag({
+     id: 'test-drag',  // 元素id
+     self: true   // 元素自身任何区域可以拖拽
+   });
+});
+ *
+ * @example <caption> 自定义内部子节点触发的拖拽初始化 </caption>
+Q.ready(function() {
+   Q.drag({
+     id: 'test-drag',  // 元素id
+     self: true        // 元素自身任何区域可以拖拽
+     objects: ['test-drag-child1', 'test-drag-child2']  // test-drag-child1, test-drag-child2 都为test-drag元素的子节点元素
+   });
+});
+ 
  */
 Q.drag = function(json) {
   if(!instance)  
