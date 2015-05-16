@@ -90,7 +90,7 @@ each : function(fn) {
  * @param data {any} - 绑定的数据
  */
 append : function(data) {
-  var node = new Q.list.node(data);
+  var node = new this.node(data);
   if(!this.head) {
     this.head = node;
   } else {

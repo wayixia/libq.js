@@ -1,0 +1,129 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.drag | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<style>
+  #red-object {
+    cursor: default;
+    background: #EEE;
+    overflow:hidden; 
+    position:absolute;
+    width: 360px;
+    height: 260px;
+    border:1px solid #999;
+  }
+
+  div#red-object {
+    background:red;
+  }
+
+  #blue-object {
+    position: absolute;
+    background:blue;
+    left: 30px;
+    top: 30px;
+  }
+
+  #debug-window {
+    background: #CCC;
+    height: 300px;
+    width: 600px;
+    overflow:auto; 
+  }
+</style>
+
+<script type="text/javascript" src="../Q.js"></script>
+<script type="text/javascript" src="../utils/stl.js"></script>
+<script type="text/javascript" src="../ui/drag.js"></script>
+
+<script>
+<!--
+  Q.ready(function() {
+     Q.drag({id: 'red-object', self: true});
+     Q.drag({id: 'blue-object', self: true});
+     Q.drag({id: 'wnd-object', self: true, objects: [Q.$('wnd-title-c'), Q.$('wnd-title')]});
+  });
+-->
+</script>
+</head>
+<body onmouseup="document.selection && document.selection.empty()" onselectstart="return false" ondragstart="return false" onbeforecopy="return false" oncopy="document.selection.empty()" onselect="document.selection.empty()">
+<br>
+<h3>Q.drag | 拖拽示例</h3>
+<hr>
+
+<br>
+<div id="red-object">
+  red object 
+  <img id="blue-object" src="http://www.baidu.com/img/bdlogo.png" onselect="return false;">
+</div>
+<br/>
+
+
+<br>
+
+<div id='debug_window' style='width:100%;height: 300px;overflow: auto;'>
+
+</div>
+<div __qwindow__="true" id="wnd-object" class="q-window q-attr-with-bottom" style="z-index: 10008; width: 480px; height: 370px;" q-drag-object="true">
+  <div class="q-title" id="wnd-title">
+    <img class="q-icon"/>
+    <div class="q-title-content" id="wnd-title-c">无标题</div>
+    <div>
+      <button class="q-close">&nbsp;</button><button class="q-max">&nbsp;</button><button class="q-min">&nbsp;</button>
+    </div>
+  </div>
+  <div class="q-window-client">test flash</div>
+  <div class="q-bottom-bar"></div>
+  <div class="clsMaskWindow alpha_1" style="display: none;"></div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="skin-default" id="task-bar">
+  <div id="task-list">
+  </div> 
+</div>
+
+</body>
+</html>

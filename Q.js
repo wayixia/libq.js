@@ -79,6 +79,14 @@
    * @function Q.extend
    * @param props {object} - 派生类的属性
    * @return {class} 返回派生类
+   * 
+   * @example
+// 派生一个新的class
+var subclass = Q.extend({
+  __init__ : function(json) {
+   // 构造函数
+  }
+});
    */
   Q.extend = function(props) {
     return this.prototype.extend.call(this, props);
@@ -422,7 +430,7 @@
    * @return 无
    */
   Q.ready = function(f, front) {
-    var back = !push_front;
+    var back = !front;
     if(back)
       _on_page_load.push(f); 
     else 
