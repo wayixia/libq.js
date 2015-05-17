@@ -47,7 +47,7 @@ Q.json_encode = function(v) {
 
 function STRUCT_REQUEST(json) {
   if(json.command.toString().indexOf('?') == -1) {
-    this.command = json.command + '?' + '&rnd=' + Round(16);
+    this.command = json.command + '?' + '&rnd=' + Q.rnd(16);
   } else {
     this.command =   json.command ? (json.command + '&rnd=' + Q.rnd(16)) : null;
   }
@@ -57,7 +57,8 @@ function STRUCT_REQUEST(json) {
   this.oncomplete = json.oncomplete || function(){}; 
   this.onerror = json.onerror || function(){};
   this.toString = function() {
-    return json2str(this.postdata);
+    console.log(this.postdata)
+    return Q.json2str(this.postdata);
   }
 }
 
@@ -94,8 +95,8 @@ Q.ajax = function(json) {
   var postdata = 'postdata='+encodeURIComponent(encodeURIComponent(request.toString())); 
   xmlhttp.open("POST", request.command, true);
   xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  if(req.withCredentials) {
-    xmlhttp.withCredentials = !! req.withCredentials;
+  if(json.withCredentials) {
+    xmlhttp.withCredentials = !! json.withCredentials;
   }
   //xmlhttp.setRequestHeader( "Content-Type", "text/html;charset=UTF-8" );
   xmlhttp.onreadystatechange = function() {
@@ -107,5 +108,5 @@ Q.ajax = function(json) {
       }
     }
   };
-  xmlhttp.send(senddata);
+  xmlhttp.send(postdata);
 }

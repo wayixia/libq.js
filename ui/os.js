@@ -241,11 +241,11 @@ run :function (app) {
       app.ui_runtime = new Q.ui({src: app.ui, oncomplete: function(ok) {
         // init app instance
         Q.printf("load ui -> " + (ok?"ok":"failed"));
-        try {
+        //try {
           _this.create_instance(app); 
-        } catch(e) {
-          _this.run_error(app, err + "<br>" + e.description);
-        }
+        //} catch(e) {
+        //  _this.run_error(app, err + "<br>" + e.description);
+        //}
       }});
     })
   };

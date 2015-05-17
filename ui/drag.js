@@ -112,7 +112,7 @@
       
       this.begin_left = target_wnd.offsetLeft;
       this.begin_top = target_wnd.offsetTop;
-      Q.printf("[drag-onbegin]offet x: " + this.begin_left + ", offset y: " + this.begin_top )
+      //Q.printf("[drag-onbegin]offet x: " + this.begin_left + ", offset y: " + this.begin_top )
       if(this.capture_wnd.q_onmove_begin)
         this.capture_wnd.q_onmove_begin(this.zoom(this.begin_left+this.x), this.zoom(this.begin_top+this.y));
       this.timer = setTimeout(Q.bind_handler(this, function() { Q.addEvent(document, 'mousemove', this.mousemove_handler);  }), 10);
@@ -126,7 +126,7 @@
     if (this.is_drag) {
       var x = evt.clientX-this.x;
       var y = evt.clientY-this.y;
-      Q.printf("[drag-onmove] dx: " + x + ", dy: " + y);
+      //Q.printf("[drag-onmove] dx: " + x + ", dy: " + y);
       this.capture_wnd.q_onmove(this.begin_left+this.zoom(x), this.begin_top+this.zoom(y));
       return false; 
     }
@@ -179,6 +179,8 @@ Q.drag = function(json) {
  * 初始化拖拽元素
  * @function
  * @param id {dom|string} - 解除元素拖拽绑定
+ * @example 
+ * Q.dragno('test-drag');
  */
 Q.dragno = function(id) {
   if(instance) {

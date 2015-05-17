@@ -143,8 +143,8 @@ var subclass = Q.extend({
       _debug.innerHTML += '<br/>'+message;
       _debug.scrollTop = _debug.scrollHeight;
     } else {
-      if(console)
-        console.log(message);
+      if(window.console)
+        window.console.log(message);
     }
   };
 
@@ -290,9 +290,9 @@ var subclass = Q.extend({
    * @param dblclick {function} - 双击事件处理函数
    * @return 无
    */
-  Q.click = function(element, click, dblclick) {
+  Q.dblclick = function(element, dblclick) {
     element = Q.$(element);
-    element.onclick = (function(r) { return function(evt) {
+    Q.addEvent(element, 'click', (function(r) { return function(evt) {
     if(r.__clickonce__) {
       r.__clickonce__ = false;
       clearTimeout(r.t);
@@ -307,7 +307,7 @@ var subclass = Q.extend({
     }})(r), 200);
     }
     return false;
-  }})(element);
+  }})(element));
  
   }
  
@@ -392,6 +392,29 @@ var subclass = Q.extend({
     }
     return { t: t, l: l, w: w, h: h };
   };
+
+  /**
+   * @typedef size {object} 
+   * @property width {number} - 宽度
+   * @property height {number} - 高度
+   */
+  /** 获取和设置工作区大小，作用于右键菜单和窗口系统
+   * @function Q.workspace
+   * @return {size} 工作区大小
+   */
+  Q.workspace = function() {
+    var max_height = document.body.clientHeight;
+    if( document.documentElement.clientHeight) {
+      max_height = document.documentElement.clientHeight;
+    }
+  
+    var max_width = document.body.clientWidth;
+    if( document.documentElement.clientWidth) {
+      max_width = document.documentElement.clientWidth;
+    }
+   
+    return  {width: max_width, height: max_height}
+  }, 
 
   /** Object对象拷贝
    * 

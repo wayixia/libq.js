@@ -12,20 +12,6 @@ var MENU_ITEM = 0;
 var MENU_ITEM_CHECKBOX = 1;
 var MENU_ITEM_RADIO = 3;
 
-Q.workspace = function() {
- var max_height = document.body.clientHeight;
-  if( document.documentElement.clientHeight) {
-    max_height = document.documentElement.clientHeight;
-  }
-
-  var max_width = document.body.clientWidth;
-  if( document.documentElement.clientWidth) {
-    max_width = document.documentElement.clientWidth;
-  }
-
-  return  {width: max_width, height: max_height}
-} 
-
 var class_menuitem = Q.extend({
 hwnd : null,
 parentMenu : null,

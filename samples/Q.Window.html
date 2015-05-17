@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-  <title>Q.window | QLib | Powered By PHPKIND</title>
+  <title>Q.Window | QLib </title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <!-- 使用QLib控件是必须包含样式表 -->
   <link type="text/css" rel="stylesheet" href="../ui.css" />
@@ -9,25 +9,16 @@
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
   -->
-  <script type="text/javascript" src="../Q.js">
-  <!--
-  // 需要加载额外库时
-  import utils.stl;
-  import utils.xml;
-  import ui.drag;
-  import ui.contextmenu;
-  import ui.wndx-1-0-2;
-  -->
-  </script>
-
+  <script type="text/javascript" src="../Q.js"></script>
+  <script type="text/javascript" src="../utils/stl.js"></script>
+  <script type="text/javascript" src="../ui/drag.js"></script>
+  <script type="text/javascript" src="../ui/wndx-1-0-2.js"></script>
   <script>
   <!--
   var g_test_window;
   var g_test_dialog;
   var g_multi_window;
-  Q.Ready(function() {
-    //Q.debug(true);
-    //Q.setdebug(Q.$('debug_window'));
+  Q.ready(function() {
     // 提示对话框
     Q.$('btnOpenMessageBox').onclick = function() {
       g_test_dialog = new Q.Dialog({
@@ -41,11 +32,9 @@
     }
 
     Q.$('btnOpenWindow').onclick = function() {
-      //g_test_window = new Q.Window({width:480, height:370, wstyle: "q-attr-no-icon|q-attr-with-bottom|q-attr-fixed|q-attr-no-max|q-attr-no-min"});
       g_test_window = new Q.Window({width:480, height:370, wstyle: "q-attr-no-icon|q-attr-wit1h-bottom|q-attr-fixed"});
       g_test_window.show(true);
       g_test_window.set_content(Q.$('progress'));
-      //g_test_window.adjust();
       g_test_window.center();
     }
   
@@ -71,19 +60,15 @@
         onok : function() { return true; }
       });
     }
-
-    Q.$('btnClear').onclick=function() {
-      Q.$('debug_window').innerHTML = '';
-    }
   });
   
   -->
   </script>
 </head>
-<body onselectstart="return false;" style=" background: #CCC;height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
-
-<p>提示对话框</p>
-<button id="btnClear">Clear</button>
+<body onselectstart="return false;" style="-moz-user-select:none;-webkit-user-select: none;">
+<br>
+<p>Q.Window | Q.Dialog</p>
+<hr>
 <button id="btnOpenWindow">Window</button>
 <button id="btnOpenMultiWindow">MultiWindow</button>
 <button id="btnOpenMessageBox">MessageBox</button>
@@ -93,10 +78,6 @@
 <button id="test-domodal" style="display:none;">DoModal</button>
 <!-- wndx template -->
 <br>
-
-<div id='debug_window' style='width:100%;height: 300px;overflow: auto;'>
-
-</div>
 
 <div __qwindow__="" class="q-window undefined q-attr-fixed q-attr-no-min q-attr-no-max q-attr-with-bottom" style="top: 143px; left: 214px; width: 600px; height: 400px; display: none;" q-drag-object="true">
   <div class="q-title">
@@ -115,12 +96,11 @@
 </div>
 
 
-<div id="progress" style="background: red; height: 40px; line-height: 40px; ">
-  <button style="margin: 12px 0 0 0; padding:0; background:none; height: 16px;border-width:0;background:blue;">test</button>
+<div style="position: relative; width: 300px;height: 200px;">
+<div id="progress" style="position:absolute; left: 0; top:0; right:0; bottom:0;background: yellow; ">
+  dom content
 </div>
-
-
-
+</div>
 
 </body>
 </html>

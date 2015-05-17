@@ -32,7 +32,7 @@ length : 0,
 __init__ : function(config) {
   var config = config || {}; 
   var _this = this;
-  _this.records = new STRUCT_HASMAP;
+  _this.records = new Q.hashmap;
   _this.remote = config.remote || false;
   if(config.datasource)
     _this.load_json(config.datasource);
@@ -46,12 +46,12 @@ __init__ : function(config) {
 load_json : function(jsonsrouce, bClearOldData) {
   var _this = this;
   if(!!bClearOldData) {
-    _this.records = new STRUCT_HASMAP;
+    _this.records = new Q.hashmap;
     _this.length = 0;
   }
     
   jsonsrouce.each(function(record, index) {
-      record["dataIndex"] = _this.records.dataIndex; // 存储数据索引， 用于确定改记录在记录集中的位置
+      record["__data_index__"] = _this.records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
       _this.records.push(record);
   });
 },
@@ -80,7 +80,7 @@ load_page : function(page, pagesize, callback) {
   if(_this.proxy) {
     _this.load_remote(page, pagesize, fnCallback);
   } else {
-    var pagedata = new STRUCT_HASMAP;
+    var pagedata = new Q.hashmap;
     for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
       if(i >= _this.records.length) { break; }
       pagedata.push(_this.records.item(i));
@@ -91,7 +91,7 @@ load_page : function(page, pagesize, callback) {
   
 push : function(record) {
   var _this = this;
-  record["dataIndex"] = _this.records.dataIndex; // 存储数据索引， 用于确定改记录在记录集中的位置
+  record["__data_index__"] = _this.records.dataIndex; // 存储数据索引， 用于确定改记录在记录集中的位置
   _this.records.push(record);
   _this.length++;
 },
@@ -243,20 +243,24 @@ var __TH = Q.extend({
 var SELECT_MODE_CTRL  = 1;
 var SELECT_MODE_SHIFT  = 2;
 
+/** 
+ * 
+ * jtable的组成机构如下图：
+ *
+ * |--------------------| __ wndTitle 
+ * |--------------------| __ wndGroupHeader 
+ * |--------------------|
+ * |                    | __ wndFrame
+ * |  wndGroupBody      | 
+ * |                    |
+ * |--------------------| __ wndToolbar
+ * |--------------------|
+ *
+ * @constructor
+ */
+
+
 Q.table = Q.extend({
-// jtable的组成机构如下图：
-//
-// |--------------------| __ wndTitle
-// |--------------------| __ wndGroupHeader
-// |--------------------|
-// |                    | __ wndFrame
-// |  wndGroupBody      | 
-// |                    |
-// |--------------------| __ wndToolbar
-// |--------------------|
-//
-
-
 wndParent : null,
 wnd : null,
 wndTitleBar : null,
@@ -282,16 +286,24 @@ __init__ : function(json) {
   _this.columns = json.columns || [];
 
   // method overrides
-  if(typeof json.row_onclick == 'function') {  _this.row_onclick = json.row_onclick; }
-  if(typeof json.row_ondblclick == 'function') {  _this.row_ondblclick = json.row_ondblclick; }
-  if(typeof json.row_onmouseover == 'function') {  _this.row_onmouseover = json.row_onmouseover; }
-  if(typeof json.row_onmouseout == 'function') {  _this.row_onmouseout = json.row_onmouseout; }
+  if(typeof json.row_onclick == 'function') {  
+    _this.row_onclick = json.row_onclick; 
+  }
+  if(typeof json.row_ondblclick == 'function') {  
+    _this.row_ondblclick = json.row_ondblclick; 
+  }
+  if(typeof json.row_onmouseover == 'function') { 
+    _this.row_onmouseover = json.row_onmouseover; 
+  }
+  if(typeof json.row_onmouseout == 'function') {  
+    _this.row_onmouseout = json.row_onmouseout; 
+  }
   _this.row_ondblclick = (typeof json.row_ondblclick == 'function') ? json.row_ondblclick : function(row) {};
   _this.row_oninsert = (typeof json.row_oninsert == 'function') ? json.row_oninsert : function(row, record) {};
 
   // 初始化父窗口 wndParent,用来显示jtable控件
   // 并初始化jtable视图
-  _this.wndParent = Q.$(json.container);
+  _this.wndParent = Q.$(json.id);
   _this._initview(json);
 
   _this.render();
@@ -380,14 +392,30 @@ _sync_scroll : function() {
   this.sync_scroll();
 },
 
-set_style: function(wstyle) {
+/** 设置表格样式
+ * @memberof Q.table.prototype
+ * @param wstyle {string} - css样式属性
+ * @return 无
+ */
+setStyle: function(wstyle) {
   Q.addClass(this.wnd, wstyle);
 },
 
-remove_style: function() {
+/** 移除表格样式
+ * @memberof Q.table.prototype
+ * @param wstyle {string} - 移除的css样式属性
+ * @return 无
+ */
+removeStyle: function(wstyle) {
   Q.removeClass(this.wnd, wstyle);
 },
 
+/** 在指定行添加一行
+ * @memberof Q.table.prototype
+ * @param nIndex {number} - 插入行位置
+ * @param record {object} - 初始化行数据
+ * @return 无
+ */
 append : function(nIndex, record) {
   var _this = this;  
   var ROW = _this.wndTableData.insertRow(-1);
@@ -418,7 +446,7 @@ append : function(nIndex, record) {
     }
     return false;
   }})(this, ROW);
-  ROW.setAttribute('dataIndex', record['dataIndex']);  // 设置数据索引
+  ROW.setAttribute('__data_index__', record['__data_index__']);  // 设置数据索引
   ROW.data = record;
   var len = _this.wndTableHeaderRow.cells.length;
   for(var j = 0; j < len; j++) {
@@ -461,12 +489,17 @@ _create_cell : function(nRow, nCol, json) {
   //else DIV.innerText = json.content;
   return DIV;
 },
-  
-loadData : function(datasrc, bClearOldData) {
-  var _this = this;
-  _this.store.load_json(datasrc, !!bClearOldData);
-  if(!!bClearOldData) {
-    _this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
+
+/** 加载数据到表格视图
+ * @memberof Q.table.prototype
+ * @param data {array} - 数据记录集
+ * @param clearold {boolean} - 清楚就数据
+ * @return 无
+ */
+loadData : function(data, clearold) {
+  this.store.load_json(data, !!clearold);
+  if(!!clearold) {
+    this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
   }
 },
 
@@ -600,14 +633,16 @@ _rows_onclick : function(row) {
       _this.row_set_selected(row, true);
     }
   }
-  _this.row_onclick(row);
+  if(_this.row_onclick)
+    _this.row_onclick(row);
 },
 
 _rows_ondblclick : function(row) {
   if(!this.row_is_enabled(row)) {
     return false;
   }
-  this.row_ondblclick(row);
+  if(this.row_ondblclick)
+    this.row_ondblclick(row);
 },
   
 
@@ -620,7 +655,6 @@ rows_each : function(callback) {
 
 row_enable : function(row, enabled) {
   var _this = this;
-  var dataIndex = parseInt(row.getAttribute('dataIndex'), 10);
   // 设置选中颜色
   //row.style.backgroundColor = '#DFE8F6'; //'#A2CAEA'
 },
@@ -640,7 +674,9 @@ row_insert : function(index, record) {
   _this.autosize();
 },
 
-row_index       : function(row) { return parseInt(row.getAttribute('dataIndex'),10); },
+row_index : function(row) { 
+  return parseInt(row.getAttribute('__data_index__'),10); 
+},
 row_is_enabled  : function(row) { return row && (!row.getAttribute('_disabled')); },
 row_is_selected : function(row) { return Q.hasClass(row, "q-selected"); },
 
@@ -666,7 +702,7 @@ row_set_selected : function(row, bSelected) {
   
 get_records : function(row) {
   var _this = this;
-  var dataIndex = parseInt(_this.row_index(row), 10);
+  var dataIndex = _this.row_index(row);
   var store = _this.store;
   var arr = [];
   if(-1 == dataIndex) {  
@@ -676,16 +712,11 @@ get_records : function(row) {
 
   if(store.records.has(dataIndex) ) {
     arr.push(store.records.item(dataIndex));
-    // alert("get_records:" + store.records.item(dataIndex));
     return arr;  
   } else {
     alert('无效数据索引['+dataIndex+']!');
     return null;
   }
-},
-
-row_index : function(row) {
-  return parseInt(row.getAttribute('dataIndex'),10);  
 },
 
 get_text : function(row, fieldName) {

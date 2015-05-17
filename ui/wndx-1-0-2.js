@@ -5,7 +5,9 @@
  $ 2014@http://wayixia.com.
 ----------------------------------------------------------------------------------*/
 
-// global const variables definition
+/**
+ * @
+ */
 var CONST = {
   no_title    : "q-attr-no-title",
   no_icon     : "q-attr-no-icon",
@@ -42,22 +44,21 @@ __GLOBALS.appid      = -1;
 __GLOBALS.apps       = {};
 
 // global windows intitalize  
-Q.Ready(function() {
+Q.ready(function() {
   __GLOBALS.desktop = document.body;
-  __GLOBALS.desktop.hook = new Q.LIST();
-  __GLOBALS.desktop.wnds   = new Q.LIST();  // popups windows
+  __GLOBALS.desktop.hook = new Q.list();
+  __GLOBALS.desktop.wnds   = new Q.list();  // popups windows
   __GLOBALS.desktop.active_child = null;
-  __GLOBALS.explorer = new Q.UIApplication();
+  __GLOBALS.explorer = new Q.uiapplication();
   $CreateMaskLayer(__GLOBALS.desktop, "q-top-mask");
 }, true);
 
 
-/*-------------------------------------------------------------------------
- application base class
- manage the resources, i.e Q.Window
----------------------------------------------------------------------------*/
+/** 应用程序基类, 资源管理，例如窗口模板等等
+ * @constructor
+ */
 
-Q.Application = Q.extend({
+Q.application = Q.extend({
 id : -1,   // application id
 __init__ : function(params) {
   // generator app id
@@ -65,21 +66,50 @@ __init__ : function(params) {
   __GLOBALS.apps[this.id] = this;
 },
 
+/** 释放应用程序相关资源
+ * @memberof Q.application.prototype
+ */
 end : function() {
   delete __GLOBALS.apps[this.id];
 }
 
 });
 
-Q.UIApplication = Q.Application.extend({
+/** UI应用程序，主要是窗口管理
+ *
+ * @constructor
+ * @augments Q.application
+ * @property wnds_map {Q.list} - 窗口管理
+ */
+Q.uiapplication = Q.application.extend({
 wnds_map: null,
 __init__ : function(params) {
-  Q.Application.prototype.__init__.call(this, arguments);
-  this.wnds_map = new Q.LIST();
+  Q.application.prototype.__init__.call(this, arguments);
+  this.wnds_map = new Q.list();
 },
 
-add_window   : function(wndNode) { this.wnds_map.append(wndNode); },
-erase_window : function(wndNode) { this.wnds_map.erase(wndNode); },
+/** 注册窗口到应用程序
+ *
+ * @memberof Q.uiapplication.prototype
+ * @param wndNode {dom} - 注册的窗口
+ */
+add_window   : function(wndNode) { 
+  this.wnds_map.append(wndNode); 
+},
+
+/** 注销窗口
+ *
+ * @memberof Q.uiapplication.prototype
+ * @param wndNode {dom} - 注销的窗口
+ */
+erase_window : function(wndNode) { 
+  this.wnds_map.erase(wndNode); 
+},
+
+/** UI应用程序释放，同时关闭释放窗口资源
+ *
+ * @override
+ */
 end : function() {
   // close all windows
   this.wnds_map.each(function(wndNode) {
@@ -87,11 +117,11 @@ end : function() {
     wndNode.on_close = function() { return true; }
     $BindWindowMessage(wndNode, MESSAGE.CLOSE)();
   });
-  Q.Application.prototype.end.call(this); 
+  Q.application.prototype.end.call(this); 
 }
 });
 
-//  Q.Application end
+//  Q.application end
 
 /*-----------------------------------------------------------------
   common APIs
@@ -172,8 +202,7 @@ function $ShowWindow(wndNode, visible)  {
   }
 }
 
-/*----------------------------------------------------
- 窗口激活模式 $ActiveWindow
+/** 窗口激活模式 $ActiveWindow
 
 RootWindow (__GLOBALS.desktop)  
  |               
@@ -184,7 +213,8 @@ RootWindow (__GLOBALS.desktop)
  |
  +-------------- Window 2
  +-------------- Window 3
-------------------------------------------------------*/
+ *
+ */
 function $ActivateWindow(wndNode, zindex) {
   if(!$IsWindow(wndNode))
     return;
@@ -291,9 +321,20 @@ function $SetWindowTitle(wndNode, title){
   wndNode.hTitle.hTitleContent.innerText = title;
 }
 
-function $SetActiveChild(wndNode, child)   { wndNode.active_child = child;  }
-function $SetWindowZIndex(wndNode, zIndex) { if( isNaN(parseInt(zIndex)) ) { return; } wndNode.style.zIndex = zIndex; }
-function $RemoveWindowStyle(wndNode, ws)   { Q.removeClass(wndNode, ws); }
+function $SetActiveChild(wndNode, child) {
+  wndNode.active_child = child;  
+}
+
+function $SetWindowZIndex(wndNode, zIndex) { 
+  if(wndNode === $GetDesktopWindow())
+    return;
+  wndNode.style.zIndex = zIndex; 
+}
+
+function $RemoveWindowStyle(wndNode, ws) { 
+  Q.removeClass(wndNode, ws); 
+}
+
 function $SetWindowStatus(wndNode, status) { 
   wndNode.status_type  = status; 
 }
@@ -576,7 +617,7 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
   hwnd.container_wnd = container_wnd;
   hwnd.modal_next   = null;
   hwnd.model_prev   = null;  
-  hwnd.wnds         = new Q.LIST();   // 窗口
+  hwnd.wnds         = new Q.list();   // 窗口
   hwnd.active_child = null; 
   hwnd.title_text   = title || 'untitled';
   hwnd.status_type  = CONST.SIZE_NORMAL;
@@ -639,7 +680,8 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
   
   // render 
   container.appendChild(hwnd);
-  Q.drag.attach_object(hwnd, {
+  Q.drag({
+    id: hwnd,
     objects : [hwnd.hTitle, hwnd.hTitle.hTitleCtrlBar, hwnd.hTitle.hTitleContent],
     onmove_begin: Q.bind_handler(hwnd, function(x, y) {
       if($GetWindowStatus(this) != CONST.SIZE_MAX) 
