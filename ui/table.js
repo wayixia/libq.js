@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------
- $ class Q.table
+ $ class Q.Table
  $ date: 2015-5-2 15:54
  $ author: Q
 ---------------------------------------------------------------------------------------*/
@@ -23,62 +23,81 @@ var BindAsEventHandler = function(object, func) {
   };
 };
  
-// create the Data Store
-Q.store = Q.extend({
+/** 数据管理类
+ * @constructor
+ * @property records {Q.HashMap} - 记录集
+ * @property proxy {string} - 数据代理地址
+ * @property currentpage {number} - 当前页
+ * @property length {number} - 数据记录数
+ */
+Q.Store = Q.extend({
 records : null,  // 记录集
 proxy : null,
 currentpage : -1,
 length : 0,
 __init__ : function(config) {
   var config = config || {}; 
-  var _this = this;
-  _this.records = new Q.hashmap;
-  _this.remote = config.remote || false;
-  if(config.datasource)
-    _this.load_json(config.datasource);
+  this.records = new Q.HashMap;
+  this.remote = config.remote || false;
+  if(config.data)
+    this.loadData(config.data);
   
   if(config.proxy) { 
-    _this.proxy = config.proxy; 
-    _this.load_remote(0, 30, null);
+    this.proxy = config.proxy; 
+    this.load_remote(0, 30, null);
   }
 },
-  
-load_json : function(jsonsrouce, bClearOldData) {
-  var _this = this;
-  if(!!bClearOldData) {
-    _this.records = new Q.hashmap;
-    _this.length = 0;
-  }
-    
-  jsonsrouce.each(function(record, index) {
-      record["__data_index__"] = _this.records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
-      _this.records.push(record);
-  });
+
+/** 清空数据
+ *
+ * @memberof Q.Store.prototype
+ */
+clear : function() {
+  this.records = new Q.hashmap;
+  this.length = 0;
 },
-  
-load_remote : function(page, pagesize, callback) {
+
+/** 加载json数据记录集
+ * 
+ * @memberof Q.Store.prototype
+ * @param arr {array} - 数据集
+ */
+appendData : function(arr) {
+  arr.each((function(t) { return function(record, index) {
+    t.push(record);
+  }})(this));
+},
+
+/** 读取远程数据
+ *
+ * @memberof Q.Store.prototype
+ */
+loadRemote : function(page, pagesize, callback) {
   var _this = this;
   Q.Ajax({
     command: _this.proxy+'&page='+page+'&size='+pagesize,
     oncomplete : function(xmlhttp) {
-      //alert(xmlhttp.responseText);
       var s = Q.json_decode(xmlhttp.responseText);
-      _this.load_json(s.data);
-      _this.length = s.extra;
-      
       if(typeof callback == 'function') {
-        callback(_this.records);
+        callback(s.data);
       }
     }
   });
 },
-  
-load_page : function(page, pagesize, callback) {
+ 
+/** 加载页
+ * 
+ * @memberof Q.Store.prototype
+ * @param page {number} - 指定页
+ * @param pagesize {number} - 页大小
+ * @param callback {function} - 回调
+ */
+loadPage : function(page, pagesize, callback) {
   var fnCallback = callback || function(arr) {};
   var _this = this;
     
   if(_this.proxy) {
-    _this.load_remote(page, pagesize, fnCallback);
+    _this.loadRemote(page, pagesize, fnCallback);
   } else {
     var pagedata = new Q.hashmap;
     for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
@@ -88,28 +107,45 @@ load_page : function(page, pagesize, callback) {
     fnCallback(pagedata);
   }
 },
-  
+
+/** 添加记录
+ * 
+ * @memberof Q.Store.prototype
+ * @param record {object} - 记录数据
+ */
 push : function(record) {
   var _this = this;
   record["__data_index__"] = _this.records.dataIndex; // 存储数据索引， 用于确定改记录在记录集中的位置
   _this.records.push(record);
-  _this.length++;
 },
-  
+ 
+/** 删除一条记录
+ *
+ * @memberof Q.Store.prototype
+ * @param record {object} - 删除的记录
+ */
 remove : function(record) {
-  var _this = this;
-  var key = _this.records.find(record);
-  _this.records.remove(key);
-  _this.length--;
+  var key = this.records.find(record);
+  this.records.remove(key);
 },
 
-//! 渲染数据接口
+/** 渲染数据接口
+ *
+ * @memberof Q.Store.prototype
+ * @param fnHandler {callback} - 处理记录数据
+ */
 render : function(fnHanlder) {
   if(fnHanlder) {
     this.records.each(fnHanlder);
   }
 },
-  
+ 
+/** 获取指定索引数据
+ *
+ * @memberof Q.Store.prototype
+ * @param index {number} - 索引
+ * @return {object} 记录
+ */
 item : function(index) {
   return this.records[index];
 }
@@ -214,7 +250,6 @@ var __TH = Q.extend({
     this.hwnd_moveline.style.display = "none";
     if(this._isResizable) {
       this._width = oEvent.clientX - this._left + this._dx;
-      Q.printf(this._width);
       this.hwnd.firstChild.style.width = (this._width) + 'px';
     }
     
@@ -260,7 +295,7 @@ var SELECT_MODE_SHIFT  = 2;
  */
 
 
-Q.table = Q.extend({
+Q.Table = Q.extend({
 wndParent : null,
 wnd : null,
 wndTitleBar : null,
@@ -279,7 +314,6 @@ selected_row: null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
- 
   
   _this.title = json.title;
   _this.store = json.store;
@@ -304,14 +338,19 @@ __init__ : function(json) {
   // 初始化父窗口 wndParent,用来显示jtable控件
   // 并初始化jtable视图
   _this.wndParent = Q.$(json.id);
-  _this._initview(json);
+  _this.initview(json);
 
   _this.render();
   _this.autosize();
 },
 
-//  初始化表格控件视图
-_initview : function(json) {
+/**
+ * 初始化表格空间视图
+ *
+ * @private
+ * @memberof Q.Table.prototype
+ */
+initview : function(json) {
   var _this = this;
   _this.wnd = document.createElement('DIV');
     _this.wndTitleBar = document.createElement('DIV');
@@ -368,7 +407,10 @@ _initview : function(json) {
   _this.wndGroupBody.onselectstart = function() { return false; };
 },
 
-// 更新控件视图
+/** 更新控件视图
+ *
+ * @memberof Q.Table.prototype
+ */
 autosize : function() {
   var _this = this;
   var frame_width, frame_height;
@@ -393,7 +435,7 @@ _sync_scroll : function() {
 },
 
 /** 设置表格样式
- * @memberof Q.table.prototype
+ * @memberof Q.Table.prototype
  * @param wstyle {string} - css样式属性
  * @return 无
  */
@@ -402,7 +444,7 @@ setStyle: function(wstyle) {
 },
 
 /** 移除表格样式
- * @memberof Q.table.prototype
+ * @memberof Q.Table.prototype
  * @param wstyle {string} - 移除的css样式属性
  * @return 无
  */
@@ -411,7 +453,7 @@ removeStyle: function(wstyle) {
 },
 
 /** 在指定行添加一行
- * @memberof Q.table.prototype
+ * @memberof Q.Table.prototype
  * @param nIndex {number} - 插入行位置
  * @param record {object} - 初始化行数据
  * @return 无
@@ -490,17 +532,22 @@ _create_cell : function(nRow, nCol, json) {
   return DIV;
 },
 
-/** 加载数据到表格视图
- * @memberof Q.table.prototype
- * @param data {array} - 数据记录集
- * @param clearold {boolean} - 清楚就数据
- * @return 无
+/** 清除表格视图数据
+ *
+ * @memberof Q.Table.prototype
  */
-loadData : function(data, clearold) {
-  this.store.load_json(data, !!clearold);
-  if(!!clearold) {
-    this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
-  }
+clear : function() {
+  this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
+},
+
+/** 追加数据到表格视图 
+ *
+ * @memberof Q.Table.prototype
+ * @param data {array} - 数据记录集
+ */
+
+appendData : function(data) {
+  this.store.appendData(data);
 },
 
 render : function() {

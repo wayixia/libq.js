@@ -48,7 +48,7 @@
     var obj = Q.$(config.id);
     var config = config || {};
     obj.setAttribute('q-drag-object', true);
-    obj.q_drag_objects = new Q.list();
+    obj.q_drag_objects = new Q.List();
     obj.q_onmove_begin = config.onmove_begin || function(x, y) {}
     obj.q_onmove_end = config.onmove_end || function(x, y) {}
     obj.q_onmove = config.onmove || function(x, y) {

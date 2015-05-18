@@ -53,7 +53,7 @@
     }
 
     Q.$('test-domodal').onclick = function() {
-      new Q.MessageBox({
+      Q.alert({
         parent: g_test_dialog,
         title: "test",
         content: 'test-domodal',
@@ -69,9 +69,9 @@
 <br>
 <p>Q.Window | Q.Dialog</p>
 <hr>
-<button id="btnOpenWindow">Window</button>
-<button id="btnOpenMultiWindow">MultiWindow</button>
-<button id="btnOpenMessageBox">MessageBox</button>
+<button id="btnOpenWindow">Q.Window窗口</button>
+<button id="btnOpenMultiWindow">Q.Window多窗口</button>
+<button id="btnOpenMessageBox">Q.alert消息窗口</button>
 <!-- wndx template
 <embed id="flash" style="display:none;" pluginspage='http://www.macromedia.com/go/getflashplayer' src='http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=3685396_1292548084_ah21RiZsBjPK+l1lHz2stqkP7KQNt6nki2O2vlasJQZdQ0/XM5GaZNUC4yDQFokbpWFOQpA6dvcg/s.swf' type='application/x-shockwave-flash' name='sinaplayer' allowFullScreen='true' allowScriptAccess='always' width='480' height='370' wmode='transparent'></embed-->
 
@@ -95,7 +95,7 @@
   <div class="q-window-mask alpha_1" style="display: none;"></div>
 </div>
 
-
+<br>
 <div style="position: relative; width: 300px;height: 200px;">
 <div id="progress" style="position:absolute; left: 0; top:0; right:0; bottom:0;background: yellow; ">
   dom content

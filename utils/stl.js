@@ -6,22 +6,22 @@
 /**
  * 双向链表
  * @constructor 
- * @property {Q.list.node} head -  链表的头部
+ * @property {Q.List.Node} head -  链表的头部
  * @property {number} length -  链表长度
  */
-Q.list = Q.extend({
+Q.List = Q.extend({
 head : null,  
 length : 0,
 __init__ : function() {},
 /**
  * 节点结构
- * @class Q.list.node
- * @property {Q.list.node} next - 下一个节点
- * @property {Q.list.node} prev - 上一个节点
+ * @class Q.List.Node
+ * @property {Q.List.Node} next - 下一个节点
+ * @property {Q.List.Node} prev - 上一个节点
  * @property {any} next  - 绑定的数据
  * @param data {any} - 绑定的数据
  */
-node : function(data) {
+Node : function(data) {
   this.next = null;
   this.prev = null;
   this.data = data;
@@ -29,9 +29,9 @@ node : function(data) {
 
 /** 
  * 获取链表开始节点 
- * @memberof Q.list.prototype
- * @type {Q.list.node}
- * @return {Q.list.node} - head节点， 如果为null，则说明链表为空
+ * @memberof Q.List.prototype
+ * @type {Q.List.Node}
+ * @return {Q.List.Node} - head节点， 如果为null，则说明链表为空
  */
 begin : function() {  
   return this.head; 
@@ -39,7 +39,7 @@ begin : function() {
 
 /** 
  * 获取链表结尾节点， 返回默认null 
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  * @return {null} 总是返回空节点
  */
 end : function() {  
@@ -48,7 +48,7 @@ end : function() {
 
 /** 
  * 返回链表长度 
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  * @type {number}
  * @return {number}  链表长度 
  */
@@ -58,7 +58,7 @@ len : function() {
 
 /**
  * 获取当前遍历位置的节点数据
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  */
 item : function() {
   return this.current.data; 
@@ -73,7 +73,7 @@ item : function() {
 
 /** 
  * 遍历链表元素
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  * @param fn {fn_list_each} - 回调函数
  */
 each : function(fn) {
@@ -85,12 +85,12 @@ each : function(fn) {
 },
 
 /**
- * 在链表末尾追加一个{@link Q.list.node}节点
- * @memberof Q.list.prototype
+ * 在链表末尾追加一个{@link Q.List.Node}节点
+ * @memberof Q.List.prototype
  * @param data {any} - 绑定的数据
  */
 append : function(data) {
-  var node = new this.node(data);
+  var node = new this.Node(data);
   if(!this.head) {
     this.head = node;
   } else {
@@ -105,7 +105,7 @@ append : function(data) {
 
 /**
  * 删除链表的一个节点
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  * @param data {any} - 指定的数据
  */
 erase : function(data){
@@ -130,7 +130,7 @@ erase : function(data){
 
 /**
  * 清空链表
- * @memberof Q.list.prototype
+ * @memberof Q.List.prototype
  */
 clear : function(){
   for(var node = this.begin(); node != this.end(); node = node.next){
@@ -140,10 +140,10 @@ clear : function(){
 
 /**
  * 查找data所在的节点
- * @type {Q.list.node}
- * @memberof Q.list.prototype
+ * @type {Q.List.Node}
+ * @memberof Q.List.prototype
  * @param data {any} - 指定查询的数据
- * @return {Q.list.node} 节点不存在则返回null
+ * @return {Q.List.Node} 节点不存在则返回null
  */
 find : function(data){
   for(var node = this.begin(); node != this.end(); node = node.next){
@@ -161,7 +161,7 @@ find : function(data){
  * @property length {number} - 元素个数
  * @property dataIndex {number} - 数据项索引, 初始值 0
  */
-Q.hashmap = Q.extend({
+Q.HashMap = Q.extend({
 base : null,
 length : 0,
 index : 0,
@@ -171,7 +171,7 @@ __init__ : function() {
   
 /**
  * 遍历哈希表元素回调函数
- * @callback fn_hashmap_each
+ * @callback fn_HashMap_each
  * @param data {any} - 节点的data
  * @param key  {any} - 节点索引关键字
  * @return {bool} 返回结果决定是否继续遍历: true 继续遍历,  false 停止遍历
@@ -179,8 +179,8 @@ __init__ : function() {
 
 /** 
  * 遍历哈希表元素
- * @memberof Q.hashmap.prototype
- * @param fn {fn_hashmap_each} - 回调函数
+ * @memberof Q.HashMap.prototype
+ * @param fn {fn_HashMap_each} - 回调函数
  */
 each : function(fn) {
   if(typeof fn != 'function') 
@@ -193,7 +193,7 @@ each : function(fn) {
 
 /**
  * 获取指定索引的对象
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param index {number|string} 索引
  * @return {any} 返回指定索引项的值
  */
@@ -203,7 +203,7 @@ item : function(index) {
 
 /**
  * 添加项
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param index {number|string} 索引
  * @param value {any} 值
  * @return 无
@@ -215,7 +215,7 @@ add : function(index, value) {
  
 /**
  * 删除指定索引项
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param index {number|string} 索引
  */
 remove : function(key) {
@@ -226,7 +226,7 @@ remove : function(key) {
 
 /**
  * 清空哈希表
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  */
 clear : function() {
   var _this = this;
@@ -238,7 +238,7 @@ clear : function() {
   
 /**
  * 添加项，自动索引
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param value {any} 数据
  */
 push : function(value) {
@@ -249,7 +249,7 @@ push : function(value) {
   
 /**
  * 删除最后一个数字索引项
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  */
 pop : function() {
   var re = this.base[this.dataIndex];
@@ -260,7 +260,7 @@ pop : function() {
   
 /**
  * 查找value对应的索引
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param value {value} 值
  * @return {number|string} 索引
  */
@@ -277,7 +277,7 @@ find : function(value) {
   
 /**
  * 查找索引项是否存在
- * @memberof Q.hashmap.prototype
+ * @memberof Q.HashMap.prototype
  * @param index {number|string} 索引
  * @return {bool} 该项是否存在
  */

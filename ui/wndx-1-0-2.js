@@ -46,20 +46,22 @@ __GLOBALS.apps       = {};
 // global windows intitalize  
 Q.ready(function() {
   __GLOBALS.desktop = document.body;
-  __GLOBALS.desktop.hook = new Q.list();
-  __GLOBALS.desktop.wnds   = new Q.list();  // popups windows
+  __GLOBALS.desktop.hook = new Q.List();
+  __GLOBALS.desktop.wnds   = new Q.List();  // popups windows
   __GLOBALS.desktop.active_child = null;
-  __GLOBALS.explorer = new Q.uiapplication();
+  __GLOBALS.explorer = new Q.UIApplication();
   $CreateMaskLayer(__GLOBALS.desktop, "q-top-mask");
 }, true);
 
 
-/** 应用程序基类, 资源管理，例如窗口模板等等
+/** 应用程序基类, 资源管理，例如窗口模板等等, 默认系统会自动创建全局UIApplication
+ * 
  * @constructor
+ * @property id {number} - Application ID
  */
 
-Q.application = Q.extend({
-id : -1,   // application id
+Q.Application = Q.extend({
+id : -1,
 __init__ : function(params) {
   // generator app id
   this.id = ++__GLOBALS.appid;
@@ -67,7 +69,7 @@ __init__ : function(params) {
 },
 
 /** 释放应用程序相关资源
- * @memberof Q.application.prototype
+ * @memberof Q.Application.prototype
  */
 end : function() {
   delete __GLOBALS.apps[this.id];
@@ -78,19 +80,19 @@ end : function() {
 /** UI应用程序，主要是窗口管理
  *
  * @constructor
- * @augments Q.application
- * @property wnds_map {Q.list} - 窗口管理
+ * @augments Q.Application
+ * @property wnds_map {Q.List} - 窗口管理
  */
-Q.uiapplication = Q.application.extend({
+Q.UIApplication = Q.Application.extend({
 wnds_map: null,
 __init__ : function(params) {
-  Q.application.prototype.__init__.call(this, arguments);
-  this.wnds_map = new Q.list();
+  Q.Application.prototype.__init__.call(this, arguments);
+  this.wnds_map = new Q.List();
 },
 
 /** 注册窗口到应用程序
  *
- * @memberof Q.uiapplication.prototype
+ * @memberof Q.UIApplication.prototype
  * @param wndNode {dom} - 注册的窗口
  */
 add_window   : function(wndNode) { 
@@ -99,7 +101,7 @@ add_window   : function(wndNode) {
 
 /** 注销窗口
  *
- * @memberof Q.uiapplication.prototype
+ * @memberof Q.UIApplication.prototype
  * @param wndNode {dom} - 注销的窗口
  */
 erase_window : function(wndNode) { 
@@ -120,8 +122,6 @@ end : function() {
   Q.application.prototype.end.call(this); 
 }
 });
-
-//  Q.application end
 
 /*-----------------------------------------------------------------
   common APIs
@@ -147,9 +147,18 @@ function invoke_hook(hwnd, message_id) {
   });
 }
 
-function $IsDesktopWindow(wndNode) { return (__GLOBALS.desktop == wndNode); }
-function $IsWindow(wndNode)        { return (!$IsNull(wndNode)) && (wndNode.nodeType == Q.ELEMENT_NODE) && wndNode.getAttribute('__QWindow__');}
-function $IsMaxWindow(wndNode)     { return ($IsStyle(wndNode, CONST.STYLE_MAX) && (CONST.SIZE_MAX == $GetWindowStatus(wndNode))); }
+function $IsDesktopWindow(wndNode) { 
+  return (__GLOBALS.desktop == wndNode); 
+}
+
+function $IsWindow(wndNode) {
+  return (!$IsNull(wndNode)) && (wndNode.nodeType == Q.ELEMENT_NODE) && wndNode.getAttribute('__QWindow__');
+}
+
+function $IsMaxWindow(wndNode) {
+  return ($IsStyle(wndNode, CONST.STYLE_MAX) && (CONST.SIZE_MAX == $GetWindowStatus(wndNode))); 
+}
+
 function $BindWindowMessage(wndNode, messageid, parameters) {
   return function() {
     if(wndNode != $GetDesktopWindow()) {
@@ -617,7 +626,7 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
   hwnd.container_wnd = container_wnd;
   hwnd.modal_next   = null;
   hwnd.model_prev   = null;  
-  hwnd.wnds         = new Q.list();   // 窗口
+  hwnd.wnds         = new Q.List();   // 窗口
   hwnd.active_child = null; 
   hwnd.title_text   = title || 'untitled';
   hwnd.status_type  = CONST.SIZE_NORMAL;
@@ -914,11 +923,11 @@ adjust : function()        { $FitWindow(this.hwnd); },
 item: function(q_id)       { return qid($GetClient(this.hwnd), q_id); }
 });
 
-/*-----------------------------------------------------------------
- $ class Q.Dialog
- $ dialog base class
- $ date: 2007-11-20
--------------------------------------------------------------------*/
+/** 对话框类封装，支持模态和非模态
+ *
+ * @constructor
+ *
+ */
 Q.Dialog = Q.Window.extend({
 old_window_proc : null,
 __init__ : function(config) {
@@ -1006,11 +1015,13 @@ end_dialog : function(code) {
 
 }); // Q.Dialog
 
-/*-----------------------------------------------------------------
-  class Q.MessageBox
--------------------------------------------------------------------*/
-
-Q.MessageBox = Q.Dialog.extend({
+/** 模拟alert对话框
+ * @function
+ * @param json {json} - 弹窗参数
+ * @return {Q.dialog} 对话框
+ */
+Q.alert = function(json) {
+var _alert = Q.Dialog.extend({
 __init__: function(config) {
   config = config || {};
   config.width  = config.width  || 360;
@@ -1033,13 +1044,16 @@ __init__: function(config) {
       onclick: Q.bind_handler(this, function() { this.on_cancel() && this.end_dialog(CONST.IDCANCEL); })})   
   }
   Q.Dialog.prototype.__init__.call(this, config);
-  this.domodal(config.parent);
-  //this.adjust();
-  //this.center();
+  this.domodal(config.parent?config.parent.wnd():null);
 }
-}); // Q.MessageBox
+});
 
-/* wndx template */
+  return new _alert(json); 
+} // Q.alert
+
+/** wndx 模板加载器
+ * @
+ */
 Q.ui = Q.extend({
 ui_iframe: null,
 __init__: function(json) {
