@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-<title>Q.class | QLib | Powered By PHPKIND</title>
+<title>Q.addClass Q.removeClass | QLib </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- 使用QLib控件是必须包含样式表 -->
 <link type="text/css" rel="stylesheet" href="../ui.css" />
@@ -27,7 +27,7 @@
 
 <script>
 <!--
-Q.Ready(function() {
+Q.ready(function() {
   Q.$('btn-add').onclick=function() {
     Q.addClass(Q.$('class_object'), 'red-background');
   }
@@ -39,8 +39,11 @@ Q.Ready(function() {
 -->
 </script>
 </head>
-<body onmouseup="document.selection && document.selection.empty()" onselectstart="return false" ondragstart="return false" onbeforecopy="return false" style="overflow-y: hidden; overflow-x: hidden" oncopy="document.selection.empty()" leftmargin="0" topmargin="0" onselect="document.selection.empty()" marginheight="0" marginwidth="0">
-<p>Q.add_class/Q.remove_class实例：</p>
+<body onmouseup="document.selection && document.selection.empty()" onselectstart="return false" ondragstart="return false" onbeforecopy="return false" oncopy="document.selection.empty()" onselect="document.selection.empty()">
+
+<p>Q.add_class/Q.remove_class示例</p>
+<hr>
+<br/>
 <button id="btn-add">add_class</button>
 <button id="btn-remove">remove_class</button>
 <br>
