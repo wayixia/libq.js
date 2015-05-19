@@ -19,8 +19,6 @@
   var _domcache = {};    
   /** QueryString */
   var _querystring = {};
-  /** _delay_dom_ready */
-  var _delay_dom_ready = [];
   /**  on_page_load Message Queue */
   var _on_page_load = [];
 
