@@ -1067,7 +1067,7 @@ __init__ : function(config) {
     var button = buttons[i];
     var style = button.style || 'sysbtn';
     this.addBottomButton(button.text, style, (function(dialog, btn) { 
-      return function() { if(btn.onclick()) { dialog.end_dialog(); }}})(this, button));
+      return function() { if(btn.onclick()) { dialog.end(); }}})(this, button));
   }
 },
 
@@ -1118,9 +1118,9 @@ addBottomButton : function(text, className, click) {
  */
 domodal : function(wndNode) {
   //Q.printf('domodal window');
-  if($IsNull(wndNode)) {
+  if(!$IsWindow(wndNode)) {
     wndNode = $GetActiveChild($GetDesktopWindow());
-    if($IsNull(wndNode)) {
+    if(!$IsWindow(wndNode)) {
       wndNode = $GetDesktopWindow();
     }
   }
@@ -1184,7 +1184,7 @@ __init__: function(config) {
       onclick: Q.bind_handler(this, function() { this.on_cancel() && this.end(CONST.IDCANCEL); })})   
   }
   Q.Dialog.prototype.__init__.call(this, config);
-  this.domodal(config.parent?config.parent.wnd():null);
+  this.domodal();
 }
 });
 

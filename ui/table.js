@@ -1,24 +1,5 @@
-/*------------------------------------------------------------------------------------
- $ class Q.Table
- $ date: 2015-5-2 15:54
- $ author: Q
----------------------------------------------------------------------------------------*/
-
 
 // 当有true返回是，说明结束循环
-/*
-Array.prototype.each = function(callback) {
-  var len = this.length;
-  if(typeof callback != 'function') {
-    alert('not a function');
-    return;
-  }
-  for(var i=0; i < len; i++) {
-    if(callback(this[i], i)) {  break; }
-  }
-};
-*/
-
 var BindAsEventHandler = function(object, func) {
   return function(event) {
     return func.call(object, (event || window.event));
@@ -60,7 +41,7 @@ clear : function() {
 /** 加载json数据记录集
  * 
  * @memberof Q.Store.prototype
- * @param arr {array} - 数据集
+ * @param {Object[]} arr - 数据集
  */
 appendData : function(arr) {
   for(var i=0; i<arr.length; i++) {
@@ -276,20 +257,20 @@ var __TH = Q.extend({
 var SELECT_MODE_CTRL  = 1;
 var SELECT_MODE_SHIFT  = 2;
 
-/** 
- * 
- * jtable的组成机构如下图：
- *
- * |--------------------| __ wndTitle 
- * |--------------------| __ wndGroupHeader 
- * |--------------------|
- * |                    | __ wndFrame
- * |  wndGroupBody      | 
- * |                    |
- * |--------------------| __ wndToolbar
- * |--------------------|
+/**
+ * Q.Table 表格控件
  *
  * @constructor
+ * @param {Object} json - 构造参数
+ * @param {string} json.title - 表格标题
+ * @param {Q.Store} json.store - 表格数据存储管理器
+ * @param {Object[]} json.columns - 表格表头
+ * @param {string} json.columns[].name - 表头列字段名
+ * @param {string} json.columns[].title - 表头列标题
+ * @param {string} json.columns[].align - 表头列文字对齐方式 "left", "center", "right";
+ * @param {string} json.columns[].width - 表头列宽度
+ * @param {bool} json.columns[].isHTML - 是否使用HTML渲染
+ * @param {function} json.columns[].renderer - 渲染接口， 默认使用record["列字段名"]
  */
 
 
@@ -541,7 +522,7 @@ clear : function() {
 /** 追加数据到表格视图 
  *
  * @memberof Q.Table.prototype
- * @param data {array} - 数据记录集
+ * @param data {Object[]} - 数据记录集
  */
 
 appendData : function(data) {
