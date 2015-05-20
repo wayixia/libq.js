@@ -34,8 +34,7 @@ Q.ready(function() {
     start_button: Q.$("q-start-button"),
     apps : installed_applications,
     on_logout: function() {
-      var box = new Q.MessageBox({
-        parent: $GetDesktopWindow(),
+      var box = Q.alert({
         title: "Simple.OS",
         wstyle: "simpleos",
         content: "Are you sure to logout",

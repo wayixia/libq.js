@@ -8,7 +8,7 @@ __init__: function(json) {
   Q.UIApplication.prototype.__init__.call(this, json);
   var _this =  this;
   this.ui = json.ui;
-  this.ui.bind_css();
+  this.ui.bindCss();
   var content = _this.ui.template("wnd-x-icons");
   if(!content) {
     alert("load template [wnd-x-icons] failed.")

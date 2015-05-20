@@ -22,26 +22,26 @@
     ];
     
     var store = new Q.Store({
-      datasource: [
+      data: [
         {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'},
-        {url: 'abc', date: '2014-12-11'}
+        {url: 'abc1', date: '2014-12-11'},
+        {url: 'abc2', date: '2014-12-11'},
+        {url: 'abc3', date: '2014-12-11'},
+        {url: 'abc4', date: '2014-12-11'},
+        {url: 'abc5', date: '2014-12-11'},
+        {url: 'abc6', date: '2014-12-11'},
+        {url: 'abc7', date: '2014-12-11'},
+        {url: 'abc8', date: '2014-12-11'},
+        {url: 'abc9', date: '2014-12-11'},
+        {url: 'abc10', date: '2014-12-11'},
+        {url: 'abc11', date: '2014-12-11'},
+        {url: 'abc12', date: '2014-12-11'},
+        {url: 'abc13', date: '2014-12-11'},
+        {url: 'abc14', date: '2014-12-11'},
+        {url: 'abc15', date: '2014-12-11'},
+        {url: 'abc16', date: '2014-12-11'},
+        {url: 'abc17', date: '2014-12-11'},
+        {url: 'abc18', date: '2014-12-11'}
       ] 
     });
     //init Q.table
@@ -52,7 +52,8 @@
       columns: columns,  
       store: store,
       row_onclick : function(row) {
-        var url = this.get_text(row, "url");
+        var datas = this.get_records(row);
+        Q.$('show_text').innerText = "当前选中: " + datas[0].url;
       }
     });
   });
@@ -65,9 +66,8 @@
 <hr>
 <br>
 
-<div id="table_container" style="width: 800px; height: 400px; position:relative;background-color:#99bbe8;">
-
-</div>
+<div id="show_text"></div>
+<div id="table_container" style="width: 800px; height: 400px; position:relative;background-color:#99bbe8;"></div>
 
 </body>
 </html>

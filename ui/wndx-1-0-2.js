@@ -1,8 +1,8 @@
-/*--------------------------------------------------------------------------------
- $ wndx.js
- $ update：2015-1-2 15:27
- $ author：Q
- $ 2014@http://wayixia.com.
+/**
+ * @file wndx.js
+ * @update 2015-1-2 15:27
+ * @author：Q
+ * @copyright 2014@http://wayixia.com.
 ----------------------------------------------------------------------------------*/
 
 /**
@@ -65,7 +65,6 @@ var CONST = {
   IDOK     :          '1',
   IDNO     :          '2'
 }
-
 
 var __GLOBALS = {};
 __GLOBALS.MIN_HEIGHT = 30;
@@ -624,6 +623,9 @@ function $CreateWindowTitlebar(hwnd)  {
   hwnd.appendChild(hTitle);
 }
 
+/** 窗口句柄，是一个DOM元素，不同于Q.Window和Q.Dialog以及后续子类派生的类。
+ * @typedef WndNode
+ */
 
 function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, height, app){
   if(wstyle!=undefined) 
@@ -906,6 +908,9 @@ function qid(p, q_id) {
  * @param {number=} config.height - 窗口高度
  */
 Q.Window = Q.extend({
+/**
+ * @type {WndNode}
+ */
 hwnd : null,
 __init__ : function(config) {
   config = config || {};
@@ -929,9 +934,37 @@ __init__ : function(config) {
   Q.bind_handler(this, config.on_create || function() {})();
 },
 
-wnd : function() { return this.hwnd; },
-set_window_proc : function(new_window_proc) { return $SetWindowProc(this.hwnd, new_window_proc); },
-set_zindex : function(zIndex) { $SetWindowZIndex(this.hwnd, zIndex); },
+/** 返回窗口句柄 
+ * 
+ * @memberof Q.Window.prototype
+ * @return {WndNode} 窗口句柄
+ */
+wnd : function() { 
+  return this.hwnd; 
+},
+
+/** 设置窗口过程回调 
+ * @memberof Q.Window.prototype
+ */
+set_window_proc : function(new_window_proc) { 
+  return $SetWindowProc(this.hwnd, new_window_proc); 
+},
+
+/** 设置窗口叠加次序， 值越大越优先显示 
+ * 
+ * @memberof Q.Window.prototype
+ * @param {number} zIndex - 叠加次序
+ */
+set_zindex : function(zIndex) { 
+  $SetWindowZIndex(this.hwnd, zIndex);
+},
+
+/** 设置窗体客户区显示内容
+ *
+ * @memberof Q.Window.prototype
+ * @param {dom|string} HTMLContent - 窗口内容可以是element也可以是字符串
+ * 
+ */
 set_content : function(HTMLContent) {
   HTMLContent = HTMLContent || "";
   if(HTMLContent && HTMLContent.nodeType == Q.ELEMENT_NODE) {
@@ -941,19 +974,75 @@ set_content : function(HTMLContent) {
     $GetClient(this.hwnd).innerHTML = HTMLContent;
   }
 },
-add_style: function(ws)    { Q.addClass(this.hwnd, ws);        },
-remove_style: function(ws) { Q.removeClass(this.hwnd, ws);     },
-show : function(isVisible) { $ShowWindow(this.hwnd, isVisible) },
-center : function()        { $CenterWindow(this.hwnd);         },
-activate : function()      { $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE)(); },
-adjust : function()        { $FitWindow(this.hwnd); },
-item: function(q_id)       { return qid($GetClient(this.hwnd), q_id); }
+
+/** 添加窗口样式 
+ *
+ * @memberof Q.Window.prototype
+ * @param {string} ws - 窗口样式, 多个样式用"|"分割，参考{@link CONST}
+ */
+add_style: function(ws)    { 
+  Q.addClass(this.hwnd, ws);        
+},
+
+/** 删除窗口样式 
+ *
+ * @memberof Q.Window.prototype
+ * @param {string} ws - 窗口样式, 多个样式用"|"分割，参考{@link CONST}
+ */
+remove_style: function(ws) { 
+  Q.removeClass(this.hwnd, ws);     
+},
+
+/**显示隐藏窗口 
+ *
+ * @memberof Q.Window.prototype
+ * @param {bool} isVisibile - 显示隐藏窗口 
+ */
+show : function(isVisible) { 
+  $ShowWindow(this.hwnd, isVisible) 
+},
+
+/** 窗口居中 
+ *
+ * @memberof Q.Widnow.prototype
+ */
+center : function() { 
+  $CenterWindow(this.hwnd);         
+},
+
+/** 激活窗口
+ *
+ * @memberof Q.Window.prototype
+ */
+activate : function() {
+  $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE)(); 
+},
+
+/** 根据窗口内容自动调整窗口大小
+ *
+ * @memberof Q.Window.prototype
+ */
+adjust : function() {
+  $FitWindow(this.hwnd); 
+},
+
+/** 获取客户区q:id为q_id的元素
+ *
+ * @param {string} q_id - 元素属性q:id
+ * @return {dom} 网页元素
+ */
+item: function(q_id) {
+  return qid($GetClient(this.hwnd), q_id); 
+}
+
 });
 
 /** 对话框类封装，支持模态和非模态
  *
+ * @augments Q.Window
  * @constructor
- *
+ * @param {Object} config - 对话框构造参数, 构造参数继承自{@link Q.Window}
+ * @param {array=} config.buttons - 按钮集合， 当buttons不为空，自动应用with_bottom样式
  */
 Q.Dialog = Q.Window.extend({
 old_window_proc : null,
@@ -977,12 +1066,15 @@ __init__ : function(config) {
   for(var i=0; i < buttons.length; i++) {
     var button = buttons[i];
     var style = button.style || 'sysbtn';
-    this.add_bottom_button(button.text, style, (function(dialog, btn) { 
+    this.addBottomButton(button.text, style, (function(dialog, btn) { 
       return function() { if(btn.onclick()) { dialog.end_dialog(); }}})(this, button));
   }
 },
 
-// dialog procedure
+/** dialog procedure
+ * @memberof Q.Dialog.prototype
+ * @private
+ */
 window_proc : function(msgid, json) {
   switch(msgid) {
   case MESSAGE.CLOSE:
@@ -997,7 +1089,14 @@ window_proc : function(msgid, json) {
   return this.old_window_proc(this.hwnd, msgid, json);
 },
 
-add_bottom_button : function(text, className, lpfunc) {
+/**
+ * 添加按钮到窗口底部按钮控制栏
+ * @memberof Q.Dialog.prototype
+ * @param {string} text - 按钮显示文字
+ * @param {string=} className - 按钮样式
+ * @param {function} click - 单击事件
+ */
+addBottomButton : function(text, className, click) {
   var _this = this;
   var ws = $GetWindowStyle(this.hwnd);
   
@@ -1007,11 +1106,16 @@ add_bottom_button : function(text, className, lpfunc) {
   var btn = document.createElement('button');
   $GetBottomBar(this.hwnd).appendChild(btn);
   btn.innerText = text;
-  btn.onclick = lpfunc;
+  btn.onclick = click;
   btn.className = className;
   return true;
 },
 
+/** 模态显示对话框
+ *
+ * @memberof Q.Dialog.prototype
+ * @param {WndNode} wndNode - 窗口句柄
+ */
 domodal : function(wndNode) {
   //Q.printf('domodal window');
   if($IsNull(wndNode)) {
@@ -1031,8 +1135,13 @@ domodal : function(wndNode) {
     this.set_zindex(100001);
   }
 },
- 
-end_dialog : function(code) {
+
+/** 销毁对话框
+ * 
+ * @memberof Q.Dialog.prototype
+ * @param {number=} code - 销毁对话框返回值 
+ */
+end : function(code) {
   $BindWindowMessage(this.hwnd, MESSAGE.CLOSE)();
   if( arguments.length > 1 )  
     return arguments[1];
@@ -1062,17 +1171,17 @@ __init__: function(config) {
   if( typeof config.on_ok == 'function' ) {
     this.on_ok = config.on_ok;
     config.buttons.push({text: Q.locale_text('qYes', ' 是 '), 
-      onclick: Q.bind_handler(this, function() { this.on_ok() && this.end_dialog(CONST.IDOK); })})   
+      onclick: Q.bind_handler(this, function() { this.on_ok() && this.end(CONST.IDOK); })})   
   }
   if( typeof config.on_no == 'function' ) {
     this.on_no = config.on_no;
     config.buttons.push({text: Q.locale_text('qNo', ' 否 '), style:'syscancelbtn', 
-      onclick: Q.bind_handler(this, function() { this.on_no() && this.end_dialog(CONST.IDNO); })})   
+      onclick: Q.bind_handler(this, function() { this.on_no() && this.end(CONST.IDNO); })})   
   }
   if( typeof config.on_cancel == 'function' ) {
     this.on_cancel = config.on_cancel;
     config.buttons.push({text: Q.locale_text('qCancel', ' 取消 '), style:'syscancelbtn', 
-      onclick: Q.bind_handler(this, function() { this.on_cancel() && this.end_dialog(CONST.IDCANCEL); })})   
+      onclick: Q.bind_handler(this, function() { this.on_cancel() && this.end(CONST.IDCANCEL); })})   
   }
   Q.Dialog.prototype.__init__.call(this, config);
   this.domodal(config.parent?config.parent.wnd():null);
@@ -1086,7 +1195,7 @@ __init__: function(config) {
  *
  * @constructor
  * @param {Object} json
- * @param {string} json.src - wndx模板文件路径
+ * @param {string} json.src - wndx模板文件路径， 引用路径时需要考虑的跨域问题，建议模板跟脚本一个路径
  * @param {Q.UI.callback} json.oncomplete - 加载结果回调
  */
 Q.UI = Q.extend({
@@ -1096,7 +1205,6 @@ ui_iframe: null,
  * @param {bool} success - wndx模板加载是否成功 
  */
 
-/** 构造入口 */
 __init__: function(json) {
   json = json || {};
   this.ui_iframe = document.createElement("IFRAME");
@@ -1129,11 +1237,11 @@ template: function(id) {
   return null;
 },
 
-/** 应用模板的样式到用户界面
+/** 应用模板的样式到用户界面, 可根据需求调用，建议调用
  *
  * @memberof Q.UI.prototype
  */
-bind_css : function() {
+bindCss : function() {
   // get ui style
 	var heads = document.getElementsByTagName("head");
   var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;

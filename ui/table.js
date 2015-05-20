@@ -27,10 +27,9 @@ var BindAsEventHandler = function(object, func) {
  
 /** 数据管理类
  * @constructor
- * @property records {Q.HashMap} - 记录集
- * @property proxy {string} - 数据代理地址
- * @property currentpage {number} - 当前页
- * @property length {number} - 数据记录数
+ * @param {Object} config - 构造参数
+ * @param {array=} config.data - 数据数组
+ * @param {string} config.proxy - 远程数据接口
  */
 Q.Store = Q.extend({
 records : null,  // 记录集
@@ -40,13 +39,12 @@ length : 0,
 __init__ : function(config) {
   var config = config || {}; 
   this.records = new Q.HashMap;
-  this.remote = config.remote || false;
   if(config.data)
-    this.loadData(config.data);
+    this.appendData(config.data);
   
   if(config.proxy) { 
     this.proxy = config.proxy; 
-    this.load_remote(0, 30, null);
+    this.loadRemote(0, 30, null);
   }
 },
 
@@ -65,9 +63,9 @@ clear : function() {
  * @param arr {array} - 数据集
  */
 appendData : function(arr) {
-  arr.each((function(t) { return function(record, index) {
-    t.push(record);
-  }})(this));
+  for(var i=0; i<arr.length; i++) {
+    this.push(arr[i]);
+  }
 },
 
 /** 读取远程数据
@@ -117,7 +115,7 @@ loadPage : function(page, pagesize, callback) {
  */
 push : function(record) {
   var _this = this;
-  record["__data_index__"] = _this.records.dataIndex; // 存储数据索引， 用于确定改记录在记录集中的位置
+  record["__dataindex__"] = _this.records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
   _this.records.push(record);
 },
  
@@ -488,7 +486,7 @@ append : function(nIndex, record) {
     }
     return false;
   }})(this, ROW);
-  ROW.setAttribute('__data_index__', record['__data_index__']);  // 设置数据索引
+  ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
   var len = _this.wndTableHeaderRow.cells.length;
   for(var j = 0; j < len; j++) {
@@ -718,7 +716,7 @@ row_insert : function(index, record) {
 },
 
 row_index : function(row) { 
-  return parseInt(row.getAttribute('__data_index__'),10); 
+  return parseInt(row.getAttribute('__dataindex__'),10); 
 },
 row_is_enabled  : function(row) { return row && (!row.getAttribute('_disabled')); },
 row_is_selected : function(row) { return Q.hasClass(row, "q-selected"); },
@@ -745,7 +743,7 @@ row_set_selected : function(row, bSelected) {
   
 get_records : function(row) {
   var _this = this;
-  var dataIndex = _this.row_index(row);
+  var dataIndex = this.row_index(row);
   var store = _this.store;
   var arr = [];
   if(-1 == dataIndex) {  
@@ -762,12 +760,6 @@ get_records : function(row) {
   }
 },
 
-get_text : function(row, fieldName) {
-  var _this = this;
-  var record = _this.get_records(row)[0];
-  return record[fieldName];
-},
-  
 sync_scroll : function() {}
 }); 
 

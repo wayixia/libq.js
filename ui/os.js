@@ -238,7 +238,7 @@ run :function (app) {
       Q.printf("load from file and create app ok");
       app.klass = app_class;
       // load ui
-      app.ui_runtime = new Q.ui({src: app.ui, oncomplete: function(ok) {
+      app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
         // init app instance
         Q.printf("load ui -> " + (ok?"ok":"failed"));
         //try {
