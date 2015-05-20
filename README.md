@@ -17,7 +17,6 @@
 * 下拉选框(Q.dropdownlist)
 * 滑块 水平+垂直 (Q.slider)
 * 菜单 (class_menu)
-* 
 
 
 ## 类
