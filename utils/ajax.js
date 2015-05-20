@@ -45,24 +45,7 @@ Q.json_encode = function(v) {
   return JSON.stringify(v);
 }
 
-function STRUCT_REQUEST(json) {
-  if(json.command.toString().indexOf('?') == -1) {
-    this.command = json.command + '?' + '&rnd=' + Q.rnd(16);
-  } else {
-    this.command =   json.command ? (json.command + '&rnd=' + Q.rnd(16)) : null;
-  }
-  
-  this.postdata = json.data || {};
-  this.disableWarning = !!json.disableWarning;
-  this.oncomplete = json.oncomplete || function(){}; 
-  this.onerror = json.onerror || function(){};
-  this.toString = function() {
-    console.log(this.postdata)
-    return Q.json2str(this.postdata);
-  }
-}
-
-function _newAjaxTrans() {
+function creatAjaxTrans() {
   var transport = null;
   try  {
     transport = new ActiveXObject("Msxml2.XMLHTTP");
@@ -80,24 +63,52 @@ function _newAjaxTrans() {
   return transport;
 }
 
-/**
- * @typedef ajax_request
- * 发送Ajax请求
+/** ajax请求回调类型
+ *
+ * @callback ajax_callback
+ * @param {Object} xmlhttp - XMLHttpRequest对象
  */
 
-/**
+/** ajax请求
  * @function
- * @param json {ajax_request} 请求选项
+ * @param {Object} json ajax请求参数
+ * @param {string} json.command - 请求url
+ * @param {string} [json.method="get"] - ajax请求方法
+ * @param {bool}   [json.async=true] - 异步ajax请求
+ * @param {*=} json.data - 请求的数据
+ * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
+ * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
+ * @param {bool=} [json.withCredentials=false] - ajax跨域凭证， 默认false
  */
 Q.ajax = function(json) {
-  var request = new STRUCT_REQUEST(json);
-  var xmlhttp = _newAjaxTrans();
-  var postdata = 'postdata='+encodeURIComponent(encodeURIComponent(request.toString())); 
-  xmlhttp.open("POST", request.command, true);
-  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  if(json.withCredentials) {
-    xmlhttp.withCredentials = !! json.withCredentials;
+  var request = json || {};
+  var command = request.command.toString();
+  if(command.indexOf('?') == -1) {
+    command = command + '?' + '&rnd=' + Q.rnd(16);
+  } else {
+    command = command + '&rnd=' + Q.rnd(16);
   }
+
+  var method = request.method || "POST";
+  method = toUpper(method);
+  if(method == "GET" || method == "POST") {
+
+  } else {
+    method = "GET"
+  }
+
+  var xmlhttp = createAjaxTrans();
+  var async = true;
+  if(request.async) {
+    async = !! request.async;
+  }
+
+  //var postdata = encodeURIComponent(encodeURIComponent(request.toString())); 
+  xmlhttp.open(method, command, async);
+  if(request.withCredentials) {
+    xmlhttp.withCredentials = !! request.withCredentials;
+  }
+  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   //xmlhttp.setRequestHeader( "Content-Type", "text/html;charset=UTF-8" );
   xmlhttp.onreadystatechange = function() {
     if(xmlhttp.readyState == 4) {
@@ -108,5 +119,10 @@ Q.ajax = function(json) {
       }
     }
   };
+
+  var postdata = null;
+  if(request.data) {
+    postdata = encodeURIComponent(encodeURIComponent(request.toString())); 
+  }
   xmlhttp.send(postdata);
 }

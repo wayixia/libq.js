@@ -52,7 +52,7 @@ end : function() {
  * @type {number}
  * @return {number}  链表长度 
  */
-len : function() {
+size : function() {
   return this.length;
 },
 
@@ -66,7 +66,7 @@ item : function() {
 
 /**
  * 遍历链表元素回调函数
- * @callback fn_list_each
+ * @callback Q.List.each_handler
  * @param data {any} - 节点的data
  * @return {bool} 返回结果决定是否继续遍历: true 继续遍历,  false 停止遍历
  */
@@ -74,7 +74,7 @@ item : function() {
 /** 
  * 遍历链表元素
  * @memberof Q.List.prototype
- * @param fn {fn_list_each} - 回调函数
+ * @param fn {Q.List.each_handler} - 回调函数
  */
 each : function(fn) {
   if(typeof fn == 'function') {
@@ -171,7 +171,7 @@ __init__ : function() {
   
 /**
  * 遍历哈希表元素回调函数
- * @callback fn_HashMap_each
+ * @callback Q.HashMap.each_handler
  * @param data {any} - 节点的data
  * @param key  {any} - 节点索引关键字
  * @return {bool} 返回结果决定是否继续遍历: true 继续遍历,  false 停止遍历
@@ -180,7 +180,7 @@ __init__ : function() {
 /** 
  * 遍历哈希表元素
  * @memberof Q.HashMap.prototype
- * @param fn {fn_HashMap_each} - 回调函数
+ * @param fn {Q.HashMap.each_handler} - 回调函数
  */
 each : function(fn) {
   if(typeof fn != 'function') 

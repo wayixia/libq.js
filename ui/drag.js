@@ -35,14 +35,6 @@
     Q.addEvent(document, 'mouseup', _this.mouseup_handler);
   },
 
-  /**
-   * @typedef json_drag
-   * @property id {dom|string} - 绑定的元素id
-   * @property onmove_begin {event} - 移动开始
-   * @property onmove {event} - 移动中
-   * @property onmove_end {event} - 移动结束
-   */
-
   attach_object : function(json) {
     var config = json || {};
     var obj = Q.$(config.id);
@@ -114,7 +106,7 @@
       this.begin_top = target_wnd.offsetTop;
       //Q.printf("[drag-onbegin]offet x: " + this.begin_left + ", offset y: " + this.begin_top )
       if(this.capture_wnd.q_onmove_begin)
-        this.capture_wnd.q_onmove_begin(this.zoom(this.begin_left+this.x), this.zoom(this.begin_top+this.y));
+        this.capture_wnd.q_onmove_begin(this.begin_left+this.zoom(this.x), this.begin_top+this.zoom(this.y));
       this.timer = setTimeout(Q.bind_handler(this, function() { Q.addEvent(document, 'mousemove', this.mousemove_handler);  }), 10);
       return false; 
     }
@@ -147,9 +139,24 @@
 var instance;
 
 /**
+ * 事件回调函数
+ *
+ * @callback drag_event_callback
+ * @param {number} left - 水平坐标
+ * @param {number} top  - 顶点坐标
+ */
+
+
+/**
  * 初始化一个拖拽元素，同时可以指定多个子节点触发当前拖动对象的移动
  * @function
- * @param json {json_drag} - 初始化拖拽参数
+ * @param {Object} json - 初始化拖拽参数
+ * @param {string|dom} json.id - 拖拽的对象
+ * @param {bool} json.self - 拖拽的对象的任何区域可拖拽
+ * @param {array} json.objects - 拖拽对象的内部触发拖拽的子节点元素，当鼠标这些元素按下时，可以触发json.id对象的拖拽
+ * @param {drag_event_callback} json.onmove_begin - 移动开始
+ * @param {drag_event_callback} json.onmove - 移动中
+ * @param {drag_event_callback} json.onmove_end - 移动结束
  *
  * @example <caption> 元素自身可拖拽初始化</caption>
 Q.ready(function() {

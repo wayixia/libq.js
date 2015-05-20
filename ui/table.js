@@ -6,6 +6,7 @@
 
 
 // 当有true返回是，说明结束循环
+/*
 Array.prototype.each = function(callback) {
   var len = this.length;
   if(typeof callback != 'function') {
@@ -16,6 +17,7 @@ Array.prototype.each = function(callback) {
     if(callback(this[i], i)) {  break; }
   }
 };
+*/
 
 var BindAsEventHandler = function(object, func) {
   return function(event) {
@@ -132,12 +134,10 @@ remove : function(record) {
 /** 渲染数据接口
  *
  * @memberof Q.Store.prototype
- * @param fnHandler {callback} - 处理记录数据
+ * @param fnHandler {Q.HashMap.each_handler} - 处理记录数据
  */
-render : function(fnHanlder) {
-  if(fnHanlder) {
-    this.records.each(fnHanlder);
-  }
+each : function(fnHanlder) {
+  this.records.each(fnHanlder);
 },
  
 /** 获取指定索引数据
@@ -551,18 +551,16 @@ appendData : function(data) {
 },
 
 render : function() {
-  var _this = this;
-  this.store.render(function(record, index) {
-    _this.append(index, record);
-  });
+  this.store.each((function(t) { return function(record, index) {
+    t.append(index, record);
+  }})(this));
 },
 
 load_columns : function() {
-  var _this = this;
-  for(var i=0; i < _this.columns.length; i++) {
-    var column = _this.columns[i];
+  for(var i=0; i < this.columns.length; i++) {
+    var column = this.columns[i];
     column.width = parseInt(column.width, 10);
-    _this.insert_column(i, column);
+    this.insert_column(i, column);
   }
 },
 
@@ -582,30 +580,28 @@ insert_column : function(arrIndex, json) {
   if(!json.fixed) {
     new __TH(TD, {moveline: _this.wndMoveLine, 
       onStart: function(evt, handler) { 
-        _this.column_MouseDown(evt, handler); 
+        _this._column_MouseDown(evt, handler); 
       }, 
       onStop: function(evt, handler) { 
-        _this.column_MouseUp(evt, handler); 
+        _this._column_MouseUp(evt, handler); 
       }
     });
   }
 },
 
-setClickEvent : function(colIndex, clickEvent) {
-  var _this = this;
-  var column = _this.columns[colIndex];
-  if(column) {
-    if(!column.clicks) {
-      column.clicks = [];
-    }
-    column.clicks.push(clickEvent);
-  } else {
-    alert('Invalid Column');
-  }
-},
-
-// 排序函数原型 sortFunc(row1, row2) 
-// 
+/** 排序函数原型
+ * @callback Q.Table.sortFn
+ *
+ * @param row1 {dom} - 一个Row
+ * @param row2 {dom} - 另一个Row
+ * @return {number} 0 - 相等， -1 - 小于， 1 - 大于
+ */
+/** 指定列排序函数 
+ *
+ * @memberof Q.Table.prototype
+ * @param colIndex {number} - 列号，从0开始
+ * @param sortFunc {Q.Table.sortFn} - 排序函数
+ */ 
 setSortFunc: function(colIndex, sortFunc) {
   var _this = this;
   var column = _this.columns[colIndex];
@@ -616,7 +612,7 @@ setSortFunc: function(colIndex, sortFunc) {
   }
 },
   
-column_MouseDown : function(evt, handler) {
+_column_MouseDown : function(evt, handler) {
   var _this = this;
   if(handler._isResizable) {
     _this.wndMoveLine.style.height = 
@@ -624,7 +620,7 @@ column_MouseDown : function(evt, handler) {
   }
 },
   
-column_MouseUp : function(evt, handler) {
+_column_MouseUp : function(evt, handler) {
   var _this = this;
   var TD = handler.hwnd;
   if(handler._isResizable) {

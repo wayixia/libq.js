@@ -6,20 +6,52 @@
 ----------------------------------------------------------------------------------*/
 
 /**
- * @
+ * 常量定义
+ * @readonly
+ * @enum {*}
  */
 var CONST = {
+  /** Q.Window窗口样式, 无标题栏
+   * @type {string}
+   */
   no_title    : "q-attr-no-title",
+  /** Q.Window窗口样式, 无标题栏图标
+   * @type {string}
+   */
   no_icon     : "q-attr-no-icon",
-  no_min      : "q-attr-no-min",
-  no_max      : "q-attr-no-max",
-  no_close    : "q-attr-no-close",
-  with_bottom : "q-attr-with-bottom",
-  fixed       : "q-attr-fixed",
-  inactive_title : "q-attr-inactive-title",
 
+  /** Q.Window窗口样式, 无最小化按钮
+   * @type {string}
+   */
+  no_min      : "q-attr-no-min",
+
+  /** Q.Window窗口样式, 无最大化按钮
+   * @type {string}
+   */
+  no_max      : "q-attr-no-max",
+
+  /** Q.Window窗口样式, 无关闭按钮
+   * @type {string}
+   */
+  no_close    : "q-attr-no-close",
+
+  /** Q.Window窗口样式, 带底部按钮控制栏
+   * @type {string}
+   */
+  with_bottom : "q-attr-with-bottom",
+
+  /** Q.Window窗口样式, 窗口固定大小，不允许拖拽边框
+   * @type {string}
+   */
+  fixed       : "q-attr-fixed",
+
+
+  /** Q.Window窗口样式, 未激活标题栏样式
+   * @type {string}
+   */
+  inactive_title : "q-attr-inactive-title",
+  
   // size text
-  SIZE_CLOSE:    "close",
   SIZE_MIN:      "min",
   SIZE_MAX:      "max",
   SIZE_NORMAL:   "normal",
@@ -211,23 +243,9 @@ function $ShowWindow(wndNode, visible)  {
   }
 }
 
-/** 窗口激活模式 $ActiveWindow
-
-RootWindow (__GLOBALS.desktop)  
- |               
- +--active_child---> Window 1 
- |        +---------------- child window 1
- |        +---active_child---> child window 2
- |        +---------------- child window 3
- |
- +-------------- Window 2
- +-------------- Window 3
- *
- */
 function $ActivateWindow(wndNode, zindex) {
   if(!$IsWindow(wndNode))
     return;
-  //Q.printf("active window " + $GetTitleText(wndNode));
   var defined_zindex = 0;
   if(!isNaN(zindex)) 
     defined_zindex = zindex;
@@ -464,7 +482,9 @@ function $GetTopZIndexWindow(){
 }
 
 
-
+/**
+ * @enum MESSAGE
+ */
 var MESSAGE = {
   CREATE: 0,
   MIN   : 1,
@@ -872,12 +892,19 @@ function qid(p, q_id) {
   return find_item(p);
 }
 
-/*-----------------------------------------------------------------
- $ class Q.Window
- $ dialog base class
- $ date: 2014-05-16
--------------------------------------------------------------------*/
-// 创建窗口，并返回一个窗口操作类
+/** 窗口类封装, 创建窗口，并返回一个窗口操作类
+ * 
+ * @constructor 
+ * @param {Object} config - 窗口构造参数
+ * @param {Q.Application=} config.app - 窗口所属App
+ * @param {Q.Window=} config.parent - 父窗口
+ * @param {string=} config.wstyle - 窗口样式属性，{@link CONST} 使用"|"分割, 例如: "q-attr-no-title|q-attr-with-bottom"
+ * @param {string=} config.title - 窗口标题
+ * @param {number=} config.left - 窗口水平坐标
+ * @param {number=} config.top - 窗口顶点垂直坐标
+ * @param {number=} config.width - 窗口宽度
+ * @param {number=} config.height - 窗口高度
+ */
 Q.Window = Q.extend({
 hwnd : null,
 __init__ : function(config) {
@@ -1015,9 +1042,13 @@ end_dialog : function(code) {
 
 }); // Q.Dialog
 
-/** 模拟alert对话框
+/** 模拟alert对话框， 构造参数继承
+ * @see Q.Dialog
  * @function
- * @param json {json} - 弹窗参数
+ * @param {Object} json - 弹窗参数
+ * @param {function=} json.on_ok - 按钮"是"
+ * @param {function=} json.on_no - 按钮"否"
+ * @param {function=} json.on_cancel - 按钮"取消"
  * @return {Q.dialog} 对话框
  */
 Q.alert = function(json) {
@@ -1051,11 +1082,21 @@ __init__: function(config) {
   return new _alert(json); 
 } // Q.alert
 
-/** wndx 模板加载器
- * @
+/** wndx 模板加载器， 通过{@link Q.UI.template}方法获取指定id的dom克隆对象
+ *
+ * @constructor
+ * @param {Object} json
+ * @param {string} json.src - wndx模板文件路径
+ * @param {Q.UI.callback} json.oncomplete - 加载结果回调
  */
-Q.ui = Q.extend({
+Q.UI = Q.extend({
 ui_iframe: null,
+/**
+ * @callback Q.UI.callback
+ * @param {bool} success - wndx模板加载是否成功 
+ */
+
+/** 构造入口 */
 __init__: function(json) {
   json = json || {};
   this.ui_iframe = document.createElement("IFRAME");
@@ -1073,6 +1114,12 @@ __init__: function(json) {
   document.body.appendChild(this.ui_iframe);
 },
 
+/** 获取模板指定id的元素的克隆副本 
+ *
+ * @memberof Q.UI.prototype
+ * @param {string} id - 元素id
+ * @returns {dom} 如果id元素存在则返回该元素的克隆副本
+ */
 template: function(id) {
   var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
   var tpl = doc.getElementById(id);
@@ -1082,6 +1129,10 @@ template: function(id) {
   return null;
 },
 
+/** 应用模板的样式到用户界面
+ *
+ * @memberof Q.UI.prototype
+ */
 bind_css : function() {
   // get ui style
 	var heads = document.getElementsByTagName("head");
