@@ -9,42 +9,37 @@
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
   -->
-  <script type="text/javascript" src="../Q.js">
-  <!--
-  // 需要加载额外库时
-  import utils.stl;
-  import ui.slider;
-  import ui.drag;
-  -->
-  </script>
+  <script type="text/javascript" src="../Q.js"></script>
+  <script type="text/javascript" src="../utils/stl.js"></script>
+  <script type="text/javascript" src="../ui/drag.js"></script>
+  <script type="text/javascript" src="../ui/slider.js"></script>
 
   <script>
   <!--
-  Q.Ready(function() {
+  Q.ready(function() {
     // 提示对话框
-    var e = new Q.slider({
+    var slider_hr = new Q.Slider({
       id: 'x-ctrl',
       min: 0,
       max: 1000, 
+      value: 300,
       on_xscroll: function(v) { 
         Q.$('x-ctrl-value').innerText="当前值: " + v;
       }
     });
-    e.set_value(300);
-    /*
-    Q.$('x-ctrl-range').innerText = "最小值-最大值: " + e.min + "-" + e.max;
-    Q.$('x-ctrl-value').innerText="当前值: " + e.value;
-    var e2= new Q.slider({id: 'y-ctrl', type: 'vt', min: 0, max: 1000});
-    e2.set_value(600);
-    */
+    
+    Q.$('x-ctrl-range').innerText = "最小值-最大值: " + slider_hr.min + "-" + slider_hr.max;
+    Q.$('x-ctrl-value').innerText="当前值: " + slider_hr.getValue();
+    
+    var slider_vt= new Q.Slider({id: 'y-ctrl', type: 'vt', min: 0, max: 1000, value: 600});
+    
   });
   //-->
   </script>
 </head>
 <body onselectstart="return false;" style="height: 100%;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
-
-<hr>
-<p>滑块控件 - Q.slider</p>
+<br>
+<p>滑块控件 - Q.Slider</p>
 <hr>
 <br>
 <p> 水平 </p>
