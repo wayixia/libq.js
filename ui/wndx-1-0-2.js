@@ -150,7 +150,7 @@ end : function() {
     wndNode.on_close = function() { return true; }
     $BindWindowMessage(wndNode, MESSAGE.CLOSE)();
   });
-  Q.application.prototype.end.call(this); 
+  Q.Application.prototype.end.call(this); 
 }
 });
 
@@ -924,7 +924,7 @@ __init__ : function(config) {
   if(config.parent instanceof Q.Window) 
     parent_wnd = config.parent.wnd() || $GetDesktopWindow();
   this.hwnd = $CreateWindow(parent_wnd, title, config.wstyle, left, top, width, height, config.app);
-  this.set_content(config.content);
+  this.setContent(config.content);
   this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
   this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
   this.hwnd.on_move_begin = Q.bind_handler(this, config.on_move_begin || function(x,y) {});
@@ -946,7 +946,7 @@ wnd : function() {
 /** 设置窗口过程回调 
  * @memberof Q.Window.prototype
  */
-set_window_proc : function(new_window_proc) { 
+setWindowProc : function(new_window_proc) { 
   return $SetWindowProc(this.hwnd, new_window_proc); 
 },
 
@@ -955,7 +955,7 @@ set_window_proc : function(new_window_proc) {
  * @memberof Q.Window.prototype
  * @param {number} zIndex - 叠加次序
  */
-set_zindex : function(zIndex) { 
+setZIndex : function(zIndex) { 
   $SetWindowZIndex(this.hwnd, zIndex);
 },
 
@@ -965,7 +965,7 @@ set_zindex : function(zIndex) {
  * @param {dom|string} HTMLContent - 窗口内容可以是element也可以是字符串
  * 
  */
-set_content : function(HTMLContent) {
+setContent : function(HTMLContent) {
   HTMLContent = HTMLContent || "";
   if(HTMLContent && HTMLContent.nodeType == Q.ELEMENT_NODE) {
     $GetClient(this.hwnd).appendChild(HTMLContent);
@@ -980,7 +980,7 @@ set_content : function(HTMLContent) {
  * @memberof Q.Window.prototype
  * @param {string} ws - 窗口样式, 多个样式用"|"分割，参考{@link CONST}
  */
-add_style: function(ws)    { 
+addStyle: function(ws)    { 
   Q.addClass(this.hwnd, ws);        
 },
 
@@ -989,7 +989,7 @@ add_style: function(ws)    {
  * @memberof Q.Window.prototype
  * @param {string} ws - 窗口样式, 多个样式用"|"分割，参考{@link CONST}
  */
-remove_style: function(ws) { 
+removeStyle: function(ws) { 
   Q.removeClass(this.hwnd, ws);     
 },
 
@@ -1058,7 +1058,7 @@ __init__ : function(config) {
     buttons = config.buttons;
   } 
   Q.Window.prototype.__init__.call(this, config);
-  this.old_window_proc = this.set_window_proc( (function(qwindow) {
+  this.old_window_proc = this.setWindowProc( (function(qwindow) {
     return function(hwnd, msgid, json) { return qwindow.window_proc(msgid, json);}
   })(this));
  
@@ -1132,7 +1132,7 @@ domodal : function(wndNode) {
   $ResizeTo(this.hwnd, this.hwnd.nWidth, this.hwnd.nHeight);
   this.center();
   if($IsDesktopWindow(wndNode)) {
-    this.set_zindex(100001);
+    this.setZIndex(100001);
   }
 },
 

@@ -56,6 +56,12 @@
         Q.$('show_text').innerText = "当前选中: " + datas[0].url;
       }
     });
+
+    Q.$('clear').onclick = function() {
+      g_table.clear();
+    }
+
+
   });
   -->
   </script>
@@ -65,8 +71,9 @@
 <p>Q.Table示例</p>
 <hr>
 <br>
-
-<div id="show_text"></div>
+<button id="clear"> 清空数据 </button> &nbsp;<span id="show_text"></span>
+<br>
+<br>
 <div id="table_container" style="width: 800px; height: 400px; position:relative;background-color:#99bbe8;"></div>
 
 </body>

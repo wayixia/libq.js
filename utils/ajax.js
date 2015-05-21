@@ -45,6 +45,7 @@ Q.json_encode = function(v) {
   return JSON.stringify(v);
 }
 
+
 function createAjaxTrans() {
   var transport = null;
   try  {
@@ -69,7 +70,37 @@ function createAjaxTrans() {
  * @param {Object} xmlhttp - XMLHttpRequest对象
  */
 
+/** 复杂结构ajax请求, 为了处理结构化的请求数据，服务端需要处理postdata字段，并且需要url_decode一次
+ * 如果请求字段没有复杂的结构体请使用{@link Q.ajax}
+ * @example <caption>PHP服务端处理示例</caption>
+ * // 处理客户端请求数据
+ * if(isset($_POST['postdata']) {
+ *   $postdata = urldecode($_POST['postdata'])
+ *   // 重新初始化$_POST
+ *   $_POST = json_decode($postdata);
+ *   if(!is_array($_POST)) {
+ *     $_POST = array();
+ *   } 
+ * }
+ * @function
+ * @param {Object} json ajax请求参数
+ * @param {string} json.command - 请求url
+ * @param {string} [json.method="get"] - ajax请求方法
+ * @param {bool}   [json.async=true] - 异步ajax请求
+ * @param {*=} json.data - 请求的数据
+ * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
+ * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
+ * @param {bool=} [json.withCredentials=false] - ajax跨域凭证， 默认false
+ */
+
+Q.ajaxc = function(json) {
+  newAjax(json, function(data) {
+    return "postdata="+encodeURIComponent(encodeURIComponent(Q.json2str(data))); 
+  });
+}
+
 /** ajax请求
+ *
  * @function
  * @param {Object} json ajax请求参数
  * @param {string} json.command - 请求url
@@ -81,6 +112,17 @@ function createAjaxTrans() {
  * @param {bool=} [json.withCredentials=false] - ajax跨域凭证， 默认false
  */
 Q.ajax = function(json) {
+  newAjax(json, function(data) {
+    var postdata = null;
+    for(var name in data) {
+      postdata += encodeURIComponent(name)+'='+encodeURIComponent(data[name])+'&'
+    }
+
+    return postdata;
+  });
+}
+
+function newAjax(json, data_handler) {
   var request = json || {};
   var command = request.command.toString();
   if(command.indexOf('?') == -1) {
@@ -103,7 +145,6 @@ Q.ajax = function(json) {
     async = !! request.async;
   }
 
-  //var postdata = encodeURIComponent(encodeURIComponent(request.toString())); 
   xmlhttp.open(method, command, async);
   if(request.withCredentials) {
     xmlhttp.withCredentials = !! request.withCredentials;
@@ -121,8 +162,9 @@ Q.ajax = function(json) {
   };
 
   var postdata = null;
-  if(request.data) {
-    postdata = encodeURIComponent(encodeURIComponent(request.toString())); 
+  if(request.data && typeof data_handler == 'function') {
+    postdata = data_handler(request.data);
   }
+  
   xmlhttp.send(postdata);
 }

@@ -70,7 +70,7 @@ _init_menu : function(json) {
           wstyle: json.skin,
           title: "系统设置", width:480, height:370, on_close: function() { delete g_os_setting; g_os_setting=null; }});
       }
-      g_os_setting.set_content("test flash");
+      g_os_setting.setContent("simpleos system setting");
       g_os_setting.show(true);
       g_os_setting.center(); 
     }
@@ -229,7 +229,7 @@ run :function (app) {
   } else {
     var app_class = null;
     window._entry = function(t) { app_class = t; }
-    Q.load_module(app.src, function(ok) {
+    Q.loadModule(app.src, function(ok) {
       if(!ok) {
         _this.run_error(app, err + "<br>" + " File("+app.src+") is error.");
         return;

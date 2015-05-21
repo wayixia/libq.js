@@ -16,9 +16,8 @@ Q.Store = Q.extend({
 records : null,  // 记录集
 proxy : null,
 currentpage : -1,
-length : 0,
 __init__ : function(config) {
-  var config = config || {}; 
+  config = config || {}; 
   this.records = new Q.HashMap;
   if(config.data)
     this.appendData(config.data);
@@ -34,8 +33,7 @@ __init__ : function(config) {
  * @memberof Q.Store.prototype
  */
 clear : function() {
-  this.records = new Q.hashmap;
-  this.length = 0;
+  this.records = new Q.HashMap;
 },
 
 /** 加载json数据记录集
@@ -80,7 +78,7 @@ loadPage : function(page, pagesize, callback) {
   if(_this.proxy) {
     _this.loadRemote(page, pagesize, fnCallback);
   } else {
-    var pagedata = new Q.hashmap;
+    var pagedata = new Q.HashMap;
     for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
       if(i >= _this.records.length) { break; }
       pagedata.push(_this.records.item(i));
@@ -516,6 +514,7 @@ _create_cell : function(nRow, nCol, json) {
  * @memberof Q.Table.prototype
  */
 clear : function() {
+  this.store.clear();
   this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
 },
 
