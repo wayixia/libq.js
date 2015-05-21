@@ -6,22 +6,41 @@
  * powered by wayixia.com
 ---------------------------------------------------------*/
 
-Q.checkbox = Q.extend({
+/** 复选框
+ * 
+ * @constructor
+ * @param {Object} json - 构造参数
+ * @param {string|dom} json.id - 渲染的元素对象
+ * @param {bool} json.checked - 初始状态
+ * @param {Q.CheckBox.callback} - onchange事件回调
+ */
+Q.CheckBox = Q.extend({
   hwnd: null,
   __init__: function(json) {
-    var _this = this;
     json = json || {}
     this.hwnd = Q.$(json.id);
     this.onchange = json.onchange || function(id) {}
-    this.hwnd.onclick = function() {  _this.set_checked(!_this.checked()); }
-    this.set_checked(!!json.checked);
+    this.setCheck(!!json.checked);
+    this.hwnd.onclick = (function(t) { return function() {  
+      t.setCheck(!t.checked()); 
+    }})(this);
   },
 
+  /** 获取check状态
+   * 
+   * @memberof Q.CheckBox.prototype
+   * @returns {bool} 是否选中
+   */
   checked : function() {
     return Q.hasClass(this.hwnd, "checked");
   },
 
-  set_checked : function(checked) {
+  /** 设置勾选状态， 触发onchange事件
+   *
+   * @memberof Q.CheckBox.prototype
+   * @param {bool} checked - 是否勾选
+   */
+  setCheck : function(checked) {
     if(this.checked() == checked) 
       return;
     if(checked) {
@@ -32,5 +51,3 @@ Q.checkbox = Q.extend({
     this.onchange(checked);
   }
 });
-
-

@@ -1,0 +1,56 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.drag | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+
+<script type="text/javascript" src="../Q.js"></script>
+<script type="text/javascript" src="../utils/stl.js"></script>
+<script type="text/javascript" src="../utils/json2.js"></script>
+<script type="text/javascript" src="../utils/ajax.js"></script>
+
+<script>
+<!--
+  Q.ready(function() {
+
+    Q.$('ajax-button').onclick = function() {
+      var url = Q.$('url').value;
+      if(url == "") {
+        Q.$('url').focus();
+        return;
+      }
+      Q.ajax({
+        command: url,
+        oncomplete : function(xmlhttp) {
+          Q.$('red-object').innerText = xmlhttp.responseText;
+        }  
+      });
+    };
+  });
+-->
+</script>
+</head>
+<body onmouseup="document.selection && document.selection.empty()" onselectstart="return false" ondragstart="return false" onbeforecopy="return false" oncopy="document.selection.empty()" onselect="document.selection.empty()">
+<br>
+<h3>Q.ajax </h3>
+<hr>
+
+<input id="url" size="100" /> <button id="ajax-button"> do </button>
+
+<br>
+<br>
+<div id="red-object">
+  red object 
+</div>
+<br/>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+</body>
+</html>

@@ -45,7 +45,7 @@ Q.json_encode = function(v) {
   return JSON.stringify(v);
 }
 
-function creatAjaxTrans() {
+function createAjaxTrans() {
   var transport = null;
   try  {
     transport = new ActiveXObject("Msxml2.XMLHTTP");
@@ -90,7 +90,7 @@ Q.ajax = function(json) {
   }
 
   var method = request.method || "POST";
-  method = toUpper(method);
+  method = method.toString().toUpperCase();
   if(method == "GET" || method == "POST") {
 
   } else {

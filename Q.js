@@ -447,7 +447,6 @@ var subclass = Q.extend({
    * @function
    * @param f {function} - 函数对象
    * @param front {bool} - 追加或者置顶 
-   * @return 无
    */
   Q.ready = function(f, front) {
     var back = !front;
@@ -459,13 +458,11 @@ var subclass = Q.extend({
 
   /** 加载js模块
    *
-   * @function Q.load_module
-   * @type void
+   * @function Q.loadModule
    * @param src {string} - javascript模块地址
-   * @param oncomplete(bool ok) {function} - 加载完成调用， ok 为true 加载成功，否则失败
-   * @return 无
+   * @param oncomplete(bool) {function} - 加载完成调用， ok 为true 加载成功，否则失败
    */
-  Q.load_module = function(src, oncomplete) {
+  Q.loadModule = function(src, oncomplete) {
     var header = document.getElementsByTagName("head")[0];
     var s = document.createElement("script");  
     s.type = "text/javascript";

@@ -1,0 +1,56 @@
+
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.CheckBox | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+
+</style>
+<!--  
+提示：src="{QLib目录}/Q.js" 
+根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+-->
+<script type="text/javascript" src="../Q.js"></script>
+<script type="text/javascript" src="../ui/checkbox.js"></script>
+
+<script>
+<!--
+
+Q.ready(function() {
+  new Q.CheckBox({id: Q.$('item-1'), 
+    checked: true,
+    onchange: function(checked) {
+      Q.printf(":::" + checked);
+    }
+  });
+  new Q.CheckBox({id: Q.$('item-2')});
+  new Q.CheckBox({id: Q.$('item-3')});
+  new Q.CheckBox({id: Q.$('item-4')});
+});
+
+-->
+</script>
+</head>
+<body onselectstart="return false;" style="overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+<h3>Q.checkbox samples </h3>
+<hR>
+
+
+<a class="q-checkbox" id="item-1"> 项目1 </a>
+<a class="q-checkbox" id="item-2"> 项目2 </a>
+<a class="q-checkbox" id="item-3"> 项目3 </a>
+<a class="q-checkbox" id="item-4"> 项目4 </a>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body>
+</html>
+
+
+
+
