@@ -1,18 +1,21 @@
-/*------------------------------------------------------------------------------------
- $ class contextmenu component
- $ date: 2009-5-10 16:31
- $ author: LovelyLife http://onlyaa.com
- 
- $ bugs Fixed:
---------------------------------------------------------------------------------------*/
 
+/**菜单分割线
+ * @type {string}
+ * @readonly
+ */
+var MENU_SEPERATOR = "seperator";
+var MENU_ITEM = "item";
+var MENU_ITEM_CHECKBOX = "checkbox";
+var MENU_ITEM_RADIO = "radio";
 
-var MENU_SEPERATOR = -1;
-var MENU_ITEM = 0;
-var MENU_ITEM_CHECKBOX = 1;
-var MENU_ITEM_RADIO = 3;
-
-var class_menuitem = Q.extend({
+/** 菜单项
+ *
+ * @constructor
+ * @param {Object} json - 菜单项构造参数
+ * @param {number} [json.type=MENU_ITEM] - 菜单项类型
+ */
+Q.MenuItem = Q.extend(
+{
 hwnd : null,
 parentMenu : null,
 topMenu : null,
@@ -192,7 +195,11 @@ data : function() {
 
 });
 
-var class_menu = Q.extend({
+/** 菜单封装，支持右键弹出
+ * 
+ * @constructor
+ */
+Q.Menu = Q.extend({
 hwnd : null,
 subwnd: null,
 timer : null,
@@ -348,12 +355,16 @@ function fireMouseEvent(element, evtName) {
   }
 }
 
-var class_menubar = Q.extend({
+/** 菜单栏
+ *
+ * @constructor
+ */
+Q.MenuBar = Q.extend({
 focus: null,
 items: null,
 __init__: function(json) {
   json = json || {};
-  this.items = new Q.LIST();
+  this.items = new Q.List();
   this._hide = Q.bind_handler(this, function() {
     Q.printf('blur');
     Q.removeEvent(document, "mousedown", this._hide);

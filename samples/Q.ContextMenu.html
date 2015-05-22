@@ -1,30 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <title>Q.contextmenu | QLib | Powered By PHPKIND</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <!-- 使用QLib控件是必须包含样式表 -->
-  <link type="text/css" rel="stylesheet" href="../ui.css" />
-  <!--  
+<title>Q.contextmenu | QLib | Powered By PHPKIND</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<!--  
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
-  -->
-    <script type="text/javascript" src="../Q.js">
-  <!--
-  // 需要加载额外库时
-  import utils.stl;
-  import ui.contextmenu;
-
-  -->
-  </script>
-
+-->
+<script type="text/javascript" src="../Q.js"></script>
+<script type="text/javascript" src="../utils/stl.js"></script>
+<script type="text/javascript" src="../ui/contextmenu.js"></script>
   <script>
   <!--
 
   // 全局菜单实例 class_menu
   var g_menu = null;
 
-  Q.Ready(function() 
+  Q.ready(function() 
   {
     // 初始化菜单
     g_menu = new class_menu({
