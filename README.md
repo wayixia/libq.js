@@ -26,7 +26,7 @@
 2. tween.js
 
 ## 项目地址
-https://git.oschina.net/iknown/Q.js.git
+http://git.oschina.net/iknown/Q.js
 
 ##协议
 MIT license
