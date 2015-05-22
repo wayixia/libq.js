@@ -32,18 +32,7 @@
       g_test_dialog = new Q.Dialog({
         title: 'Normal Dialog', 
         width:480, 
-        height:370,
-        buttons: [
-          { 
-            text:'确 定', 
-            onclick: function() { alert(1); return true; } 
-          }, 
-          { 
-            text:'取 消', 
-            onclick: function() { alert(2); return true; } 
-          }, 
-        ],
-        });
+        height:370});
       g_test_dialog.show(true);
       g_test_dialog.setContent(Q.$('flash'));
       g_test_dialog.adjust();
@@ -68,13 +57,15 @@
 <button id="btnOpenDialog">Q.Dialog对话框</button>
 <button id="btnOpenMessageBox">Q.alert提示框</button>
 <!-- wndx template -->
-<embed id="flash" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="100%" height="100%" flashvars="local=true&amp;amovid=5f4ffbc12418024&amp;refererdomain=yinyuetai.com&amp;domain=yinyuetai.com&amp;videoId=2293888&amp;showlyrics=false&amp;capturevideoavailable=true&amp;sendsnaplog=true&amp;usepromptbar=true&amp;popupwin=true&amp;markerlocation=http%3A%2F%2Fs.yytcdn.com%2Fswf%2Fcommon%2Fmarker.%245eb423.swf&amp;preamovid=true&amp;showadvipbutton=true&amp;swflocation=http%3A%2F%2Fs.yytcdn.com%2Fswf%2Fcommon%2Fmvplayer.%24300d05.swf" bgcolor="#000000" allowfullscreen="true" allowscriptaccess="always" wmode="window" id="yinyuetaiplayer" name="yinyuetaiplayer" src="http://s.yytcdn.com/swf/common/playerloader.$f9e175.swf" style="display: none;">
+
+<embed id="flash" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="100%" height="100%" src="http://tv.sohu.com/upload/swf/20150519/Main.swf" quality="high" bgcolor="#000000" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="&amp;cmscat=56page;10;14323558;137253660&amp;oad=&amp;ead=&amp;pad=&amp;fbarad=&amp;flogoad=&amp;flogodelay=&amp;tlogoad=&amp;tlogodelay=&amp;fbottomad=&amp;fbottomdelay=&amp;ftitlead=&amp;ftitledelay=&amp;domain=inner&amp;sogouBtn=0&amp;skin=0&amp;api_key=&amp;enforceMP4=&amp;xuid=&amp;recommend=&amp;showRecommend=&amp;playercover=&amp;id=80197890&amp;autoplay=true&amp;pageurl=http://www.56.com/w87/play_album-aid-14323558_vid-MTM3MjUzNjYw.html&amp;showCtrlBar=1&amp;jump=0&amp;sid=null&amp;onPlayerReady=sohuPlayer.notifyReady&amp;uuid=52c1c1fc-a038-1418-8214-7c2f0f41885c&amp;topBarFull=1" style="width: 100%; height: 100%;display: none;">
+
 <button id="test-domodal" style="display:none;">DoModal</button>
 <!-- wndx template -->
 <br>
 <br>
 
-<div style="background: yellow; height: 300px; width: 400px;">
+<div style="background: ; height: 300px; width: 400px;">
   dom content
 </div>
 

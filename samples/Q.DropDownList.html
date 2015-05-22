@@ -69,30 +69,25 @@
 提示：src="{QLib目录}/Q.js" 
 根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
 -->
-<script type="text/javascript" src="../Q.js">
-<!--
-// 需要加载额外库时
-import utils.stl;
-import utils.xml;
-import ui.contextmenu;
-import ui.dropdownlist;
--->
-</script>
-
+<script type="text/javascript" src="../Q.js"></script>
+<script type="text/javascript" src="../utils/stl.js"></script>
+<script type="text/javascript" src="../ui/contextmenu.js"></script>
+<script type="text/javascript" src="../ui/dropdownlist.js"></script>
 <script>
 <!--
 
 var g_box;
 
-Q.Ready(function() {
+Q.ready(function() {
 
-  g_box = new Q.dropdownlist({render: Q.$('dropdownlist'), 
+  g_box = new Q.DropDownList(
+    {id: 'dropdownlist', 
     on_change: function(text,value) {
       Q.printf(text + ":::" + value);
     }
   });
-  g_box.set_value('category');
-  g_box2 = new Q.dropdownlist({render: Q.$('wayixia-view'), wstyle: 'os-start-menu'});
+  g_box.setValue('category');
+  g_box2 = new Q.DropDownList({id: 'wayixia-view', wstyle: 'os-start-menu'});
 
 });
 

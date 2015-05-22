@@ -11,7 +11,7 @@ var g_os_start_menu;
 var g_os_setting;
 var g_task_items = [];
 
-Q.os = Q.extend({
+Q.SimpleOS = Q.extend({
 apps: null,
 window_list_bar: null,
 task_bar: null,
@@ -46,7 +46,7 @@ __init__ : function(json) {
 
 _init_menu : function(json) {
   var _this = this; 
-  g_os_start_menu = new class_menu({
+  g_os_start_menu = new Q.Menu({
     style: "os-start-menu", 
     on_popup: function(popup) {
       if(popup) {
@@ -62,7 +62,7 @@ _init_menu : function(json) {
     g_os_start_menu.showElement(this);      
   }
 
-  var m1 = new class_menuitem({
+  var m1 = new Q.MenuItem({
     text: "系统设置",
     callback : function(menuitem) {
       if(!g_os_setting) {
@@ -76,10 +76,10 @@ _init_menu : function(json) {
     }
   });
 
-  var m2 = new class_menuitem({text: "程序", popup_style: "os-start-menu"});
-  var m3 = new class_menuitem({type: MENU_SEPERATOR, text: ""});
+  var m2 = new Q.MenuItem({text: "程序", popup_style: "os-start-menu"});
+  var m3 = new Q.MenuItem({type: MENU_SEPERATOR, text: ""});
  
-  var m4 = new class_menuitem({
+  var m4 = new Q.MenuItem({
     text: "注销", 
     callback : function(menuitem) {
       setTimeout(function() { _this.on_logout()}, 300);
@@ -94,7 +94,7 @@ _init_menu : function(json) {
   // init applications menus
   for(var i=0; i < json.apps.length; i++) {
     var app = json.apps[i];
-    var m2x = new class_menuitem({
+    var m2x = new Q.MenuItem({
       text: app.name,
       callback : (function(app_info) { return function(menuitem) {
         _this.run(app_info);

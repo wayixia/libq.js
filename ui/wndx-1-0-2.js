@@ -888,7 +888,8 @@ function qid(p, q_id) {
 }
 
 /** 窗口类封装, 创建窗口，并返回一个窗口操作类
- * 
+ *
+ * @tutorial Q.Window 
  * @constructor 
  * @param {Object} config - 窗口构造参数
  * @param {Q.Application=} config.app - 窗口所属App
@@ -1032,7 +1033,8 @@ item: function(q_id) {
 
 /** 对话框类封装，支持模态和非模态
  *
- * @augments Q.Window
+ * @tutorial Q.Dialog 
+ * @extends Q.Window
  * @constructor
  * @param {Object} config - 对话框构造参数, 构造参数继承自{@link Q.Window}
  * @param {array=} config.buttons - 按钮集合， 当buttons不为空，自动应用with_bottom样式
@@ -1104,10 +1106,10 @@ addBottomButton : function(text, className, click) {
   return true;
 },
 
-/** 模态显示对话框
- *
+/** 模态显示对话框, 当前无任何激活窗口是，则会阻塞整个网页，否则会自动阻塞当前激活的窗口
+ * 
  * @memberof Q.Dialog.prototype
- * @param {WndNode} wndNode - 窗口句柄
+ * @param {WndNode=} wndNode - 阻塞的窗口句柄
  */
 domodal : function(wndNode) {
   //Q.printf('domodal window');

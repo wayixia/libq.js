@@ -1,14 +1,6 @@
 
 /**
- * drag.js
  * 拖拽封装，提供简单添加和删除完成元素的拖拽功能，只能创建一个实例
- * @date 2012-10-08
- * @author Q
- */
-
-/**
- * 拖拽封装，提供简单添加和删除完成元素的拖拽功能，只能创建一个实例
- * @constructor
  */
 (function (Q) {
   var draging = Q.extend({
@@ -149,6 +141,7 @@ var instance;
 
 /**
  * 初始化一个拖拽元素，同时可以指定多个子节点触发当前拖动对象的移动
+ * @tutorial Q.drag
  * @function
  * @param {Object} json - 初始化拖拽参数
  * @param {string|dom} json.id - 拖拽的对象

@@ -1,4 +1,5 @@
 {
+    "applicationName": "Q.js",
     "opts" : {
       "encoding" : "utf8",
       "destination" : "./docs"
@@ -14,6 +15,7 @@
     },
     "plugins": ["plugins/markdown"],
     "templates": {
+        "duoshuo": "true",
         "cleverLinks": false,
         "monospaceLinks": false,
         "applicationName" : "Q.js"

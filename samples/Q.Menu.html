@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>Q.contextmenu | QLib | Powered By PHPKIND</title>
+<title>Q.Menu | Q.js</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- 使用QLib控件是必须包含样式表 -->
 <link type="text/css" rel="stylesheet" href="../ui.css" />
@@ -12,7 +12,7 @@
 <script type="text/javascript" src="../Q.js"></script>
 <script type="text/javascript" src="../utils/stl.js"></script>
 <script type="text/javascript" src="../ui/contextmenu.js"></script>
-  <script>
+<script>
   <!--
 
   // 全局菜单实例 class_menu
@@ -21,7 +21,7 @@
   Q.ready(function() 
   {
     // 初始化菜单
-    g_menu = new class_menu({
+    g_menu = new Q.Menu({
       style: "", 
       on_popup: function(popup) {
         if(popup) {
@@ -32,35 +32,35 @@
       }
     });
     
-    var m1 = new class_menuitem({
+    var m1 = new Q.MenuItem({
       text: "菜单一",
       callback : function(menuitem) {
         
       }
     });
 
-    var m2 = new class_menuitem({
+    var m2 = new Q.MenuItem({
       text: "菜单二asdfdddddddd", 
       callback : function(menuitem) {
         
       }
     });
 
-    var m3 = new class_menuitem({type: MENU_SEPERATOR, text: ""});
-    var m4 = new class_menuitem({text: "子菜单ssssssssssssssssssssssssssssssssssssssssssssssss"});
+    var m3 = new Q.MenuItem({type: MENU_SEPERATOR, text: ""});
+    var m4 = new Q.MenuItem({text: "子菜单ssssssssssssssssssssssssssssssssssssssssssssssss"});
     g_menu.addMenuItem(m1);
     g_menu.addMenuItem(m2);
     g_menu.addMenuItem(m3);
     g_menu.addMenuItem(m4);
 
-    var m41 = new class_menuitem({
+    var m41 = new Q.MenuItem({
       text: "子菜单一",
       callback : function(menuitem) {
         
       }
     });
 
-    var m42 = new class_menuitem({
+    var m42 = new Q.MenuItem({
       text: "子菜单二asdfasdfasdf", 
       callback : function(menuitem) {
         alert('您点击的是子菜单二！');
@@ -70,7 +70,7 @@
     m4.addSubMenuItem(m41);
     m4.addSubMenuItem(m42);
 
-   var m421 = new class_menuitem({
+   var m421 = new Q.MenuItem({
       text: "子菜单二asdfasdfasdf", 
       callback : function(menuitem) {
         alert('您点击的是子菜单二！');
@@ -82,7 +82,7 @@
     g_menu.hide();
 
     
-    g_menu2 = new class_menu({
+    g_menu2 = new Q.Menu({
       style: "", 
       on_popup: function(popup) {
         if(popup) {
@@ -93,20 +93,20 @@
       }
     });
 
-    var m2_1 = new class_menuitem({
+    var m2_1 = new Q.MenuItem({
       text: "复制", 
       callback : function(menuitem) {
         return 1;
       }
     });
-    var m2_2 = new class_menuitem({
+    var m2_2 = new Q.MenuItem({
       text: "粘贴", 
       callback : function(menuitem) {
         alert('粘贴成功！');
       }
     });
 
-    var m2_3 = new class_menuitem({
+    var m2_3 = new Q.MenuItem({
       text: "移动", 
       callback : function(menuitem) {
         alert('移动成功！');
@@ -118,7 +118,7 @@
 
     g_menu2.hide();
 
-    g_menubar = new class_menubar({container: 'q-menubar'});
+    g_menubar = new Q.MenuBar({container: 'q-menubar'});
     g_menubar.append(Q.$('menu-file'), g_menu);
     g_menubar.append(Q.$('menu-edit'), g_menu2);
     //g_menubar.append(Q.$('btnMenu'), g_menu2);
@@ -136,11 +136,14 @@
 </head>
 <body>
 <br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="btnMenu">显示菜单</button>
-
+Q.Menu 示例
 <hr>
-<div class="q-contextmenu" ondragstart="return false;">
+<br>
+<button id="btnMenu">下拉菜单</button>
+
+<br>
+<br>
+<!--div class="q-contextmenu" ondragstart="return false;">
   <li class="q-item" id="test">
     <div class="q-item-title"><button class="q-item-icon">&nbsp;</button>菜单一</div>
   </li>
@@ -157,35 +160,25 @@
     </div>
   </li>
   <div style="clear:both;"></div>
-</div>
+</div-->
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+Q.MenuBar 示例
 <hr>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <div id="q-menubar" ondragstart="return false;" style="height: 30px; width: auto;">
 <button class="q-item" id="menu-file">文件</button>
 <button class="q-item" id="menu-edit">编辑</button>
 </div>
 
-<!--div class="q-contextmenu q-contextmenu-bar" style="top: 500px;" ondragstart="return false;">
-  <li class="q-item">
-    <div class="q-item-title">菜单一</div>
-  </li>
-  <li class="q-item">
-    <div class="q-item-title"></button>菜单二</div>
-  </li>
-  <li class="q-item">
-    <div class="q-item-title">菜单xxxxxxxx</div>
-  </li>
-</div-->
 </body>
 </html>
