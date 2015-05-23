@@ -15,8 +15,8 @@
     },
     "plugins": ["plugins/markdown"],
     "templates": {
-        "duoshuo": "true",
-       	"googleAnalytics": "UA-63273490-1",
+        "duoshuo": "",
+       	"googleAnalyticss": "UA-63273490-1",
         "cleverLinks": false,
         "monospaceLinks": false,
         "applicationName" : "Q.js"

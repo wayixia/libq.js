@@ -52,8 +52,8 @@
       columns: columns,  
       store: store,
       row_onclick : function(row) {
-        var datas = this.get_records(row);
-        Q.$('show_text').innerText = "当前选中: " + datas[0].url;
+        var data = this.getRecord(row);
+        Q.$('show_text').innerText = "当前选中: " + data.url;
       }
     });
 
@@ -67,7 +67,7 @@
   </script>
 </head>
 <body onselectstart="return false;" style="height: auto;overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
-
+<br/>
 <p>Q.Table示例</p>
 <hr>
 <br>

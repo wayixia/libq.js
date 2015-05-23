@@ -10,9 +10,15 @@ var MENU_ITEM_RADIO = "radio";
 
 /** 菜单项
  *
+ * @tutorial Q.Menu
  * @constructor
  * @param {Object} json - 菜单项构造参数
  * @param {number} [json.type=MENU_ITEM] - 菜单项类型
+ * @param {string} json.text - 菜单项文本
+ * @param {string} json.icon - 菜单项图片
+ * @param {*} json.data - 菜单项绑定的数
+ * @param {string} json.popup_style - 弹出子菜单窗口样式
+ * @param {function} json.callback - 响应回调
  */
 Q.MenuItem = Q.extend(
 {
@@ -30,6 +36,12 @@ items : null,
 data : null,
 isChecked : true,
 popup_style: null,
+/**
+ * @callback Q.MenuItem.callback
+ * @param {Q.MenuItem} item - 子菜单项
+ * @returns {bool} true 关闭菜单，false 不关闭菜单
+ */
+
 __init__ : function(json) {
   json = json || {};
   var _this = this;
@@ -109,6 +121,10 @@ __init__ : function(json) {
   _this.hwnd.onselectstart = function(evt) { return false; }
 },
 
+/** 添加子菜单项
+ * @memberof Q.MenuItem.prototype
+ * @param {Q.MenuItem} subItem - 子菜单
+ */
 addSubMenuItem : function(subItem) {
   if((this.type == MENU_SEPERATOR)
    || (this.type == MENU_ITEM_CHECKBOX))
@@ -196,8 +212,12 @@ data : function() {
 });
 
 /** 菜单封装，支持右键弹出
- * 
+ *
+ * @tutorial Q.Menu
  * @constructor
+ * @param {Object} json - 构造参数
+ * @param {string} json.style - 菜单样式
+ * @param {Q.Menu.callback} json.on_popup - 弹出菜单 
  */
 Q.Menu = Q.extend({
 hwnd : null,
@@ -209,11 +229,17 @@ items : null,
 _fHide : null,
 _fWheel: null,
 _fOnPopup : null,
+
+/**
+ * @callback Q.Menu.callback
+ * @param {bool} popup - true 弹出, false 隐藏 
+ */
+
 __init__ : function(json) {
   json = json || {};
   var _this = this;
-  _this.items = [];
-  _this._fHide = (function(o, h) {
+  this.items = [];
+  this._fHide = (function(o, h) {
     return function(evt) {
       evt = evt || window.event;
       var target = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
@@ -236,7 +262,7 @@ __init__ : function(json) {
     this._fOnPopup = function(popup) {};
   }
 
-  _this.initview(json);
+  this.initview(json);
 },
 
 initview : function(json) {
@@ -246,6 +272,11 @@ initview : function(json) {
   Q.addClass(this.hwnd, json.style);
 },
 
+/**
+ * 添加子菜单项
+ * 
+ * @memberof Q.Menu.prototype
+ */
 addMenuItem : function(item) {
   var _this = this;
   _this.hwnd.appendChild(item.hwnd);
@@ -357,7 +388,9 @@ function fireMouseEvent(element, evtName) {
 
 /** 菜单栏
  *
+ * @tutorial Q.Menu
  * @constructor
+ * @param {Object} json - 构造参数
  */
 Q.MenuBar = Q.extend({
 focus: null,
@@ -373,6 +406,12 @@ __init__: function(json) {
   });
 },
 
+/** 追加菜单到菜单栏，布局用户自定义
+ * 
+ * @memberof Q.MenuBar.prototype
+ * @param {dom} item - 渲染的菜单栏项
+ * @param {Q.Menu} menu - 菜单的菜单栏项
+ */
 append: function(item, menu) {
   item._menu = menu;
   item.onmousedown = (function(bar, i, m) { 

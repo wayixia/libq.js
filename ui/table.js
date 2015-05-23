@@ -720,24 +720,16 @@ row_set_selected : function(row, bSelected) {
     }      
   }  
 },
-  
-get_records : function(row) {
-  var _this = this;
-  var dataIndex = this.row_index(row);
-  var store = _this.store;
-  var arr = [];
-  if(-1 == dataIndex) {  
-    _this.store.records.each(function(node, i) { arr.push(node); });
-    return arr;
-  }
 
-  if(store.records.has(dataIndex) ) {
-    arr.push(store.records.item(dataIndex));
-    return arr;  
-  } else {
-    alert('无效数据索引['+dataIndex+']!');
-    return null;
-  }
+/**
+ * 获取行记录数据
+ * @memberof Q.Table.prototype
+ * @param {dom} row - 行元素
+ * @return {Object[]} 返回行记录数
+ */
+getRecord : function(row) {
+  var dataIndex = this.row_index(row);
+  return this.store.records.item(dataIndex);
 },
 
 sync_scroll : function() {}
