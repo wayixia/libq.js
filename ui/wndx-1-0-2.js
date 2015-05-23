@@ -909,7 +909,7 @@ hwnd : null,
 __init__ : function(config) {
   config = config || {};
   var _this = this;
-  var title = config.title || '无标题';
+  var title = config.title || 'not';
   var left  = config.left || 0;
   var top   = config.top || 0;
   var width = config.width || 600;
