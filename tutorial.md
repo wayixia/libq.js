@@ -28,5 +28,9 @@
 ## 项目地址
 http://git.oschina.net/iknown/Q.js
 
+## API参考文档
+http://qlibs.com/Q.js/docs/index.html
+
+
 ##协议
 MIT license

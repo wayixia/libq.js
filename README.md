@@ -10,15 +10,15 @@
 ## 示例
 示例内容较为丰富简单，在samples目录下可以看到。
 
-* 窗口 - {@tutorial Q.Window}
-* 对话框 - {@tutorial Q.Dialog}
-* 模拟alert - {@tutorial Q.Dialog}
-* 复选框 - {@tutorial Q.CheckBox}
-* 下拉选框 - {@tutorial Q.DropDownList}
-* 滑块 水平+垂直 - {@tutorial Q.Slider}
-* 菜单 - {@tutorial Q.Menu}
-* 简单表格控件 - <a target="_blank" href="../samples/Q.Table.html">Q.Table</a>
-* 模拟视窗系统SimpleOS - <a target="_blank" href="../samples/Q.SimpleOS.html">Q.SimpleOS</a>
+* 窗口 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Window.html">Q.Window</a>
+* 对话框 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Dialog.html">Q.Dialog</a>
+* 模拟alert - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Dialog.html">Q.Dialog</a>
+* 复选框 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.CheckBox.html">Q.CheckBox</a>
+* 下拉选框 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.DropDownList.html">Q.DropDownList</a>
+* 滑块 水平+垂直 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Slider.html">Q.Slider</a>
+* 菜单 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Menu.html">Q.Menu</a>
+* 简单表格控件 - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.Table.html">Q.Table</a>
+* 模拟视窗系统SimpleOS - <a target="_blank" href="http://www.qlibs.com/Q.js/samples/Q.SimpleOS.html">Q.SimpleOS</a>
 
 
 ## 引用库
@@ -27,6 +27,9 @@
 
 ## 项目地址
 http://git.oschina.net/iknown/Q.js
+
+## API参考文档
+http://qlibs.com/Q.js/docs/index.html
 
 ##协议
 MIT license
