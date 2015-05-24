@@ -1,4 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ui/table.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ui/table.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 // 当有true返回是，说明结束循环
 var BindAsEventHandler = function(object, func) {
   return function(event) {
@@ -42,7 +70,7 @@ clear : function() {
  * @param {Object[]} arr - 数据集
  */
 appendData : function(arr) {
-  for(var i=0; i<arr.length; i++) {
+  for(var i=0; i&lt;arr.length; i++) {
     this.push(arr[i]);
   }
 },
@@ -54,7 +82,7 @@ appendData : function(arr) {
 loadRemote : function(page, pagesize, callback) {
   var _this = this;
   Q.Ajax({
-    command: _this.proxy+'&page='+page+'&size='+pagesize,
+    command: _this.proxy+'&amp;page='+page+'&amp;size='+pagesize,
     oncomplete : function(xmlhttp) {
       var s = Q.json_decode(xmlhttp.responseText);
       if(typeof callback == 'function') {
@@ -79,7 +107,7 @@ loadPage : function(page, pagesize, callback) {
     _this.loadRemote(page, pagesize, fnCallback);
   } else {
     var pagedata = new Q.HashMap;
-    for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
+    for(var i=(page-1) * pagesize; i &lt; (page * pagesize); i++) {
       if(i >= _this.records.length) { break; }
       pagedata.push(_this.records.item(i));
     }
@@ -210,7 +238,7 @@ var __TH = Q.extend({
       this._left = pos.left;
       this._right = pos.left + pos.width;
       var x = oEvent.clientX - scrollinfo.l;
-      if( (x <= (this._right+3)) && (x >= (this._right-5)) ) {  
+      if( (x &lt;= (this._right+3)) &amp;&amp; (x >= (this._right-5)) ) {  
         // 是否在右边框1像素的范围内
         this.hwnd.style.cursor = 'col-resize';
       } else {
@@ -363,7 +391,7 @@ initview : function(json) {
   // 初始化表头表格和数据表格
   _this.wndGroupBody.innerHTML = 
     _this.wndGroupHeader.innerHTML = 
-    '<table cellpadding="0" cellspacing="0" border="0"><tbody></tbody></table>';
+    '&lt;table cellpadding="0" cellspacing="0" border="0">&lt;tbody>&lt;/tbody>&lt;/table>';
   _this.wndTableHeaderRow = _this.wndGroupHeader.firstChild.insertRow(-1);
   _this.wndTableData = _this.wndGroupBody.firstChild;
 
@@ -468,7 +496,7 @@ append : function(nIndex, record) {
   ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
   var len = _this.wndTableHeaderRow.cells.length;
-  for(var j = 0; j < len; j++) {
+  for(var j = 0; j &lt; len; j++) {
     var TD = ROW.insertCell(-1);
     var theader = _this.wndTableHeaderRow.cells[j];
     var column = _this.columns[theader.getAttribute('_index')];
@@ -535,7 +563,7 @@ render : function() {
 },
 
 load_columns : function() {
-  for(var i=0; i < this.columns.length; i++) {
+  for(var i=0; i &lt; this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
     this.insert_column(i, column);
@@ -549,8 +577,8 @@ insert_column : function(arrIndex, json) {
   json.isHidden = !!json.isHidden;
   TD.style.display = json.isHidden ? 'none' : '';
   TD.setAttribute('_index', arrIndex);
-  TD.innerHTML = '<DIV align="'+json.align+'" class="q-column-header" style="width:'+json.width+'px;"><a HideFocus>'
-          +json.title+'</a></DIV>';
+  TD.innerHTML = '&lt;DIV align="'+json.align+'" class="q-column-header" style="width:'+json.width+'px;">&lt;a HideFocus>'
+          +json.title+'&lt;/a>&lt;/DIV>';
   
   TD.firstChild.onclick = function() { _this._column_click(this.parentNode.cellIndex); };
 
@@ -620,8 +648,8 @@ _column_click : function(nCol) {
     //this.sortTable(nCol, true, column.sort);
   }
   
-  if(column&&column.clicks) {
-    for(var i=0; i<column.clicks.length; i++) {
+  if(column&amp;&amp;column.clicks) {
+    for(var i=0; i&lt;column.clicks.length; i++) {
       column.clicks[i]();
     }
   }
@@ -669,7 +697,7 @@ _rows_ondblclick : function(row) {
 
 rows_each : function(callback) {
   var _this = this;
-  for(var i=0; i < _this.wndTableData.rows.length; i++) {
+  for(var i=0; i &lt; _this.wndTableData.rows.length; i++) {
     callback(_this.wndTableData.rows[i]);
   }
 },
@@ -698,7 +726,7 @@ row_insert : function(index, record) {
 row_index : function(row) { 
   return parseInt(row.getAttribute('__dataindex__'),10); 
 },
-row_is_enabled  : function(row) { return row && (!row.getAttribute('_disabled')); },
+row_is_enabled  : function(row) { return row &amp;&amp; (!row.getAttribute('_disabled')); },
 row_is_selected : function(row) { return Q.hasClass(row, "q-selected"); },
 
 // 设置选择
@@ -735,3 +763,26 @@ getRecord : function(row) {
 sync_scroll : function() {}
 }); 
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Q.Application.html">Application</a></li><li><a href="Q.CheckBox.html">CheckBox</a></li><li><a href="Q.Dialog.html">Dialog</a></li><li><a href="Q.DropDownList.html">DropDownList</a></li><li><a href="Q.HashMap.html">HashMap</a></li><li><a href="Q.List.html">List</a></li><li><a href="Q.List.Node.html">Node</a></li><li><a href="Q.Menu.html">Menu</a></li><li><a href="Q.MenuBar.html">MenuBar</a></li><li><a href="Q.MenuItem.html">MenuItem</a></li><li><a href="Q.Slider.html">Slider</a></li><li><a href="Q.Store.html">Store</a></li><li><a href="Q.Table.html">Table</a></li><li><a href="Q.UI.html">UI</a></li><li><a href="Q.UIApplication.html">UIApplication</a></li><li><a href="Q.Window.html">Window</a></li></ul><h3>Namespaces</h3><ul><li><a href="Q.html">Q</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONST">CONST</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#hwnd">hwnd</a></li><li><a href="global.html#item">item</a></li><li><a href="global.html#MENU_SEPERATOR">MENU_SEPERATOR</a></li><li><a href="global.html#MESSAGE">MESSAGE</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 11:21:15 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

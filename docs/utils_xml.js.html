@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils/xml.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils/xml.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// 解决ff下XML的selectNodes和selectSingleNode的实现问题
+if (!window.ActiveXObject) {
+	Element.prototype.selectNodes = function(sXPath) {
+		var oEvaluator = new XPathEvaluator();
+		var oResult = oEvaluator.evaluate(sXPath, this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+		var aNodes = new Array();
+
+		if (oResult != null) {
+			var oElement = oResult.iterateNext();
+			while(oElement) {
+				aNodes.push(oElement);
+				oElement = oResult.iterateNext();
+			}
+		}
+		return aNodes;
+	};
+
+	Element.prototype.selectSingleNode = function(sXPath) {
+		var oEvaluator = new XPathEvaluator();
+		// FIRST_ORDERED_NODE_TYPE returns the first match to the xpath.
+		var oResult = oEvaluator.evaluate(sXPath, this, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+		if (oResult != null) {
+			return oResult.singleNodeValue;
+		} else {
+			return null;
+		}              
+	};
+}
+
+function XMLDocument(xmlfile) {
+	var xmlDoc = null;
+	
+	try {
+		if (window.ActiveXObject) {
+			xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+		} else if (document.implementation &amp;&amp; document.implementation.createDocument){
+			// code for Mozilla, Firefox, Opera, etc.
+			xmlDoc=document.implementation.createDocument("","",null);
+		} else {
+			throw new Error('浏览器不支持.');
+		}
+		
+		xmlDoc.async=false;
+		
+		if(xmlfile) {
+			 if(!xmlDoc.load(xmlfile)) {
+				//alert('加载xml文件出错!');
+				throw new Error('加载xml文件出错!');
+			}
+		}
+	} catch(e) {
+		try {
+			// for google chrome
+			var xmlhttp = new window.XMLHttpRequest();
+			if(xmlfile) {
+				xmlhttp.open("GET", xmlfile, false);
+				
+				xmlhttp.send(null);
+				//alert(xmlhttp.responseText);
+				xmlDoc = xmlhttp.responseXML.documentElement.ownerDocument;	
+			}
+		} catch (e)	{
+			alert(e);
+			xmlDoc = null;
+		}
+	}
+
+	return xmlDoc;
+}
+
+/**
+ * 读取XML字符串并解析成DOM对象
+ * @function Q.xml
+ * @param xmlString {string} - XML字符串 
+ * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
+ */
+Q.xml = function(xmlString){
+	var doc;
+	if (window.ActiveXObject) {
+		doc = new ActiveXObject("MSXML2.DOMDocument");
+		doc.loadXML(xmlString).documentElement;
+	} else {
+		doc = (new DOMParser()).parseFromString(xmlString, "text/xml").documentElement;
+	}
+
+	return doc.ownerDocument?doc.ownerDocument:doc;
+}
+
+/**
+ * 读取XML文件并解析成DOM对象
+ * @function Q.xmlfile
+ * @param filename {string} - XML文件
+ * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
+ */
+Q.xmlfile = function(filename) {
+	return XMLDocument(filename);
+}
+
+
+/**
+ * XPATH选择器
+ * @function Q.selectSingleNode
+ * @param xmlDoc {document} - XML文档对象
+ * @param elementPath {string} - XPATH路径
+ * @return {dom} - XPATH指定的元素
+ */ 
+Q.selectSingleNode = function(xmlDoc, elementPath)  {	
+	if(window.ActiveXObject) {
+		return xmlDoc.selectSingleNode(elementPath);
+	} else {
+		var xpe = new XPathEvaluator();
+		var nsResolver = xpe.createNSResolver( xmlDoc.ownerDocument == null ? xmlDoc.documentElement : xmlDoc.ownerDocument.documentElement);
+		var results = xpe.evaluate(elementPath,xmlDoc,nsResolver,XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    return results.singleNodeValue; 
+	}
+}
+
+
+
+/**
+ * @example
+// IE only
+//var ret = xmlDoc.loadXML("&lt;?xml version=\"1.0\" encoding = \"GB2312\" ?>&lt;html>sdfasdfasdf&lt;/html>");
+//var d = xmlDoc.load(fileName);
+var xmlDoc = new XMLDocument();
+var s = xmlDoc.loadXML('&lt;t>dsadf&lt;/t>');
+if( s ) { 
+	var elements = xmlDoc.getElementsByTagName('t');	
+	var element = elements[0];
+	var newElement = xmlDoc.createElement('DIV');
+	element.appendChild(newElement);
+	newElement.text = 'newdivs'
+	xmlDoc.save('C:\\im.xml')
+}
+*/
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Q.Application.html">Application</a></li><li><a href="Q.CheckBox.html">CheckBox</a></li><li><a href="Q.Dialog.html">Dialog</a></li><li><a href="Q.DropDownList.html">DropDownList</a></li><li><a href="Q.HashMap.html">HashMap</a></li><li><a href="Q.List.html">List</a></li><li><a href="Q.List.Node.html">Node</a></li><li><a href="Q.Menu.html">Menu</a></li><li><a href="Q.MenuBar.html">MenuBar</a></li><li><a href="Q.MenuItem.html">MenuItem</a></li><li><a href="Q.Slider.html">Slider</a></li><li><a href="Q.Store.html">Store</a></li><li><a href="Q.Table.html">Table</a></li><li><a href="Q.UI.html">UI</a></li><li><a href="Q.UIApplication.html">UIApplication</a></li><li><a href="Q.Window.html">Window</a></li></ul><h3>Namespaces</h3><ul><li><a href="Q.html">Q</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONST">CONST</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#hwnd">hwnd</a></li><li><a href="global.html#item">item</a></li><li><a href="global.html#MENU_SEPERATOR">MENU_SEPERATOR</a></li><li><a href="global.html#MESSAGE">MESSAGE</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 11:21:15 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
