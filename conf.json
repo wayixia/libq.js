@@ -9,7 +9,7 @@
         "dictionaries": ["jsdoc","closure"]
     },
     "source": {
-        "include": ["ui", "utils", "./"],
+        "include": ["src"],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },

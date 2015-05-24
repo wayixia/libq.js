@@ -5,7 +5,7 @@
  $ author: Q 
 ---------------------------------------------------------*/
 
-Q.images_box = Q.extend({
+Q.ImagesBox = Q.extend({
 hwnd: null,
 __init__ : function(json) {
   json = json || {};
@@ -197,5 +197,5 @@ copy_data : function(src_object) {
   return target_object;
 },
 
-}); // Q.images_box
+}); // Q.ImagesBox
 

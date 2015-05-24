@@ -123,7 +123,7 @@ var __InitDragItem = Q.extend(
 });
 
 
-Q.simpletree = Q.extend(
+Q.Tree = Q.extend(
 {
 //! hwnd 树的主窗口容器， hwndTree： 树窗口
 //! 结构 
