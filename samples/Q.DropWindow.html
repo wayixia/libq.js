@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Q.DropWindow | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+-->
+<script type="text/javascript" src="../src/Q.js"></script>
+<script type="text/javascript" src="../src/stl.js"></script>
+<script type="text/javascript" src="../src/drag.js"></script>
+<script type="text/javascript" src="../src/wndx-1-0-2.js"></script>
+<script type="text/javascript" src="../src/dropwindow.js"></script>
+<script>
+<!--
+
+Q.ready(function(){
+  Q.$('btnDrop').onclick = function(evt) {
+    var dw = new Q.DropWindow({
+      
+    });
+    dw.showElement(this);
+  } 
+});
+
+-->
+</script>
+</head>
+<body>
+<br>
+Q.DropWindow 示例
+<hr>
+<br>
+<button id="btnDrop">DropWindow</button>
+
+<br>
+<br>
+<button class="q-item" id="menu-file">文件</button>
+<button class="q-item" id="menu-edit">编辑</button>
+
+</body>
+</html>

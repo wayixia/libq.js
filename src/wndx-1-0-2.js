@@ -944,6 +944,26 @@ setWindowProc : function(new_window_proc) {
   return $SetWindowProc(this.hwnd, new_window_proc); 
 },
 
+/** 设置窗口坐标
+ *
+ * @memberof Q.Window.prototype
+ * @param x - 水平位置
+ * @param y - 垂直位置
+ */
+moveTo : function(x, y) {
+  return $MoveTo(this.hwnd, x, y);
+},
+
+/** 设置窗口大小
+ *
+ * @memberof Q.Window.prototype
+ * @param width - 窗口宽度
+ * @param height - 窗口高度
+ */
+resizeTo : function(width, height) {
+  $ResizeTo(this.hwnd, width, height);
+},
+
 /** 设置窗口叠加次序， 值越大越优先显示 
  * 
  * @memberof Q.Window.prototype
