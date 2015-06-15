@@ -4,11 +4,6 @@
  * @tutorial Q.DropWindow
  * @constructor
  * @param {Object} json - 菜单项构造参数
- * @param {number} [json.type=MENU_ITEM] - 菜单项类型
- * @param {string} json.text - 菜单项文本
- * @param {string} json.icon - 菜单项图片
- * @param {*} json.data - 菜单项绑定的数
- * @param {string} json.popup_style - 弹出子菜单窗口样式
  * @param {function} json.callback - 响应回调
  */
 Q.DropWindow = Q.Window.extend( {
@@ -28,7 +23,7 @@ __init__ : function(json) {
     return function(evt) {
       evt = evt || window.event;
       var target = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
-      while(target && (!Q.hasClass(target,"q-dropwindw")) && (target != document.body)) {
+      while(target && (!Q.hasClass(target,"q-dropwindow")) && (target != document.body)) {
         target = target.parentNode;
       }
       //Q.printf(target);
@@ -47,7 +42,7 @@ __init__ : function(json) {
     this._fOnPopup = function(popup) {};
   }
 
-  json.wstyle = "q-dropwindow q-attr-no-title"
+  json.wstyle = "q-dropwindow q-attr-no-title";
   Q.Window.prototype.__init__.call(this, json);
 },
 
