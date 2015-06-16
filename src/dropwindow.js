@@ -2,6 +2,7 @@
 /** 下拉窗口封装
  *
  * @tutorial Q.DropWindow
+ * @extends Q.Window
  * @constructor
  * @param {Object} json - 菜单项构造参数
  * @param {function} json.callback - 响应回调
