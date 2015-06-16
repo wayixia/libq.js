@@ -17,18 +17,24 @@
 <script>
 <!--
 
-<<<<<<< HEAD
-Q.ready(function(){
-  Q.$('btnDrop').onclick = function(evt) {
-    var dw = new Q.DropWindow({
-      width: 200, height: 160 
-    });
-=======
 Q.ready(function() {
-
-  Q.ColorTable = Q.extend({
+  
+  /** 简易的调色板，固定给出几组颜色
+   *
+   * @constructor
+   * @param {Object} json - 构造参数
+   */
+  Q.ColorTable = Q.DropWindow.extend({
   table : null,
   __init__ : function(json) {
+    
+    json = json || {};
+    json.width = ( 12+3 )*16+2;
+    json.height= ( 12+2 )*16+2;
+    if( typeof json.onchange == "function" ) 
+      this.onchange = json.onchange;
+    
+    /** color table */
     var defaultColors = [
       '990033', 'ff3366', 'cc0033', 'ff0033', 'ff9999', 'cc3366', 'ffccff', 'cc6699',
       '993366', '660033', 'cc3399', 'ff99cc', 'ff66cc', 'ff99ff', 'ff6699', 'cc0066',
@@ -60,6 +66,7 @@ Q.ready(function() {
       '000000', '000000', '000000', '000000', '000000', '000000', '000000', '000000'
     ];
     
+    /** init color table */
     this.table = document.createElement('table');
     var current_row = null;
     for(var i=0; i < defaultColors.length; i++) {
@@ -71,26 +78,27 @@ Q.ready(function() {
       td.style.width = "12px";
       td.style.height = "12px";
       td.style.backgroundColor = "#" + defaultColors[i];
+      td.onclick = ( function(t, o) { return function( evt ) {
+        t.onchange && t.onchange(o.style.backgroundColor);
+        t.hide();
+      } } )(this, td);
     }
-  },
 
-  get : function() {
-    return this.table;
+    json.content = this.table;
+    Q.DropWindow.prototype.__init__.call(this, json);
   }
   }); 
   /** 创建Q.DropWindow实例
    * 
    */
-  var dw = new Q.DropWindow({
-    width: 12*16, height: 12*16,
-    content: (new Q.ColorTable).get()
-  });
+  var dw = new Q.ColorTable( { onchange: function(v) {
+    Q.$('btnDrop').style.backgroundColor = v; 
+  } } );
  
   /**
    * add click event to button btnDrop
    */
   Q.$("btnDrop").onclick = function(evt) {
->>>>>>> 2f2681aab137189ab94856fc269196685f3bbf4d
     dw.showElement(this);
   } 
 
@@ -114,6 +122,7 @@ Q.DropWindow 示例
 <hr>
 <br>
 <button id="btnDrop">DropWindow</button>
+<button id="btnDrop2">DropWindow with dom</button>
 
 <br>
 <br>

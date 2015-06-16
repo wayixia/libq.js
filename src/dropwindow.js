@@ -43,11 +43,7 @@ __init__ : function(json) {
     this._fOnPopup = function(popup) {};
   }
 
-<<<<<<< HEAD
-  json.wstyle = "q-dropwindow q-attr-no-title";
-=======
   json.wstyle = "q-dropwindow q-attr-no-title q-attr-fixed"
->>>>>>> 2f2681aab137189ab94856fc269196685f3bbf4d
   Q.Window.prototype.__init__.call(this, json);
 },
 
