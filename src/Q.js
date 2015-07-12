@@ -561,8 +561,18 @@ var subclass = Q.extend({
     var values = query[i].split('=');
     _querystring[values[0]] = values[1];
   }
-
+  
+  var tmr = setInterval( ( function( t, r ) { return function() {
+    if( document.readyState == 'complete' ) {
+      t.loaded = true;
+      Q.delayDOMReady();
+      clearInterval( r );
+    }
+  } } )( Q, tmr ), 100 );
   Q.addEvent(window, 'load', function(evt) {
-    Q.delayDOMReady();
-  });
+    if( !Q.loaded ) {
+      Q.loaded = true;
+      Q.delayDOMReady();
+    }
+  } );
 })();
