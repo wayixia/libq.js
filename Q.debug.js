@@ -26,7 +26,7 @@
   String.prototype.trim = function() { 
     return this.replace(/(^\s*)|(\s*$)/g, ""); 
   }
-　String.prototype.trim_left = function() { 
+  String.prototype.trim_left = function() { 
     return this.replace(/(^\s*)/g,""); 
   }
   String.prototype.trim_right= function() { 
@@ -362,7 +362,7 @@ var subclass = Q.extend({
   Q.absPositionEx = function(element) {
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
-　　var t =rect.top+document.documentElement.scrollTop;
+    var t =rect.top+document.documentElement.scrollTop;
     var w =rect.width;
     var h =rect.height;
 
@@ -3661,9 +3661,7 @@ bindCss : function() {
 }
 
 }); // end of Q.ui
-
-
-﻿/*-------------------------------------------------------
+/*-------------------------------------------------------
  * slider.js
  * date: 2012-11-08
  * author: Q
@@ -4583,7 +4581,7 @@ getRecord : function(row) {
 sync_scroll : function() {}
 }); 
 
-﻿
+
 /** 下拉控件
  *
  * @tutorial Q.DropDownList

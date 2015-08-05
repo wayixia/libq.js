@@ -1291,5 +1291,3 @@ bindCss : function() {
 }
 
 }); // end of Q.ui
-
-

@@ -26,7 +26,7 @@
   String.prototype.trim = function() { 
     return this.replace(/(^\s*)|(\s*$)/g, ""); 
   }
-　String.prototype.trim_left = function() { 
+  String.prototype.trim_left = function() { 
     return this.replace(/(^\s*)/g,""); 
   }
   String.prototype.trim_right= function() { 
@@ -362,7 +362,7 @@ var subclass = Q.extend({
   Q.absPositionEx = function(element) {
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
-　　var t =rect.top+document.documentElement.scrollTop;
+    var t =rect.top+document.documentElement.scrollTop;
     var w =rect.width;
     var h =rect.height;
 
