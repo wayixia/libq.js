@@ -2580,7 +2580,7 @@ function $MaskWindow(wndNode, bmask) {
 function $CreateMaskLayer(wndNode, extra_style) {
   wndNode.layer_mask = document.createElement('DIV');
   wndNode.layer_mask.body_style = document.body.currentStyle.overflow;
-  wndNode.layer_mask.className = 'q-window-mask alpha_1';
+  wndNode.layer_mask.className = 'q-window-mask';
   if(extra_style)
     Q.addClass(wndNode.layer_mask, extra_style);
   wndNode.appendChild(wndNode.layer_mask);
@@ -4964,14 +4964,14 @@ function get_app(id) {
 
 
 /*------------------------------------------------------------------------------------
- $ class placeholder
+ $ class Q.PlaceHolder
  $ date: 2015-1-5 16:31
  $ author: Q http://jshtml.com
  
  $ bugs Fixed:
 --------------------------------------------------------------------------------------*/
 
-Q.placeholder = Q.extend({
+Q.PlaceHolder = Q.extend({
 hwnd : null, 
 holder: null,
 __init__ : function(json) {
@@ -4980,19 +4980,24 @@ __init__ : function(json) {
   this.holder = Q.$(json.holder);
   Q.addEvent(this.hwnd, "blur", Q.bind_handler(this, this.onblur));
   Q.addEvent(this.hwnd, "focus", Q.bind_handler(this, this.onfocus));
+  this.checkValue();
 },
 
 onblur : function() {
-  if(this.hwnd.value == "") {
+  this.checkValue();
+},
+
+onfocus : function() {
+  Q.addClass(this.hwnd, "q-inplace");
+},
+
+checkValue : function() {
+  if(this.hwnd.value != "") {
     // show place holders
     Q.addClass(this.hwnd, "q-inplace");
   } else {
     Q.removeClass(this.hwnd, "q-inplace");
   }
-},
-
-onfocus : function() {
-  Q.removeClass(this.hwnd, "q-inplace");
 }
 
 });

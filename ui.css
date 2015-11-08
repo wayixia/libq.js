@@ -64,9 +64,12 @@
 
 /* q-window's mask */
 .q-window-mask {position:absolute; background: #000000; display:; left:0;top:0;right:0;bottom:0;}
-.q-window-mask.q-top-mask {
+.q-window-mask.q-top-mask 
+{
   z-index: 100000;
+  filter:alpha(opacity=10);-moz-opacity:0.1;-khtml-opacity: 0.1;opacity: 0.1;
 }
+
 /* q-window's cient area */
 .q-window .q-window-client { overflow: hidden; position:absolute; left:0; top:30px; right:0; bottom:0;margin:0;padding:0;}
 .q-window.q-attr-no-title .q-window-client { top:0px; }
@@ -612,6 +615,38 @@
 
 .q-checkbox.checked {
   background : transparent url(images/checkbox/checked.gif) no-repeat 0 center;
+}
+
+
+.q-placeholder {
+  margin:0px 1px 0 1px;
+  border: 1px solid #999;
+  height: 25px;
+  line-height: 25px;
+  width: 258px;
+  text-indent: 5px;
+  color: #666;
+  position:relative;
+  background:transparent;
+}
+
+
+.q-placeholder input { 
+  background-color: transparent; 
+  position:absolute;
+  left: 3px;
+  top: 0px;
+  height: 25px;
+  border: 0;
+  padding:0;
+  font-size: 16px;
+  outline:none;
+  width: 252px;
+  border-width: 0;
+}
+
+.q-placeholder input.q-inplace {
+  background-color: #FFF;
 }
 
 .q-images-box {

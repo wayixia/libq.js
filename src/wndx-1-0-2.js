@@ -210,7 +210,7 @@ function $MaskWindow(wndNode, bmask) {
 function $CreateMaskLayer(wndNode, extra_style) {
   wndNode.layer_mask = document.createElement('DIV');
   wndNode.layer_mask.body_style = document.body.currentStyle.overflow;
-  wndNode.layer_mask.className = 'q-window-mask alpha_1';
+  wndNode.layer_mask.className = 'q-window-mask';
   if(extra_style)
     Q.addClass(wndNode.layer_mask, extra_style);
   wndNode.appendChild(wndNode.layer_mask);
