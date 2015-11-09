@@ -42,12 +42,12 @@ function loadcalendar() {
   s += '<div id="calendar_year" onclick="_cancelBubble(event)"><div class="col">';
   for(var k = 1930; k <= 2019; k++) {
     s += k != 1930 && k % 10 == 0 ? '</div><div class="col">' : '';
-    s += '<a href="#" onclick="refreshcalendar(' + k + ', mm);$(\'calendar_year\').style.display=\'none\';return false"><span' + (today.getFullYear() == k ? ' class="today"' : '') + ' id="calendar_year_' + k + '">' + k + '</span></a><br />';
+    s += '<a href="#" onclick="refreshcalendar(' + k + ', mm);Q.$(\'calendar_year\').style.display=\'none\';return false"><span' + (today.getFullYear() == k ? ' class="today"' : '') + ' id="calendar_year_' + k + '">' + k + '</span></a><br />';
   }
   s += '</div></div>';
   s += '<div id="calendar_month" onclick="_cancelBubble(event)">';
   for(var k = 1; k <= 12; k++) {
-    s += '<a href="#" onclick="refreshcalendar(yy, ' + (k - 1) + ');$(\'calendar_month\').style.display=\'none\';return false"><span' + (today.getMonth()+1 == k ? ' class="today"' : '') + ' id="calendar_month_' + k + '">' + k + ( k < 10 ? '&nbsp;' : '') + ' 月</span></a><br />';
+    s += '<a href="#" onclick="refreshcalendar(yy, ' + (k - 1) + ');Q.$(\'calendar_month\').style.display=\'none\';return false"><span' + (today.getMonth()+1 == k ? ' class="today"' : '') + ' id="calendar_month_' + k + '">' + k + ( k < 10 ? '&nbsp;' : '') + ' 月</span></a><br />';
   }
   s += '</div>';
 
@@ -120,17 +120,17 @@ function refreshcalendar(y, m) {
   var dd = null;
   yy = x.getFullYear();
   mm = x.getMonth();
-  $("year").innerHTML = yy;
-  $("month").innerHTML = mm + 1 > 9  ? (mm + 1) : '0' + (mm + 1);
+  Q.$("year").innerHTML = yy;
+  Q.$("month").innerHTML = mm + 1 > 9  ? (mm + 1) : '0' + (mm + 1);
 
   for(var i = 1; i <= mv; i++) {
-    dd = $("d" + i);
+    dd = Q.$("d" + i);
     dd.innerHTML = "&nbsp;";
     dd.className = "";
   }
 
   while(x.getMonth() == mm) {
-    dd = $("d" + (d + mv));
+    dd = Q.$("d" + (d + mv));
     dd.innerHTML = '<a href="###" onclick="settime(' + d + ');return false">' + d + '</a>';
     if(x.getTime() < today.getTime() || (enddate && x.getTime() > enddate.getTime()) || (startdate && x.getTime() < startdate.getTime())) {
       dd.className = 'expire';
@@ -148,7 +148,7 @@ function refreshcalendar(y, m) {
   }
 
   while(d + mv <= 42) {
-    dd = $("d" + (d + mv));
+    dd = Q.$("d" + (d + mv));
     dd.innerHTML = "&nbsp;";
     d++;
   }
@@ -173,6 +173,6 @@ function zerofill(s) {
   return (s < 10 ? '0' : '') + s.toString();
 }
 
-Q.Ready(function() {
+Q.ready(function() {
   loadcalendar();
-});
+}, true );
