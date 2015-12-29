@@ -87,6 +87,7 @@ function createAjaxTrans() {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
+ * @param {bool}   [json.queue=true] - 使用队列执行ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
