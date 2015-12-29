@@ -56,11 +56,11 @@ function loadcalendar() {
   document.getElementsByTagName("body")[0].appendChild(nElement);
 
 //  document.write(s);
-  document.onclick = function(event) {
+  Q.addEvent( document, 'click', function(event) {
     Q.$('calendar').style.display = 'none';
     Q.$('calendar_year').style.display = 'none';
     Q.$('calendar_month').style.display = 'none';
-  }
+  });
   Q.$('calendar').onclick = function(event) {
     _cancelBubble(event);
     Q.$('calendar_year').style.display = 'none';

@@ -21,9 +21,9 @@ Q.CheckBox = Q.extend({
     this.hwnd = Q.$(json.id);
     this.onchange = json.onchange || function(id) {}
     this.setCheck(!!json.checked);
-    this.hwnd.onclick = (function(t) { return function() {  
+    Q.addEvent( this.hwnd, 'click',  (function(t) { return function() {  
       t.setCheck(!t.checked()); 
-    }})(this);
+    }})(this));
   },
 
   /** 获取check状态

@@ -94,9 +94,16 @@ function createAjaxTrans() {
  */
 
 Q.ajaxc = function(json) {
-  newAjax(json, function(data) {
+  var queue = !!json.queue;
+  if( queue ) { 
+    ajaxQueue( json, _data_handler );  
+  } else {
+    newAjax( json, _data_handler );
+  }
+
+  function _data_handler(data) {
     return "postdata="+encodeURIComponent(encodeURIComponent(Q.json2str(data))); 
-  });
+  };
 }
 
 /** ajax请求
@@ -106,23 +113,59 @@ Q.ajaxc = function(json) {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
+ * @param {bool}   [json.queue=true] - 使用队列执行ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
  * @param {bool=} [json.withCredentials=false] - ajax跨域凭证， 默认false
  */
 Q.ajax = function(json) {
-  newAjax(json, function(data) {
+  var queue = !!json.queue;
+  if( queue ) { 
+    ajaxQueue( json, _data_handler );  
+  } else {
+    newAjax( json, _data_handler );
+  }
+
+  function _data_handler( data ) {
     var postdata = null;
     for(var name in data) {
       postdata += encodeURIComponent(name)+'='+encodeURIComponent(data[name])+'&'
     }
 
     return postdata;
-  });
+  }
 }
 
-function newAjax(json, data_handler) {
+function ajaxQueue( json, data_handler ) {
+  this.tasks = this.tasks || [];
+  var run_task = ( this.tasks.length == 0 );
+ // queue execute ajax
+  this.tasks.push( json );
+  if( run_task ) {
+    _run(this)();
+  } else {
+    console.log("push a task only");
+  }
+
+  function _run( a ) { return function() {
+    var callee = arguments.callee;
+    if( a.tasks.length == 0 ) {
+      return;
+    }
+    
+    var t = a.tasks[0];
+    newAjax( t , data_handler, function( success ) {
+      var url = a.tasks.shift();
+      console.log("[ajax]completed one and remove item -> "+url.command);
+      if( success ) {
+        callee.call();
+      }
+    } );
+  } };
+}
+
+function newAjax(json, data_handler, complete_handler) {
   var request = json || {};
   var command = request.command.toString();
   if(command.indexOf('?') == -1) {
@@ -154,9 +197,11 @@ function newAjax(json, data_handler) {
   xmlhttp.onreadystatechange = function() {
     if(xmlhttp.readyState == 4) {
       if(xmlhttp.status == 200) {
-        request.oncomplete &&request.oncomplete(xmlhttp);
+        request.oncomplete && request.oncomplete(xmlhttp);
+        complete_handler && complete_handler( true );
       } else {
         request.onerror && request.onerror(xmlhttp);
+        complete_handler && complete_handler( false );
       }
     }
   };

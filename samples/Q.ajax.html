@@ -6,29 +6,41 @@
 <!-- 使用QLib控件是必须包含样式表 -->
 <link type="text/css" rel="stylesheet" href="../ui.css" />
 
-<script type="text/javascript" src="../Q.js"></script>
-<script type="text/javascript" src="../utils/stl.js"></script>
-<script type="text/javascript" src="../utils/json2.js"></script>
-<script type="text/javascript" src="../utils/ajax.js"></script>
+<script type="text/javascript" src="../src/Q.js"></script>
+<script type="text/javascript" src="../src/stl.js"></script>
+<script type="text/javascript" src="../src/json2.js"></script>
+<script type="text/javascript" src="../src/ajax.js"></script>
 
 <script>
 <!--
-  Q.ready(function() {
+var urls = ["http://q.wayixia.com/index.html", "http://q.wayixia.com/samples/Q.ajax.html"];
+for( var j=0; j < 150; j++) {
+  urls.push("http://q.wayixia.com/index.html");
+  urls.push("http://q.wayixia.com/samples/Q.ajax.html");
+}
 
-    Q.$('ajax-button').onclick = function() {
-      var url = Q.$('url').value;
-      if(url == "") {
-        Q.$('url').focus();
-        return;
-      }
-      Q.ajax({
-        command: url,
+Q.ready(function() {
+
+  Q.$('ajax-button').onclick = function() {
+    //var url = Q.$('url').value;
+    //if(url == "") {
+    //  Q.$('url').focus();
+    //  return;
+    //}
+
+    for(var i=0; i< urls.length; i++ ) {
+      Q.ajaxc({
+        command: urls[i],
+        queue: true,
         oncomplete : function(xmlhttp) {
-          Q.$('red-object').innerText = xmlhttp.responseText;
+          Q.$('red-object').innerHTML += this.command + "<br/>";
         }  
       });
-    };
-  });
+    }
+
+    console.log("task running");
+  };
+});
 -->
 </script>
 </head>
@@ -41,8 +53,8 @@
 
 <br>
 <br>
-<div id="red-object">
-  red object 
+<div id="red-object" style="background-color: yellow;">
+
 </div>
 <br/>
 <br>

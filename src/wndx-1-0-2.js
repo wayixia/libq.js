@@ -195,14 +195,14 @@ function $BindWindowMessage(wndNode, messageid, parameters) {
 
 function $MaskWindow(wndNode, bmask) { 
   var layer_mask = $GetMask(wndNode);
-  if($IsDesktopWindow(wndNode)) {
-    if(bmask) {
-      layer_mask.body_style = document.body.currentStyle.overflow;
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = layer_mask.body_style;
-    }
-  }
+  //if($IsDesktopWindow(wndNode)) {
+    //if(bmask) {
+    //  layer_mask.body_style = document.body.currentStyle.overflow;
+    //  document.body.style.overflow = 'hidden';
+    //} else {
+    //  document.body.style.overflow = layer_mask.body_style;
+    //}
+  //}
   if(layer_mask && layer_mask.style)
     layer_mask.style.display=((!!bmask)?'':'none'); 
 }
