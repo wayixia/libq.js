@@ -87,7 +87,8 @@ function createAjaxTrans() {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
- * @param {bool}   [json.queue=true] - 使用队列执行ajax请求
+ * @param {bool}   [json.queue=false] - 使用队列执行ajax请求
+ * @param {bool}   [json.continueError=false] - 使用队列执行ajax请求，错误时继续执行下一个ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
@@ -114,7 +115,8 @@ Q.ajaxc = function(json) {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
- * @param {bool}   [json.queue=true] - 使用队列执行ajax请求
+ * @param {bool}   [json.queue=false] - 使用队列执行ajax请求
+ * @param {bool}   [json.continueError=false] - 使用队列执行ajax请求，错误时继续执行下一个ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
@@ -157,9 +159,9 @@ function ajaxQueue( json, data_handler ) {
     
     var t = a.tasks[0];
     newAjax( t , data_handler, function( success ) {
-      var url = a.tasks.shift();
-      console.log("[ajax]completed one and remove item -> "+url.command);
-      if( success ) {
+      var o = a.tasks.shift();
+      Q.printf("[ajax]completed("+(success?"ok":"failed")+") one and remove item -> "+o.command);
+      if( success || ( !!o.continueError ) ) {
         callee.call();
       }
     } );

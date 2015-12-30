@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-<title>Q.drag | Q.js</title>
+<title>Q.ajax Q.ajaxc | Q.js</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- 使用QLib控件是必须包含样式表 -->
 <link type="text/css" rel="stylesheet" href="../ui.css" />
@@ -13,7 +13,7 @@
 
 <script>
 <!--
-var urls = ["http://q.wayixia.com/index.html", "http://q.wayixia.com/samples/Q.ajax.html"];
+var urls = ["http://q.wayixia.com/index.html", "http://q.wayixia.com/samples/Q.ajax.htmls"];
 for( var j=0; j < 150; j++) {
   urls.push("http://q.wayixia.com/index.html");
   urls.push("http://q.wayixia.com/samples/Q.ajax.html");
@@ -27,14 +27,23 @@ Q.ready(function() {
     //  Q.$('url').focus();
     //  return;
     //}
+    
+    var continueError = Q.$('continueError').checked;
+    var queue = Q.$('queue').checked;
+    
+    Q.$('red-object').innerHTML = "";
 
     for(var i=0; i< urls.length; i++ ) {
       Q.ajaxc({
         command: urls[i],
-        queue: true,
+        continueError: continueError,
+        queue: queue,
         oncomplete : function(xmlhttp) {
-          Q.$('red-object').innerHTML += this.command + "<br/>";
-        }  
+          Q.$('red-object').innerHTML += "[ok]" + this.command + "<br/>";
+        },
+        onerror : function( xmlhttp ) {
+          Q.$('red-object').innerHTML += "[error]" + this.command + "<br/>";
+        }
       });
     }
 
@@ -49,7 +58,14 @@ Q.ready(function() {
 <h3>Q.ajax </h3>
 <hr>
 
-<input id="url" size="100" /> <button id="ajax-button"> do </button>
+<input id="url" size="100" />
+<br>
+<br>
+<input type="checkbox" id="continueError"/><label for="continueError">continueError</label>
+<input type="checkbox" id="queue"/> <label for="queue">queue</label>
+<br/>
+<br/>
+<button id="ajax-button"> do </button>
 
 <br>
 <br>
