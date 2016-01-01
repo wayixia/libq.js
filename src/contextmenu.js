@@ -17,7 +17,7 @@ var MENU_ITEM_RADIO = "radio";
  * @param {string} json.text - 菜单项文本
  * @param {string} json.icon - 菜单项图片
  * @param {*} json.data - 菜单项绑定的数
- * @param {string} json.popup_style - 弹出子菜单窗口样式
+ * @param {string} json.style - 弹出子菜单窗口样式
  * @param {function} json.callback - 响应回调
  */
 Q.MenuItem = Q.extend(
@@ -35,7 +35,7 @@ clickHidden : true,
 items : null,
 data : null,
 isChecked : true,
-popup_style: null,
+style: null,
 /**
  * @callback Q.MenuItem.callback
  * @param {Q.MenuItem} item - 子菜单项
@@ -48,7 +48,7 @@ __init__ : function(json) {
   _this.items = [];
   _this.parentMenu = json.parentMenu;
   _this.data = json.data;
-  this.popup_style = json.popup_style;
+  this.style = json.style;
   this.type = json.type || MENU_ITEM; 
   // construct dom
   _this.hwnd = document.createElement('LI');
@@ -136,8 +136,8 @@ addSubMenuItem : function(subItem) {
     this.subwnd = document.createElement("DIV");
     document.body.appendChild(this.subwnd);
     this.subwnd.className = 'q-contextmenu';
-    if(this.popup_style)
-      Q.addClass(this.subwnd, this.popup_style);
+    if(this.style)
+      Q.addClass(this.subwnd, this.style);
 
     Q.addClass(this.hwnd, 'q-more');
     this.subwnd.onmousedown = function(evt) { 
@@ -346,6 +346,10 @@ showElement : function(element, isClosed) {
     top = pos.top-_this.hwnd.offsetHeight;
   } else {
     top = pos.top + pos.height;
+  }
+
+  if( top < 0 ) {
+    top = pos.top+pos.height;
   }
   if(_this.hwnd.offsetWidth + pos.left > workspace.width) {
     left = pos.left+pos.width - _this.hwnd.offsetWidth;  
