@@ -322,14 +322,17 @@ show : function(evt){
 
 showElement : function(element, isClosed) {
   var _this = this;
+  
+  if(element.nodeType != Q.ELEMENT_NODE)  
+    return; 
+  
   _this.hide();
   Q.addEvent(document, "mousedown", _this._fHide);
   Q.addEvent(window, "blur", this._fHide);
   this._fOnPopup(true);
-  if(element.nodeType != Q.ELEMENT_NODE)  
-    return; 
   
   _this.hwnd.style.display = '';
+  /*
   if(!this.isajust) {
     this.isajust = true;
     var childNodes = this.hwnd.childNodes;
@@ -339,8 +342,9 @@ showElement : function(element, isClosed) {
       node.style.width = (_this.hwnd.offsetWidth - 2) + 'px';
     }
   }
+  */
   var workspace = Q.workspace();
-  var pos = Q.absPosition(element);
+  var pos = Q.absPositionEx(element);
   var left =0, top = 0;
   if(pos.top+pos.height+_this.hwnd.offsetHeight > workspace.height ) {
     top = pos.top-_this.hwnd.offsetHeight;

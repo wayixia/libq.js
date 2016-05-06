@@ -360,6 +360,9 @@ var subclass = Q.extend({
    * 
    */
   Q.absPositionEx = function(element) {
+    if( !element.getBoundingClientRect ) {
+      return Q.absPosition(element);
+    }
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
     var t =rect.top+document.documentElement.scrollTop;
@@ -466,7 +469,7 @@ var subclass = Q.extend({
     var header = document.getElementsByTagName("head")[0];
     var s = document.createElement("script");  
     s.type = "text/javascript";
-    s.src = src;
+    s.src = src + '?' + new Date().getTime(); //Math.floor(+new Date/1E7);
     // 对于IE浏览器，使用readystatechange事件判断是否载入成功  
     // 对于其他浏览器，使用onload事件判断载入是否成功  
     s.done = false;
@@ -1633,6 +1636,8 @@ function createAjaxTrans() {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
+ * @param {bool}   [json.queue=false] - 使用队列执行ajax请求
+ * @param {bool}   [json.continueError=false] - 使用队列执行ajax请求，错误时继续执行下一个ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
@@ -1659,7 +1664,8 @@ Q.ajaxc = function(json) {
  * @param {string} json.command - 请求url
  * @param {string} [json.method="get"] - ajax请求方法
  * @param {bool}   [json.async=true] - 异步ajax请求
- * @param {bool}   [json.queue=true] - 使用队列执行ajax请求
+ * @param {bool}   [json.queue=false] - 使用队列执行ajax请求
+ * @param {bool}   [json.continueError=false] - 使用队列执行ajax请求，错误时继续执行下一个ajax请求
  * @param {*=} json.data - 请求的数据
  * @param {ajax_callback=} json.oncompete - ajax请求完成时的回调
  * @param {ajax_callback=} json.onerror - ajax请求完成时的回调
@@ -1702,9 +1708,9 @@ function ajaxQueue( json, data_handler ) {
     
     var t = a.tasks[0];
     newAjax( t , data_handler, function( success ) {
-      var url = a.tasks.shift();
-      console.log("[ajax]completed one and remove item -> "+url.command);
-      if( success ) {
+      var o = a.tasks.shift();
+      Q.printf("[ajax]completed("+(success?"ok":"failed")+") one and remove item -> "+o.command);
+      if( success || ( !!o.continueError ) ) {
         callee.call();
       }
     } );
@@ -1970,7 +1976,7 @@ var MENU_ITEM_RADIO = "radio";
  * @param {string} json.text - 菜单项文本
  * @param {string} json.icon - 菜单项图片
  * @param {*} json.data - 菜单项绑定的数
- * @param {string} json.popup_style - 弹出子菜单窗口样式
+ * @param {string} json.style - 弹出子菜单窗口样式
  * @param {function} json.callback - 响应回调
  */
 Q.MenuItem = Q.extend(
@@ -1988,7 +1994,7 @@ clickHidden : true,
 items : null,
 data : null,
 isChecked : true,
-popup_style: null,
+style: null,
 /**
  * @callback Q.MenuItem.callback
  * @param {Q.MenuItem} item - 子菜单项
@@ -2001,7 +2007,7 @@ __init__ : function(json) {
   _this.items = [];
   _this.parentMenu = json.parentMenu;
   _this.data = json.data;
-  this.popup_style = json.popup_style;
+  this.style = json.style;
   this.type = json.type || MENU_ITEM; 
   // construct dom
   _this.hwnd = document.createElement('LI');
@@ -2089,8 +2095,8 @@ addSubMenuItem : function(subItem) {
     this.subwnd = document.createElement("DIV");
     document.body.appendChild(this.subwnd);
     this.subwnd.className = 'q-contextmenu';
-    if(this.popup_style)
-      Q.addClass(this.subwnd, this.popup_style);
+    if(this.style)
+      Q.addClass(this.subwnd, this.style);
 
     Q.addClass(this.hwnd, 'q-more');
     this.subwnd.onmousedown = function(evt) { 
@@ -2275,14 +2281,17 @@ show : function(evt){
 
 showElement : function(element, isClosed) {
   var _this = this;
+  
+  if(element.nodeType != Q.ELEMENT_NODE)  
+    return; 
+  
   _this.hide();
   Q.addEvent(document, "mousedown", _this._fHide);
   Q.addEvent(window, "blur", this._fHide);
   this._fOnPopup(true);
-  if(element.nodeType != Q.ELEMENT_NODE)  
-    return; 
   
   _this.hwnd.style.display = '';
+  /*
   if(!this.isajust) {
     this.isajust = true;
     var childNodes = this.hwnd.childNodes;
@@ -2292,13 +2301,18 @@ showElement : function(element, isClosed) {
       node.style.width = (_this.hwnd.offsetWidth - 2) + 'px';
     }
   }
+  */
   var workspace = Q.workspace();
-  var pos = Q.absPosition(element);
+  var pos = Q.absPositionEx(element);
   var left =0, top = 0;
   if(pos.top+pos.height+_this.hwnd.offsetHeight > workspace.height ) {
     top = pos.top-_this.hwnd.offsetHeight;
   } else {
     top = pos.top + pos.height;
+  }
+
+  if( top < 0 ) {
+    top = pos.top+pos.height;
   }
   if(_this.hwnd.offsetWidth + pos.left > workspace.width) {
     left = pos.left+pos.width - _this.hwnd.offsetWidth;  
@@ -3638,7 +3652,7 @@ ui_iframe: null,
 __init__: function(json) {
   json = json || {};
   this.ui_iframe = document.createElement("IFRAME");
-  this.ui_iframe.src=json.src;
+  //this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
   this.ui_iframe.onload = function() {    
     json.oncomplete(true);
   }
@@ -3648,7 +3662,7 @@ __init__: function(json) {
     document.body.removeChild(this);
   }
   this.ui_iframe.style.display = "none";
-  this.ui_iframe.src=json.src;
+  this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
   document.body.appendChild(this.ui_iframe);
 },
 
@@ -5977,6 +5991,7 @@ __init__ : function(json) {
 create_element: function(config, init) {
   var _this = this;
   var box = document.createElement('DIV');
+  box.__userdata = config;
   box.setAttribute('data-url', config.src);
   box.setAttribute('data-width', config.width);
   box.setAttribute('data-height', config.height);
@@ -6111,11 +6126,12 @@ calculate : function(max_width, max_height, img_width, img_height) {
 // Returns a function which will handle displaying information about the
 // image once the image has finished loading.
 //
-getImageInfoHandler : function(data, init) {
+getImageInfoHandler : function(data, userdata, init) {
   var _this = this;
   return function() {
     var img = this;
-    var image_item = _this.copy_data(data);        
+    var image_item = _this.copy_data(data);
+    image_item["userdata"] = userdata;
     image_item['src'] = img.src;
     image_item['width'] = img.width;
     image_item['height'] = img.height;
@@ -6129,9 +6145,11 @@ display_images : function(accept_images, data, init) {
   this.hwnd.innerHTML = '';
   return function() {
     for(var src in accept_images) {
-        var img = new Image();
-        img.onload=_this.getImageInfoHandler(data, init);
-        img.src=src;
+      // combine user data
+      var userdata = accept_images[src];
+      var img = new Image();
+      img.onload=_this.getImageInfoHandler(data, userdata, init);
+      img.src=src;
     }
   }
 },

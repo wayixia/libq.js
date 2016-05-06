@@ -1223,7 +1223,7 @@ ui_iframe: null,
 __init__: function(json) {
   json = json || {};
   this.ui_iframe = document.createElement("IFRAME");
-  this.ui_iframe.src=json.src;
+  //this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
   this.ui_iframe.onload = function() {    
     json.oncomplete(true);
   }
@@ -1233,7 +1233,7 @@ __init__: function(json) {
     document.body.removeChild(this);
   }
   this.ui_iframe.style.display = "none";
-  this.ui_iframe.src=json.src;
+  this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
   document.body.appendChild(this.ui_iframe);
 },
 

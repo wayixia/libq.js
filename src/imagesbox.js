@@ -23,6 +23,7 @@ __init__ : function(json) {
 create_element: function(config, init) {
   var _this = this;
   var box = document.createElement('DIV');
+  box.__userdata = config;
   box.setAttribute('data-url', config.src);
   box.setAttribute('data-width', config.width);
   box.setAttribute('data-height', config.height);
@@ -157,11 +158,12 @@ calculate : function(max_width, max_height, img_width, img_height) {
 // Returns a function which will handle displaying information about the
 // image once the image has finished loading.
 //
-getImageInfoHandler : function(data, init) {
+getImageInfoHandler : function(data, userdata, init) {
   var _this = this;
   return function() {
     var img = this;
-    var image_item = _this.copy_data(data);        
+    var image_item = _this.copy_data(data);
+    image_item["userdata"] = userdata;
     image_item['src'] = img.src;
     image_item['width'] = img.width;
     image_item['height'] = img.height;
@@ -175,9 +177,11 @@ display_images : function(accept_images, data, init) {
   this.hwnd.innerHTML = '';
   return function() {
     for(var src in accept_images) {
-        var img = new Image();
-        img.onload=_this.getImageInfoHandler(data, init);
-        img.src=src;
+      // combine user data
+      var userdata = accept_images[src];
+      var img = new Image();
+      img.onload=_this.getImageInfoHandler(data, userdata, init);
+      img.src=src;
     }
   }
 },

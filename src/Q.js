@@ -360,6 +360,9 @@ var subclass = Q.extend({
    * 
    */
   Q.absPositionEx = function(element) {
+    if( !element.getBoundingClientRect ) {
+      return Q.absPosition(element);
+    }
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
     var t =rect.top+document.documentElement.scrollTop;
@@ -466,7 +469,7 @@ var subclass = Q.extend({
     var header = document.getElementsByTagName("head")[0];
     var s = document.createElement("script");  
     s.type = "text/javascript";
-    s.src = src;
+    s.src = src + '?' + new Date().getTime(); //Math.floor(+new Date/1E7);
     // 对于IE浏览器，使用readystatechange事件判断是否载入成功  
     // 对于其他浏览器，使用onload事件判断载入是否成功  
     s.done = false;
