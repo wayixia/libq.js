@@ -832,3 +832,44 @@
   height: 15px;
   background-color: none;
 }
+
+.q-tabs.property {
+
+}
+
+.q-tabs.property .q-panel {
+  line-height: 30px;
+  font-family: 'Segoe UI', Arial, 'Microsoft Yahei', Simsun, sans-serif;
+	padding: 10px 20px;
+}
+
+.q-tabs.property input,
+.q-tabs.property select
+{
+  height: 25px;
+}
+
+.q-tabs.property .q-tabs-header {
+  background: none;
+  height: 30px;
+  line-height: 30px;
+}
+
+.q-tabs.property .q-tabs-header a {
+  color: #000;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+.q-tabs.propertyn .q-tabs-header a:hover {
+  color: #FFF;
+}
+
+.q-tabs.property .q-tabs-header a.q-selected {
+  background: #FFF;
+	z-index: 1px;
+}
+
+
+
+

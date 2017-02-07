@@ -561,8 +561,12 @@ var subclass = Q.extend({
   // 解析地址页面的查询字段
   var query = location.search.slice(1).split('&');
   for(var i=0; i < query.length; i++) {
-    var values = query[i].split('=');
-    _querystring[values[0]] = values[1];
+    var pos = query[i].indexOf( '=' );
+    if( pos >= 0 ) {
+      var name = query[i].substring( 0, pos );
+      var value = query[i].substring( pos + 1 );
+      _querystring[ name ] = value;
+    }
   }
   
   var tmr = setInterval( ( function( t, r ) { return function() {
