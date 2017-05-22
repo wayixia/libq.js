@@ -17,7 +17,10 @@
   var g_table = null;
   Q.ready(function() {
     var columns = [
-    { name: 'url', title: '地址', align:'left', width: 540, isHTML: true, renderer : function(record) {return record['url'];}, },
+    { name: 'url', title: '地址', align:'left', width: 540, isHTML: true, renderer : function(record) {
+        return "<a href=\"#" + record['url'] + "\">" + record['url'] + "</a>";
+      },
+    },
     { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {return record['date'];}, }
     ];
     

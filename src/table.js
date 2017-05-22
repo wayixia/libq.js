@@ -291,7 +291,7 @@ selected_row: null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
-  
+  _this.row_height = json.row_height || 30;
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
@@ -452,7 +452,9 @@ append : function(nIndex, record) {
       return;
     Q.removeClass(r, "mouseover");
   }})(this, ROW);
+  
   ROW.onclick = (function(t, r) { return function(evt) {
+    /*
     if(r.clickonce) {
       r.clickonce = false;
       clearTimeout(r.t);
@@ -463,7 +465,9 @@ append : function(nIndex, record) {
       b.clickonce = false; t._rows_onclick(r); 
     }})(r), 200);
     }
-    return false;
+    */
+    return t._rows_onclick(r);
+    //return false;
   }})(this, ROW);
   ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
@@ -482,7 +486,7 @@ append : function(nIndex, record) {
       align : column.align,
       className: column.className,
       width : width,
-      height : 30 ,
+      height : _this.row_height ,
       isHTML : column.isHTML
     });
     TD.style.display = theader.style.display;
@@ -655,7 +659,9 @@ _rows_onclick : function(row) {
     }
   }
   if(_this.row_onclick)
-    _this.row_onclick(row);
+    return _this.row_onclick(row);
+
+  return true;
 },
 
 _rows_ondblclick : function(row) {
@@ -730,6 +736,10 @@ row_set_selected : function(row, bSelected) {
 getRecord : function(row) {
   var dataIndex = this.row_index(row);
   return this.store.records.item(dataIndex);
+},
+
+addToolButton : function( json ) {
+  
 },
 
 sync_scroll : function() {}

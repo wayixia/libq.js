@@ -1,0 +1,82 @@
+
+
+<!DOCTYPE>
+<html>
+<head>
+<title>Q.Tabs | Q.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 使用QLib控件是必须包含样式表 -->
+<link type="text/css" rel="stylesheet" href="../ui.css" />
+<style>
+.q-tabs.property {
+  background: #CCC;
+}
+
+.q-tabs.property .q-panel {
+  background: #F8F8F8;
+}
+</style>
+<!--  
+提示：src="{QLib目录}/Q.js" 
+根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+-->
+<script type="text/javascript" src="../src/Q.js"></script>
+<script type="text/javascript" src="../src/tabs.js"></script>
+
+<script>
+<!--
+
+Q.ready(function() {
+
+
+var t = new Q.tabs({
+    action: "mouseover",
+    active: Q.$('tab-1'),
+    items: [
+      {tab: Q.$('tab-1'), content: Q.$('panel-1')},
+      {tab: Q.$('tab-2'), content: Q.$('panel-2')},
+      {tab: Q.$('tab-3'), content: Q.$('panel-3')},
+      {tab: Q.$('tab-4'), content: Q.$('panel-4')},
+    ]  
+  });
+
+
+});
+
+-->
+</script>
+</head>
+<body onselectstart="return false;" style="overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
+<h3>Q.Tabs samples </h3>
+<hR>
+
+<div class="q-tabs property">
+
+<div class="q-tabs-header">
+&nbsp;
+<a id="tab-1" href="javascript:;"> Tab1 </a>
+<a id="tab-2" href="javascript:;"> Tab2 </a>
+<a id="tab-3" href="javascript:;"> Tab3 </a>
+<a id="tab-4" href="javascript:;"> Tab4 </a>
+</div>
+
+<div id="panel-1" class="q-panel">
+  <div>Tab1 Panel</div>
+</div>
+<div id="panel-2" class="q-panel">Tab2 Panel</div>
+<div id="panel-3" class="q-panel">Tab3 Panel</div>
+<div id="panel-4" class="q-panel">Tab4 Panel</div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body>
+</html>
+
+
+
+

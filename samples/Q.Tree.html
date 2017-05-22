@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-  <title>Q.simpletree | Q.js </title>
+  <title>Q.Tree | Q.js </title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <!-- 使用QLib控件是必须包含样式表 -->
   <link type="text/css" rel="stylesheet" href="../ui.css" />
@@ -16,27 +16,23 @@
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
   -->
-  <script type="text/javascript" src="../Q.js">
-  <!--
-  // 需要加载额外库时
-  import utils.stl;
-  import utils.xml;
-  import ui.contextmenu;
-  import ui.simpletree;
-  import ui.drag;
-  -->
-  </script>
+  <script type="text/javascript" src="../src/Q.js"></script>
+  <script type="text/javascript" src="../src/stl.js"></script>
+  <script type="text/javascript" src="../src/xml.js"></script>
+  <script type="text/javascript" src="../src/contextmenu.js"></script>
+  <script type="text/javascript" src="../src/tree.js"></script>
+  <script type="text/javascript" src="../src/drag.js"></script>
 
   <script>
   <!--
 
   var g_dirTree = null;
-  Q.Ready(function() {
-    g_dirTree = new Q.simpletree({
+  Q.ready(function() {
+    g_dirTree = new Q.Tree( {
 		  id : Q.$('frame_left'),
 		  name : "站点根目录",
 		  open : true,
-	  });
+	  } );
 
 	  g_dirTree.setItemData(0, '/');
 

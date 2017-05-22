@@ -1,30 +1,14 @@
-/*--------------------------------------------------------------------------------
- $ 类名：__simpleTreeL
- $ 功能：通用树操作
- $ 日期：2008-10-09 23:47
- $ 作者：LovelyLife
- $ 邮件：Life.qm@gmail.com
- $ 版权: 请勿擅自修改版权和作者
- $ powered by Javascript经典专区[http://onlyaa.com] All rights reservered.
- $ 整理控件代码，集成到QLib库
-----------------------------------------------------------------------------------*/
+/**
+ * 通用树操作 Q.Tree
+ * @author Q
+ * @version 1.0
+ */
 
-
-// handle event listen
-var BindHandler = function(object, func) {
-  return function() {
-    return func.apply(object, arguments);
-  };
-};
  
 var BindAsEventHandler = function(object, func) {
   return function(evt) {
     return func.call(object, (evt || window.event));
   };
-};
-
-var CurrentStyle = function(element){
-  return element.currentStyle || document.defaultView.getComputedStyle(element, null);
 };
 
 var TREEITEM_NULL     = -1;  // 不存在的节点

@@ -328,8 +328,8 @@
 
 /* q-table control */
 
-.q-table { background: #99bbe8; overflow:hidden; position:absolute; left:0; top:0; right:0; bottom:0;}
-.q-table.q-attr-border {left:1; top:1; right:1; bottom:1;}
+.q-table { backgrounds: #99bbe8; overflow:hidden; position:absolute; left:0; top:0; right:0; bottom:0;}
+.q-table.q-attr-border {left:1px; top:1px; right:1px; bottom:1px;}
 .q-table TD {CURSOR: default;}
 .q-table TR.q-selected
 { 
