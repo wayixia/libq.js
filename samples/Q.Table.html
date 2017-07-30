@@ -21,7 +21,7 @@
         return "<a href=\"#" + record['url'] + "\">" + record['url'] + "</a>";
       },
     },
-    { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {return record['date'];}, }
+    { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {return "<button id=\"id_" + record['date'] + "\">" + record['date'] + "</button>";}, }
     ];
     
     var store = new Q.Store({
@@ -54,9 +54,12 @@
       wstyle: "q-attr-border q-attr-toolbar q-attr-title",
       columns: columns,  
       store: store,
-      row_onclick : function(row) {
+      row_onclick : function(row, evt ) {
         var data = this.getRecord(row);
-        Q.$('show_text').innerText = "当前选中: " + data.url;
+        evt.cancelBubble=true;
+        var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+        Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.id;
+        this.row_remove( row );
       }
     });
 

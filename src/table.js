@@ -466,7 +466,7 @@ append : function(nIndex, record) {
     }})(r), 200);
     }
     */
-    return t._rows_onclick(r);
+    return t._rows_onclick(r, evt );
     //return false;
   }})(this, ROW);
   ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
@@ -634,7 +634,7 @@ _column_click : function(nCol) {
 
   
 // 处理鼠标单击事件，处理之后传递给外部接口_rows_onclick
-_rows_onclick : function(row) {
+_rows_onclick : function(row, evt ) {
   var _this = this;
   if(!this.row_is_enabled(row))
     return false;
@@ -659,7 +659,7 @@ _rows_onclick : function(row) {
     }
   }
   if(_this.row_onclick)
-    return _this.row_onclick(row);
+    return _this.row_onclick(row, evt );
 
   return true;
 },
