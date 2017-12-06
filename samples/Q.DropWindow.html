@@ -88,7 +88,7 @@ Q.ready(function() {
     Q.DropWindow.prototype.__init__.call(this, json);
   }
   }); 
-  /** 创建Q.DropWindow实例
+  /** 创建Q.ColorTable实例
    * 
    */
   var dw = new Q.ColorTable( { onchange: function(v) {
@@ -102,15 +102,6 @@ Q.ready(function() {
     dw.showElement(this);
   } 
 
-  Q.$("test-button").onclick = 
-  Q.$("test-button2").onclick = 
-  Q.$("test-button3").onclick = 
-  Q.$("test-button4").onclick = 
-  Q.$("test-button5").onclick = 
-  function(evt) {
-    alert(this.innerHTML);
-    dw.hide();
-  }
 });
 
 -->
@@ -125,16 +116,6 @@ Q.DropWindow 示例
 
 <br>
 <br>
-<button class="q-item" id="menu-file">文件</button>
-<button class="q-item" id="menu-edit">编辑</button>
-
-<div id="drop-content">
-  <button id="test-button" style="width:100%;">test button</button>
-  <button id="test-button2" style="width:100%;">test button2</button>
-  <button id="test-button3" style="width:100%;">test button3</button>
-  <button id="test-button4" style="width:100%;">test button4</button>
-  <button id="test-button5" style="width:100%;">test button5</button>
-</div>
 
 </body>
 </html>

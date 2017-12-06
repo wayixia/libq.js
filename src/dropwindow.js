@@ -12,6 +12,7 @@ timer : null,
 _fHide : null,
 _fWheel: null,
 _fOnPopup : null,
+_show : false,
 
 /**
  * @callback Q.DropWindow.callback
@@ -91,7 +92,7 @@ showElement : function(element, isClosed) {
   Q.addEvent(document, "mousedown", this._fHide);
   Q.addEvent(window, "blur", this._fHide);
   this._fOnPopup(true);
-  this.show(true);
+  this.show( true );
   var workspace = Q.workspace();
   var pos = Q.absPosition(element);
   var wnd_pos = Q.absPosition(this.wnd());
@@ -113,7 +114,7 @@ showElement : function(element, isClosed) {
 
 hide : function() {
   //Q.printf("hide context menu");
-  this.show(false);
+  this.show( false );
   Q.removeEvent(window, "blur", this._fHide);
   Q.removeEvent(document, "mousedown", this._fHide);
   document.onmousewheel = this._fWheel;
@@ -121,16 +122,5 @@ hide : function() {
 }
 });
 
-function fireMouseEvent(element, evtName) {
-  if( document.createEvent ) 
-  {
-     var evObj = document.createEvent('MouseEvents');
-     evObj.initEvent( evtName, true, false );
-     element.dispatchEvent(evObj);
-  }
-  else if( document.createEventObject )
-  {
-      element.fireEvent('on'+evtName);
-  }
-}
+
 

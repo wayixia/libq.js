@@ -873,3 +873,84 @@
 
 
 
+
+/* combobox style started */
+
+.q-combobox {
+	border: 1px solid #999;
+	BACKGROUND: WHITE;
+  position: relative;
+  height: 25px;
+}
+
+
+
+.q-combobox .q-combobox-editwnd {
+	border: 0px solid #999;
+	BACKGROUND: WHITE;
+  outline: 0;
+  position: absolute;
+  left: 2px;
+  top: 0;
+  right: 20px;
+  bottom:0;
+}
+
+.q-combobox .q-combobox-arrowwnd {
+	width: 20px;
+	font-size: 13px;
+  line-height: 25px;
+	text-align: center;
+	background: #CCC;
+  position: absolute;
+  cursor: default; 
+  top: 1px;
+  right: 1px;
+  bottom:1px;
+}
+
+
+.q-combobox-dropwnd {
+
+	border: 1px solid #999;
+	position: absolute;
+	margin: 0px;
+	font-size: 13px;
+	BACKGROUND: WHITE;
+  padding: 0;
+
+   -webkit-box-shadow: 5px 5px 20px #bdbdbd; box-shadow: 5px 5px 20px #bdbdbd; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
+}
+
+.q-combobox.q-combobox-noarrow .q-combobox-editwnd {
+  position: absolute;
+  right: 2px;
+}
+
+.q-combobox.q-combobox-noarrow .q-combobox-arrowwnd {
+  display: none;
+}
+
+.q-combobox-dropwnd li {
+  word-break:break-all;
+	padding: 3px 0;
+	display: block;
+  cursor:hand;
+}
+
+.q-combobox-dropwnd .q-combobox-itemover {
+	background: blue;
+	color: white;
+}
+
+.q-combobox-dropwnd .q-combobox-itemout {
+	white-space: normal;
+}
+
+/* combobox style end*/
+
+
+
+
+
+

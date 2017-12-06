@@ -219,6 +219,18 @@ var subclass = Q.extend({
     }
   };
 
+  Q.fireEvent = function( element, evtName ) {
+    if( document.createEvent ) {
+      var evObj = document.createEvent('MouseEvents');
+      evObj.initEvent( evtName, true, false );
+      element.dispatchEvent(evObj);
+    } else if( document.createEventObject ) {
+      element.fireEvent('on'+evtName);
+    }
+  };
+
+
+
   /** 动态添加网页元素的CSS样式
    *
    * @function Q.addClass
