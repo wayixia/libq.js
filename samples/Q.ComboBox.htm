@@ -42,9 +42,11 @@
 <script language="javascript" src="../src/Q.js" type="text/javascript"></script>
 <script language="javascript" src="../src/combobox.js" type="text/javascript"></script>
 <script>
-//try {
+var g_com1 = null;
+var g_com2 = null;
+
 Q.ready( function() {
-	var com1 = new Q.ComboBox( { 
+	g_com1 = new Q.ComboBox( { 
     id: Q.$('combobox'), 
     wstyle: "q-combobox q-combobox-noarrow user-item", 
     data: [ "dtest145456asdlkasdlfajsdflajsdflkqjwelrqwjerkl", "test2", "test3", "rr", "sd", "t" ],
@@ -55,6 +57,20 @@ Q.ready( function() {
       return false;
     }
   });
+
+	g_com2 = new Q.ComboBox( { 
+    id: Q.$('combobox2'), 
+    wstyle: "q-combobox q-combobox-noarrow user-item", 
+    data: [ "dtest145456asdlkasdlfajsdflajsdflkqjwelrqwjerkl", "test2", "test3", "rr", "sd", "t" ],
+    onchange: function( item ) {
+      append( this, item );
+      this.setWndText( "" );
+      this.addfilter( item );
+      return false;
+    }
+  });
+
+
 } );
 
 
@@ -86,8 +102,14 @@ function append( c, text ) {
 Q.ComboBox ÊµÀýÑÝÊ¾<hr/>
 
 <div class="user-group">
-<input id="combobox" style="width: 500px; " />
+<input id="combobox" style="width: 300px; " />
 </div>
+<br/>
+<div class="user-group">
+<input id="combobox2" style="width: 300px; " />
+</div>
+
+
 <br>
 <br><br>
 <br><br>

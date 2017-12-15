@@ -6856,14 +6856,19 @@ Q.ComboBox = Q.extend( {
   arrowWnd: null,
   dropWnd : null,
   overitem : -1,
-  command : '',
-  textList : [],  // 下拉窗口列表数据
-  textListTemp : [],
+  lastitem: -1,
+  textList : null,  // 下拉窗口列表数据
+  textListTemp : null,
+  textFilter : null,
   __init__ : function( json ) {
     var self = this;
     json = json || {};
     // 初始化数据
     this.textList = json.data;
+    this.textListTemp = [];
+    this.textFilter = [];
+    this.onchange = json.onchange || function( item ) {};
+    this.overitem = this.lastitem = -1;
 
     this.editWnd = Q.$( json.id );
     var editWidth = this.editWnd.offsetWidth;
@@ -6985,11 +6990,18 @@ Q.ComboBox = Q.extend( {
       }
 
 
-      li.onclick = function(){ 
-        self.overitem =  self.findItem(this);
-        self.setWndText(this.innerText);
-        self.dropWindow(false);
-      }
+      li.onclick = ( function( o, item ) { return function() {
+        var old = o.overitem;
+        self.overitem =  o.findItem(this);
+        var settext = true;
+        if( o.onchange ) {
+          settext = o.onchange( item );
+        }
+        if( settext ) {
+          o.setWndText(this.innerText);
+        }
+        o.dropWindow(false);
+      } } )( self, self.textListTemp[i] );
       
     }
   },
@@ -7037,6 +7049,37 @@ Q.ComboBox = Q.extend( {
     }
     return -1;
   },
+
+  addfilter : function( text ) {
+    for( var i=0; i < this.textFilter.length; i++ ) {
+      if( this.textFilter[i] == text ) {
+        return;
+      }
+    }
+
+    this.textFilter.push( text );
+  },
+
+  removefilter: function( text ) {
+    var t = [];
+    for( var i=0; i < this.textFilter.length; i++ ) {
+      if( this.textFilter[i] != text ) {
+        t.push( this.textFilter[i] );
+      }
+    }
+
+    this.textFilter = t;
+  },
+
+  isfilter: function( text ) {
+    for( var i=0; i < this.textFilter.length; i++ ) {
+      if( this.textFilter[i] == text ) {
+        return true;
+      }
+    }
+
+    return false;
+  },
   
   autoComplete : function() {
     var text = this.editWnd.value;
@@ -7044,6 +7087,10 @@ Q.ComboBox = Q.extend( {
     this.textListTemp = [];
 
     for( var i=0; i < this.textList.length; i++ ) {
+      var s = this.textList[i];
+      if( this.isfilter( s ) ) {
+        continue;
+      } 
       if( (text == this.textList[i].substr(0, text.length)) || text == '' ) {
         this.textListTemp.push(this.textList[i]);
         count = count + 1;

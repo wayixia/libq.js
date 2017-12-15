@@ -13,16 +13,18 @@ Q.ComboBox = Q.extend( {
   dropWnd : null,
   overitem : -1,
   lastitem: -1,
-  command : '',
-  textList : [],  // 下拉窗口列表数据
-  textListTemp : [],
-  textFilter : [],
+  textList : null,  // 下拉窗口列表数据
+  textListTemp : null,
+  textFilter : null,
   __init__ : function( json ) {
     var self = this;
     json = json || {};
     // 初始化数据
     this.textList = json.data;
+    this.textListTemp = [];
+    this.textFilter = [];
     this.onchange = json.onchange || function( item ) {};
+    this.overitem = this.lastitem = -1;
 
     this.editWnd = Q.$( json.id );
     var editWidth = this.editWnd.offsetWidth;
