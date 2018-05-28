@@ -15,6 +15,57 @@
 .q-tabs.property .q-panel {
   background: #F8F8F8;
 }
+
+.q-tabs-header {
+  background-color: blue;
+  height: 100%;
+}
+
+
+.q-tabs.v-property {
+
+}
+
+
+
+.q-tabs.v-property .q-tabs-header {
+  float: left; 
+  width: 150px;
+
+}
+
+.q-tabs.v-property .q-tabs-header ul {
+  padding: 0 0 0 5px;
+  list-style: none;
+}
+
+.q-tabs.v-property .q-tabs-header ul li {
+  text-indent: 10px;
+  line-height: 30px;
+  height: 30px;
+  margin-bottom: 3px;
+}        
+
+.q-tabs.v-property .q-tabs-header ul li:hover, .q-tabs.v-property .q-tabs-header ul li.q-selected {
+  background-color: white;
+}
+
+
+
+
+
+.q-tabs-body {
+  margin-left: 150px;
+  height: 100%;
+  background-color: yellow;
+}
+
+
+
+.clearboth {
+  clear: both;
+}
+
 </style>
 <!--  
 提示：src="{QLib目录}/Q.js" 
@@ -40,6 +91,17 @@ var t = new Q.tabs({
     ]  
   });
 
+var t2 = new Q.tabs({
+    action: "click",
+    active: Q.$('tab-1-1'),
+    items: [
+      {tab: Q.$('tab-1-1'), content: Q.$('panel-1-1')},
+      {tab: Q.$('tab-1-2'), content: Q.$('panel-1-2')},
+      {tab: Q.$('tab-1-3'), content: Q.$('panel-1-3')},
+      {tab: Q.$('tab-1-4'), content: Q.$('panel-1-4')},
+    ]  
+  });
+
 
 });
 
@@ -48,8 +110,36 @@ var t = new Q.tabs({
 </head>
 <body onselectstart="return false;" style="overflow:hidden;-moz-user-select:none;-webkit-user-select: none;">
 <h3>Q.Tabs samples </h3>
-<hR>
+<hr/>
+<br/>
+<div class="q-tabs v-property" style="height: 350px;">
 
+<div class="q-tabs-header">
+	<ul>
+		<li id="tab-1-1" href="javascript:;"> Tab1 </li>
+		<li id="tab-1-2" href="javascript:;"> Tab2 </li>
+		<li id="tab-1-3" href="javascript:;"> Tab3 </li>
+		<li id="tab-1-4" href="javascript:;"> Tab4 </li>
+	</ul>
+</div>
+<div class="q-tabs-body">
+<div id="panel-1-1" class="q-panel">
+  <div>Tab1 Panel</div>
+</div>
+<div id="panel-1-2" class="q-panel">Tab2 Panel</div>
+<div id="panel-1-3" class="q-panel">Tab3 Panel</div>
+<div id="panel-1-4" class="q-panel">Tab4 Panel</div>
+</div>
+
+
+</div>
+<div class="clearboth" ></div>
+
+
+<br/>
+<br/>
+
+<hr/>
 <div class="q-tabs property">
 
 <div class="q-tabs-header">
@@ -70,8 +160,10 @@ var t = new Q.tabs({
 </div>
 
 <br/>
-<br/>
-<br/>
+
+
+
+
 <br/>
 <br/>
 </body>
