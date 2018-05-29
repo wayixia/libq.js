@@ -12,6 +12,7 @@ active : null,
 __init__: function(json) {
   json = json || {};
   this.items = json.items || [];  // {tab: id, content: id}
+  this.onactive = json.onactive || function( tid ) {};
   this.each( ( function( this_ ) { return function(item) {
     var f = ( function( thiz, tab ) { 
         return function() {
@@ -70,7 +71,13 @@ __init__: function(json) {
 set_active : function(tab_id) {
   //this.active = tab_id;
   this.each( ( function( thiz, tid ) { return function(item) {
+    
     if( item.tab == tid ) {
+      if( thiz.active != tab_id ) {
+        if( thiz.onactive ) {
+	  thiz.onactive( tab_id );
+        }
+      }
       thiz.active = tab_id;
       Q.addClass(Q.$(item.tab), "q-selected");
       if(Q.$(item.content)) {

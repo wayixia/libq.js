@@ -91,9 +91,22 @@ var t = new Q.tabs({
     ]  
   });
 
+
+function set_location( name ) {
+var stateObject = {};
+var title = "Wow Title";
+var newUrl = "#" + name;
+history.pushState(stateObject,title,newUrl);
+}
+
 var t2 = new Q.tabs({
     action: "click",
     active: Q.$('tab-1-1'),
+    onactive: function( tid ) {
+      console.log( tid );
+      set_location( tid.id ); 
+    },
+
     items: [
       {tab: Q.$('tab-1-1'), content: Q.$('panel-1-1')},
       {tab: Q.$('tab-1-2'), content: Q.$('panel-1-2')},
