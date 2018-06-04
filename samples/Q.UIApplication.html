@@ -1,0 +1,86 @@
+<!DOCTYPE>
+<html>
+<head>
+  <title>Q.Window | QLib </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- 使用QLib控件是必须包含样式表 -->
+  <link type="text/css" rel="stylesheet" href="../ui.css" />
+  <!--  
+  提示：src="{QLib目录}/Q.js" 
+  根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
+  -->
+  <script type="text/javascript" src="../src/Q.js"></script>
+  <script type="text/javascript" src="../src/stl.js"></script>
+  <script type="text/javascript" src="../src/drag.js"></script>
+  <script type="text/javascript" src="../src/wndx-1-0-2.js"></script>
+  <script>
+  <!--
+  
+  var app_class = Q.UIApplication.extend( {
+  ui : null, 
+  __init__ : function( json ) {
+    json = json || {};
+    Q.UIApplication.prototype.__init__.call( this, json );
+    // Load UI
+    this.ui = new Q.UI({src: json.ui, oncomplete: function(ok) {
+        // init app instance
+        Q.printf("load ui -> " + (ok?"ok":"failed"));
+        //try {
+        //  _this.create_instance(app); 
+        //} catch(e) {
+        //  _this.run_error(app, err + "<br>" + e.description);
+        //}
+    }});
+  }
+
+  } );
+ 
+
+  g_app = null;
+  Q.ready(function() {
+    g_app = new app_class( { ui: "testui.html" } );
+
+    Q.$('btnOpenWindow').onclick = function() {
+    }
+  });
+  
+  -->
+  </script>
+</head>
+<body onselectstart="return false;" style="-moz-user-select:none;-webkit-user-select: none;">
+<br>
+<p>Q.Window | Q.Dialog</p>
+<hr>
+<br>
+<button id="btnOpenWindow">Q.Window窗口</button>
+<button id="btnOpenMultiWindow">Q.Window多窗口</button>
+
+<br>
+<!-- wndx template -->
+<button id="test-domodal" style="display:none;">DoModal</button>
+
+<div __qwindow__="" class="q-window undefined q-attr-fixed q-attr-no-min q-attr-no-max q-attr-with-bottom" style="top: 143px; left: 214px; width: 600px; height: 400px; display: none;" q-drag-object="true">
+  <div class="q-title">
+    <div class="q-icon"></div>
+    <div class="q-title-content">提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口</div>
+    <button class="q-padding">&nbsp;</button>
+    <button class="q-close">&nbsp;</button>
+    <button class="q-max">&nbsp;</button>
+    <button class="q-min">&nbsp;</button>
+  </div>
+  <div class="q-window-client">
+    <button id="test-domodal">DoModal</button>
+  </div>
+  <div class="q-bottom-bar"></div>
+  <div class="q-window-mask alpha_1" style="display: none;"></div>
+</div>
+
+<br>
+<div style="position: relative; width: 300px;height: 200px;">
+<div id="progress" style="position:absolute; left: 0; top:0; right:0; bottom:0;">
+  dom content
+</div>
+</div>
+
+</body>
+</html>
