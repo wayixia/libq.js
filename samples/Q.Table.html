@@ -58,7 +58,7 @@
         var data = this.getRecord(row);
         evt.cancelBubble=true;
         var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
-        Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.id;
+        Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.tagName;
         this.row_remove( row );
       }
     });

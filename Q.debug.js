@@ -300,20 +300,20 @@ var subclass = Q.extend({
    * @param dblclick {function} - 双击事件处理函数
    * @return 无
    */
-  Q.dblclick = function(element, dblclick) {
+  Q.click = function(element, click, dblclick) {
     element = Q.$(element);
     Q.addEvent(element, 'click', (function(r) { return function(evt) {
     if(r.__clickonce__) {
       r.__clickonce__ = false;
       clearTimeout(r.t);
       if(dblclick)
-        dblclick(r);
+        dblclick(evt);
     } else {
       r.__clickonce__ = true;
       r.t = setTimeout((function(b) { return function() { 
       b.__clickonce__ = false; 
       if(click) 
-        click(r); 
+        click(evt); 
     }})(r), 200);
     }
     return false;
@@ -4373,8 +4373,12 @@ append : function(nIndex, record) {
       return;
     Q.removeClass(r, "mouseover");
   }})(this, ROW);
-  
-  ROW.onclick = (function(t, r) { return function(evt) {
+ 
+  Q.click( ROW, 
+    (function(t, r) { return function(evt) { t._rows_onclick( r, evt ) } } )( this, ROW ), 
+    (function(t, r) { return function(evt) { t._rows_ondblclick( r ) } } )( this, ROW )
+  );
+  //ROW.onclick = (function(t, r) { return function(evt) {
     /*
     if(r.clickonce) {
       r.clickonce = false;
@@ -4387,9 +4391,9 @@ append : function(nIndex, record) {
     }})(r), 200);
     }
     */
-    return t._rows_onclick(r, evt );
-    //return false;
-  }})(this, ROW);
+  //  return t._rows_onclick(r, evt );
+  //  //return false;
+  //}})(this, ROW);
   ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
   var len = _this.wndTableHeaderRow.cells.length;
@@ -5010,7 +5014,7 @@ run :function (app) {
       _this.create_instance(app);
       Q.printf("create app ok");
     } catch(e) {
-      _this.run_error(app, err + "<br>" + e.description);
+      _this.run_error( app, err + "<br>" + e.message );
     }
   } else {
     var app_class = null;

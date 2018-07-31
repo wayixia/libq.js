@@ -452,8 +452,12 @@ append : function(nIndex, record) {
       return;
     Q.removeClass(r, "mouseover");
   }})(this, ROW);
-  
-  ROW.onclick = (function(t, r) { return function(evt) {
+ 
+  Q.click( ROW, 
+    (function(t, r) { return function(evt) { t._rows_onclick( r, evt ) } } )( this, ROW ), 
+    (function(t, r) { return function(evt) { t._rows_ondblclick( r ) } } )( this, ROW )
+  );
+  //ROW.onclick = (function(t, r) { return function(evt) {
     /*
     if(r.clickonce) {
       r.clickonce = false;
@@ -466,9 +470,9 @@ append : function(nIndex, record) {
     }})(r), 200);
     }
     */
-    return t._rows_onclick(r, evt );
-    //return false;
-  }})(this, ROW);
+  //  return t._rows_onclick(r, evt );
+  //  //return false;
+  //}})(this, ROW);
   ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
   var len = _this.wndTableHeaderRow.cells.length;

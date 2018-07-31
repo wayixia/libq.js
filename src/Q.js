@@ -300,20 +300,20 @@ var subclass = Q.extend({
    * @param dblclick {function} - 双击事件处理函数
    * @return 无
    */
-  Q.dblclick = function(element, dblclick) {
+  Q.click = function(element, click, dblclick) {
     element = Q.$(element);
     Q.addEvent(element, 'click', (function(r) { return function(evt) {
     if(r.__clickonce__) {
       r.__clickonce__ = false;
       clearTimeout(r.t);
       if(dblclick)
-        dblclick(r);
+        dblclick(evt);
     } else {
       r.__clickonce__ = true;
       r.t = setTimeout((function(b) { return function() { 
       b.__clickonce__ = false; 
       if(click) 
-        click(r); 
+        click(evt); 
     }})(r), 200);
     }
     return false;

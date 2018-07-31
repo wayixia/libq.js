@@ -224,7 +224,7 @@ run :function (app) {
       _this.create_instance(app);
       Q.printf("create app ok");
     } catch(e) {
-      _this.run_error(app, err + "<br>" + e.description);
+      _this.run_error( app, err + "<br>" + e.message );
     }
   } else {
     var app_class = null;
