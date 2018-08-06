@@ -3505,6 +3505,8 @@ item: function(q_id) {
  * @param {array=} config.buttons - 按钮集合， 当buttons不为空，自动应用with_bottom样式
  */
 Q.Dialog = Q.Window.extend({
+user_on_create: null,
+buttons: [],
 old_window_proc : null,
 __init__ : function(config) {
   config = config || {};
@@ -3515,20 +3517,21 @@ __init__ : function(config) {
   var buttons = [];
   if(config.buttons instanceof Array) {
     config.wstyle +="|" + CONST.with_bottom;
-    buttons = config.buttons;
+    this.buttons = config.buttons;
   } 
+
+  // User on_create
+  //var user_on_create = null;
+  if( config.on_create ) {
+    this.user_on_create = config.on_create;
+  }
+
+  config.on_create = Q.bind_handler( this, this._on_initdialog );
   Q.Window.prototype.__init__.call(this, config);
   this.old_window_proc = this.setWindowProc( (function(qwindow) {
     return function(hwnd, msgid, json) { return qwindow.window_proc(msgid, json);}
   })(this));
  
-  // initialize buttons 
-  for(var i=0; i < buttons.length; i++) {
-    var button = buttons[i];
-    var style = button.style || 'sysbtn';
-    this.addBottomButton(button.text, style, (function(dialog, btn) { 
-      return function() { if(btn.onclick()) { dialog.end(); }}})(this, button));
-  }
 },
 
 /** dialog procedure
@@ -3549,6 +3552,20 @@ window_proc : function(msgid, json) {
   return this.old_window_proc(this.hwnd, msgid, json);
 },
 
+_on_initdialog: function() {
+  // initialize buttons 
+  for(var i=0; i < this.buttons.length; i++) {
+    var button = this.buttons[i];
+    var style = button.style || 'sysbtn';
+    this.addBottomButton(button.text, style, (function(dialog, btn) { 
+      return function() { if(btn.onclick()) { dialog.end(); }}})(this, button), button.id );
+  }
+
+  if( this.user_on_create ) {
+    this.user_on_create();
+  }
+},
+
 /**
  * 添加按钮到窗口底部按钮控制栏
  * @memberof Q.Dialog.prototype
@@ -3556,7 +3573,7 @@ window_proc : function(msgid, json) {
  * @param {string=} className - 按钮样式
  * @param {function} click - 单击事件
  */
-addBottomButton : function(text, className, click) {
+addBottomButton : function( text, className, click, id ) {
   var _this = this;
   var ws = $GetWindowStyle(this.hwnd);
   
@@ -3568,6 +3585,11 @@ addBottomButton : function(text, className, click) {
   btn.innerText = text;
   btn.onclick = click;
   btn.className = className;
+
+  if( id && id.length > 0 ) {
+    btn.id = id;
+  }
+
   return true;
 },
 
