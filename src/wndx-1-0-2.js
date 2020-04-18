@@ -554,11 +554,12 @@ function $DefaultWindowProc(hwnd, msg, data) {
 }
 
 
-function $CreateCtrlButton(type) {
+function $CreateCtrlButton(type, text) {
   var btn = document.createElement('button');  
-  btn.innerHTML = '&nbsp;';
   btn.className = type;
   btn.hideFocus = true;
+  btn.innerHTML = text || '&nbsp;';
+  
   return btn;
 }
 
@@ -600,7 +601,7 @@ function $CreateWindowTitlebar(hwnd)  {
  
   hTitle.hMin = $CreateCtrlButton('q-min');
   hTitle.hMax = $CreateCtrlButton('q-max');
-  hTitle.hClose = $CreateCtrlButton('q-close');
+  hTitle.hClose = $CreateCtrlButton('q-close', '&times;');
   hTitle.hPadding= $CreateCtrlButton('q-padding');
 
   hTitle.hMin.onclick = $BindWindowMessage(hwnd, MESSAGE.MIN);
