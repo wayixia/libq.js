@@ -115,7 +115,7 @@
 }
 
 /* button system */
-.sysbtn {
+.q-sysokbtn {
   background: #3b5998;
   border-width: 1px;
   border-style: outset;
@@ -127,7 +127,7 @@
   margin-top:2px;
 }
 
-.syscancelbtn { 
+.q-syscancelbtn { 
   background:#EEE; 
   border-width:1px; 
   border-style:outset;
@@ -140,7 +140,7 @@
   margin-top:2px;
 }
 
-.sysinput { 
+.q-sysinput { 
   border:1px solid #CCC;  
   color:#3b5998;
   height: 20px;
@@ -150,8 +150,8 @@
   border-bottom: 1px solid #CCC; 
 }
 
-.sysbtn:active,
-.syscancelbtn:active
+.q-sysokbtn:active,
+.q-syscancelbtn:active
 {
   outline:0;background-image:none;-webkit-box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);
 }

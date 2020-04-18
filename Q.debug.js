@@ -3508,6 +3508,7 @@ item: function(q_id) {
 Q.Dialog = Q.Window.extend({
 user_on_create: null,
 buttons: [],
+btnstyle: { sysok:"q-sysokbtn", syscancel:"q-syscancelbtn" },
 old_window_proc : null,
 __init__ : function(config) {
   config = config || {};
@@ -3557,7 +3558,7 @@ _on_initdialog: function() {
   // initialize buttons 
   for(var i=0; i < this.buttons.length; i++) {
     var button = this.buttons[i];
-    var style = button.style || 'sysbtn';
+    var style = button.style || Q.Dialog.btnstyle.sysok;
     this.addBottomButton(button.text, style, (function(dialog, btn) { 
       return function() { if(btn.onclick()) { dialog.end(); }}})(this, button), button.id );
   }
@@ -3653,17 +3654,17 @@ __init__: function(config) {
   config.on_ok = config.on_ok || function() { return true; };
   if( typeof config.on_ok == 'function' ) {
     this.on_ok = config.on_ok;
-    config.buttons.push({text: Q.locale_text('qYes', ' 是 '), 
+    config.buttons.push({text: Q.locale_text('qYes', ' 是 '),  style: Q.Dialog.btnstyle.sysok, 
       onclick: Q.bind_handler(this, function() { this.on_ok() && this.end(CONST.IDOK); })})   
   }
   if( typeof config.on_no == 'function' ) {
     this.on_no = config.on_no;
-    config.buttons.push({text: Q.locale_text('qNo', ' 否 '), style:'syscancelbtn', 
+    config.buttons.push({text: Q.locale_text('qNo', ' 否 '), style: Q.Dialog.btnstyle.syscancel, 
       onclick: Q.bind_handler(this, function() { this.on_no() && this.end(CONST.IDNO); })})   
   }
   if( typeof config.on_cancel == 'function' ) {
     this.on_cancel = config.on_cancel;
-    config.buttons.push({text: Q.locale_text('qCancel', ' 取消 '), style:'syscancelbtn', 
+    config.buttons.push({text: Q.locale_text('qCancel', ' 取消 '), style:Q.Dialog.btnstyle.syscancel, 
       onclick: Q.bind_handler(this, function() { this.on_cancel() && this.end(CONST.IDCANCEL); })})   
   }
   Q.Dialog.prototype.__init__.call(this, config);

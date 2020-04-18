@@ -9,6 +9,14 @@
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
   -->
+  <style><!--
+   .myokstyle {
+     background-color: blue;
+   } 
+   .mycancelstyle {
+     background-color: yellow;
+   }
+  --></style>
   <script type="text/javascript" src="../src/Q.js"></script>
   <script type="text/javascript" src="../src/stl.js"></script>
   <script type="text/javascript" src="../src/drag.js"></script>
@@ -18,6 +26,8 @@
   var g_test_messagebox;
   var g_test_dialog;
   Q.ready(function() {
+    Q.Dialog.btnstyle = { sysok: "myokstyle", syscancel: "mycancelstyle" };
+
     // 提示对话框
     Q.$('btnOpenMessageBox').onclick = function() {
       g_test_messagebox = Q.alert({
@@ -46,6 +56,22 @@
         content: 'test-domodal',
       });
     }
+
+    Q.$('btnOpenDialogWithBottom').onclick = function() {
+      g_test_dialog = new Q.Dialog({
+        title: 'Bottom Dialog', 
+        width:480, height:370,
+        buttons: [
+          {text:"button1", style:"", onclick: function() { alert(1); return true;} },
+          {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} },
+        ]
+      });
+      g_test_dialog.show(true);
+      g_test_dialog.setContent(Q.$('flash'));
+      g_test_dialog.adjust();
+      g_test_dialog.center();
+    }
+ 
   });
   
   -->
@@ -56,6 +82,7 @@
 <p>Q.Dialog Q.alert</p>
 <button id="btnOpenDialog">Q.Dialog对话框</button>
 <button id="btnOpenMessageBox">Q.alert提示框</button>
+<button id="btnOpenDialogWithBottom">Q.Dialog bottom bar</button>
 <!-- wndx template -->
 
 <embed id="flash" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="100%" height="100%" src="http://tv.sohu.com/upload/swf/20150519/Main.swf" quality="high" bgcolor="#000000" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="&amp;cmscat=56page;10;14323558;137253660&amp;oad=&amp;ead=&amp;pad=&amp;fbarad=&amp;flogoad=&amp;flogodelay=&amp;tlogoad=&amp;tlogodelay=&amp;fbottomad=&amp;fbottomdelay=&amp;ftitlead=&amp;ftitledelay=&amp;domain=inner&amp;sogouBtn=0&amp;skin=0&amp;api_key=&amp;enforceMP4=&amp;xuid=&amp;recommend=&amp;showRecommend=&amp;playercover=&amp;id=80197890&amp;autoplay=true&amp;pageurl=http://www.56.com/w87/play_album-aid-14323558_vid-MTM3MjUzNjYw.html&amp;showCtrlBar=1&amp;jump=0&amp;sid=null&amp;onPlayerReady=sohuPlayer.notifyReady&amp;uuid=52c1c1fc-a038-1418-8214-7c2f0f41885c&amp;topBarFull=1" style="width: 100%; height: 100%;display: none;">
