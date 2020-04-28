@@ -24,7 +24,8 @@ https://iknown.gitee.io/q.js/docs/index.html
 
 
 ## 项目地址
-http://git.oschina.net/iknown/Q.js
+https://github.com/wayixia/q.js.git
+
 
 ## 引用库
 1. json2.js
