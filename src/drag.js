@@ -19,12 +19,15 @@
     var _this = this;
 
     // 缓存时间
-    _this.mousedown_hanlder = function(evt) { _this._mousedown(evt); }
-    _this.mouseup_handler = function(evt) { _this._mouseup(evt); }
-    _this.mousemove_handler = function(evt) { _this._mousemove(evt); }
+    this.mousedown_hanlder = Q.bind_handler( this, function(evt) { this._mousedown(evt); } );
+    this.mouseup_handler = Q.bind_handler( this, function(evt) { this._mouseup(evt); } );
+    this.mousemove_handler = Q.bind_handler( this, function(evt) { this._mousemove(evt); } );
 
-    Q.addEvent(document, 'mousedown', _this.mousedown_hanlder);
-    Q.addEvent(document, 'mouseup', _this.mouseup_handler);
+    Q.addEvent(document, 'mousedown', this.mousedown_hanlder);
+    Q.addEvent(document, 'mouseup', this.mouseup_handler);
+    Q.addEvent(document, 'touchstart', this.mousedown_hanlder);
+    Q.addEvent(document, 'touchend', this.mouseup_hanlder);
+
   },
 
   attach_object : function(json) {
@@ -80,9 +83,10 @@
   },
 
   _mousedown : function(evt) {
+    Q.printf("touchstart or mousedown");
     evt = evt || window.event;
     if(evt.button == Q.RBUTTON){ return; } // 屏蔽右键拖动
-    var target_wnd = drag_handle = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+    var target_wnd = drag_handle = evt.targetTouches?evt.targetTouches[0].target : ( Q.isNS6() ? evt.target : evt.srcElement ); // 获取鼠标悬停所在的对象句柄
     
     while(target_wnd && !this.is_dragable(target_wnd) && (target_wnd != document.body)) {
       target_wnd = target_wnd.parentNode;
@@ -91,15 +95,28 @@
     if(target_wnd && this.is_drag_handler(target_wnd, drag_handle)) {
       this.capture_wnd = target_wnd;
       this.is_drag = true; 
-      this.x = evt.clientX;
-      this.y = evt.clientY; 
+
+      if( evt.targetTouches ) {
+        this.x = evt.targetTouches[0].pageX;
+        this.y = evt.targetTouches[0].pageY;
+      } else {
+        this.x = evt.clientX;
+        this.y = evt.clientY; 
+      }
+      
       
       this.begin_left = target_wnd.offsetLeft;
       this.begin_top = target_wnd.offsetTop;
       //Q.printf("[drag-onbegin]offet x: " + this.begin_left + ", offset y: " + this.begin_top )
       if(this.capture_wnd.q_onmove_begin)
         this.capture_wnd.q_onmove_begin(this.begin_left+this.zoom(this.x), this.begin_top+this.zoom(this.y));
-      this.timer = setTimeout(Q.bind_handler(this, function() { Q.addEvent(document, 'mousemove', this.mousemove_handler);  }), 10);
+      this.timer = setTimeout(Q.bind_handler(this, function() { 
+        Q.addEvent(document, 'mousemove', this.mousemove_handler); 
+        Q.addEvent(document, 'touchmove', this.mousemove_handler); 
+        Q.printf("attch move event");
+      }), 10);
+
+      evt.preventDefault();
       return false; 
     }
   },
@@ -108,10 +125,20 @@
     this.is_moved = true;
     evt = evt || window.event
     if (this.is_drag) {
-      var x = evt.clientX-this.x;
-      var y = evt.clientY-this.y;
+      var x = 0;
+      var y = 0;
+      if( evt.targetTouches ) {
+        x = evt.targetTouches[0].pageX-this.x;
+        y = evt.targetTouches[0].pageY-this.y;
+      } else {
+        x = evt.clientX-this.x;
+        y = evt.clientY-this.y;
+      }
+
       //Q.printf("[drag-onmove] dx: " + x + ", dy: " + y);
       this.capture_wnd.q_onmove(this.begin_left+this.zoom(x), this.begin_top+this.zoom(y));
+      evt.stopPropagation();
+      evt.preventDefault(); //阻止屏幕滚动的默认行为
       return false; 
     }
   },
@@ -121,6 +148,7 @@
     if(this.is_drag ) {
       this.is_drag=false;
       Q.removeEvent(document,'mousemove', this.mousemove_handler);
+      Q.removeEvent(document,'touchmove', this.mousemove_handler);
       if(this.capture_wnd.q_onmove_end)
         this.capture_wnd.q_onmove_end(this.zoom(this.x), this.zoom(this.y));
     }

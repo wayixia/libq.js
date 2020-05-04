@@ -1063,7 +1063,7 @@ item: function(q_id) {
 Q.Dialog = Q.Window.extend({
 user_on_create: null,
 buttons: [],
-btnstyle: { sysok:"q-sysokbtn", syscancel:"q-syscancelbtn" },
+//btnstyle: { sysok:"q-sysokbtn", syscancel:"q-syscancelbtn" },
 old_window_proc : null,
 __init__ : function(config) {
   config = config || {};
@@ -1113,7 +1113,7 @@ _on_initdialog: function() {
   // initialize buttons 
   for(var i=0; i < this.buttons.length; i++) {
     var button = this.buttons[i];
-    var style = button.style || Q.Dialog.btnstyle.sysok;
+    var style = button.style || this.btnstyle.sysok;
     this.addBottomButton(button.text, style, (function(dialog, btn) { 
       return function() { if(btn.onclick()) { dialog.end(); }}})(this, button), button.id );
   }
@@ -1189,6 +1189,11 @@ end : function(code) {
 }
 
 }); // Q.Dialog
+
+/** \brief Set global Q.Dialog button style 
+ * 
+ */
+Q.Dialog.btnstyle =  { sysok:"q-sysokbtn", syscancel:"q-syscancelbtn" };
 
 /** 模拟alert对话框， 构造参数继承
  * @see Q.Dialog
