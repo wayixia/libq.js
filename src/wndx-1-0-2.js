@@ -1113,7 +1113,7 @@ _on_initdialog: function() {
   // initialize buttons 
   for(var i=0; i < this.buttons.length; i++) {
     var button = this.buttons[i];
-    var style = button.style || this.btnstyle.sysok;
+    var style = button.style || Q.Dialog.btnstyle.sysok;
     this.addBottomButton(button.text, style, (function(dialog, btn) { 
       return function() { if(btn.onclick()) { dialog.end(); }}})(this, button), button.id );
   }
