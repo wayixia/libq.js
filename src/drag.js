@@ -21,6 +21,7 @@
     // 缓存时间
     this.mousedown_hanlder = Q.bind_handler( this, function(evt) { return this._mousedown(evt); } );
     this.mousemove_handler = Q.bind_handler( this, function(evt) { return this._mousemove(evt); } );
+    this.mouseup_handler = Q.bind_handler( this, function(evt) { return this._mouseup(evt); } );
 
     Q.addEvent(document, 'mousedown', this.mousedown_hanlder);
     Q.addEvent(document, 'mouseup', this.mouseup_handler);
@@ -149,7 +150,7 @@
       this.capture_wnd.q_onmove(this.begin_left+this.zoom(x), this.begin_top+this.zoom(y));
       evt.stopPropagation();
       evt.preventDefault(); //阻止屏幕滚动的默认行为
-      return false; 
+      //return false; 
     }
     
   },
