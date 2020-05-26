@@ -186,13 +186,13 @@ var subclass = Q.extend({
    * @param element {dom} - 绑定事件的网页元素 id或者dom对象
    * @param evtName {string} - 事件名称，不需要'on'前缀
    * @param fnHandler {function} - 事件处理回调函数
-   * @param useCapture {bool} -  是否使用捕捉, 一般使用false
+   * @param useCapture {bool} -  是否使用捕捉, 一般使用false, 支持object
    * @return 无
    */
   Q.addEvent = function(element, evtName, fnHandler, useCapture) {
     var obj = Q.$(element);
     if(obj.addEventListener) {
-      obj.addEventListener(evtName, fnHandler, !!useCapture);
+      obj.addEventListener(evtName, fnHandler, useCapture);
     } else if(obj.attachEvent) {
       obj.attachEvent('on'+evtName, fnHandler);
     } else {

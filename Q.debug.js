@@ -186,13 +186,13 @@ var subclass = Q.extend({
    * @param element {dom} - 绑定事件的网页元素 id或者dom对象
    * @param evtName {string} - 事件名称，不需要'on'前缀
    * @param fnHandler {function} - 事件处理回调函数
-   * @param useCapture {bool} -  是否使用捕捉, 一般使用false
+   * @param useCapture {bool} -  是否使用捕捉, 一般使用false, 支持object
    * @return 无
    */
   Q.addEvent = function(element, evtName, fnHandler, useCapture) {
     var obj = Q.$(element);
     if(obj.addEventListener) {
-      obj.addEventListener(evtName, fnHandler, !!useCapture);
+      obj.addEventListener(evtName, fnHandler, useCapture);
     } else if(obj.attachEvent) {
       obj.attachEvent('on'+evtName, fnHandler);
     } else {
@@ -1802,14 +1802,19 @@ function newAjax(json, data_handler, complete_handler) {
     var _this = this;
 
     // 缓存时间
-    this.mousedown_hanlder = Q.bind_handler( this, function(evt) { this._mousedown(evt); } );
-    this.mouseup_handler = Q.bind_handler( this, function(evt) { this._mouseup(evt); } );
-    this.mousemove_handler = Q.bind_handler( this, function(evt) { this._mousemove(evt); } );
+    this.mousedown_hanlder = Q.bind_handler( this, function(evt) { return this._mousedown(evt); } );
+    this.mousemove_handler = Q.bind_handler( this, function(evt) { return this._mousemove(evt); } );
+    this.mouseup_handler = Q.bind_handler( this, function(evt) { return this._mouseup(evt); } );
 
     Q.addEvent(document, 'mousedown', this.mousedown_hanlder);
     Q.addEvent(document, 'mouseup', this.mouseup_handler);
-    Q.addEvent(document, 'touchstart', this.mousedown_hanlder);
-    Q.addEvent(document, 'touchend', this.mouseup_hanlder);
+    
+    Q.addEvent( document, 'touchstart', this.mousedown_hanlder, {passive:false} );
+    Q.addEvent( document, 'touchend', ( function( self ) {
+      return function( evt ) {
+        return self._mouseup( evt );
+      }
+    } )( this ), false );
 
   },
 
@@ -1866,8 +1871,9 @@ function newAjax(json, data_handler, complete_handler) {
   },
 
   _mousedown : function(evt) {
-    Q.printf("touchstart or mousedown");
+    //Q.printf("touchstart or mousedown");
     evt = evt || window.event;
+
     if(evt.button == Q.RBUTTON){ return; } // 屏蔽右键拖动
     var target_wnd = drag_handle = evt.targetTouches?evt.targetTouches[0].target : ( Q.isNS6() ? evt.target : evt.srcElement ); // 获取鼠标悬停所在的对象句柄
     
@@ -1876,6 +1882,7 @@ function newAjax(json, data_handler, complete_handler) {
     }
 
     if(target_wnd && this.is_drag_handler(target_wnd, drag_handle)) {
+      //evt.preventDefault();
       this.capture_wnd = target_wnd;
       this.is_drag = true; 
 
@@ -1895,11 +1902,11 @@ function newAjax(json, data_handler, complete_handler) {
         this.capture_wnd.q_onmove_begin(this.begin_left+this.zoom(this.x), this.begin_top+this.zoom(this.y));
       this.timer = setTimeout(Q.bind_handler(this, function() { 
         Q.addEvent(document, 'mousemove', this.mousemove_handler); 
-        Q.addEvent(document, 'touchmove', this.mousemove_handler); 
-        Q.printf("attch move event");
+        Q.addEvent(document, 'touchmove', this.mousemove_handler, {passive:false}); 
+      //  Q.printf("attch move event");
       }), 10);
 
-      evt.preventDefault();
+      //evt.preventDefault();
       return false; 
     }
   },
@@ -1907,7 +1914,11 @@ function newAjax(json, data_handler, complete_handler) {
   _mousemove : function(evt){
     this.is_moved = true;
     evt = evt || window.event
+    evt.preventDefault(); //阻止屏幕滚动的默认行为
+    //Q.printf("[drag-onmove] ");
+
     if (this.is_drag) {
+      //evt.preventDefault(); //阻止屏幕滚动的默认行为
       var x = 0;
       var y = 0;
       if( evt.targetTouches ) {
@@ -1922,20 +1933,25 @@ function newAjax(json, data_handler, complete_handler) {
       this.capture_wnd.q_onmove(this.begin_left+this.zoom(x), this.begin_top+this.zoom(y));
       evt.stopPropagation();
       evt.preventDefault(); //阻止屏幕滚动的默认行为
-      return false; 
+      //return false; 
     }
+    
   },
 
   _mouseup : function(evt) {
+    //Q.printf("touchend event");
     clearTimeout(this.timer);
+    
     if(this.is_drag ) {
       this.is_drag=false;
       Q.removeEvent(document,'mousemove', this.mousemove_handler);
       Q.removeEvent(document,'touchmove', this.mousemove_handler);
+      //Q.printf("deattch move event");
       if(this.capture_wnd.q_onmove_end)
         this.capture_wnd.q_onmove_end(this.zoom(this.x), this.zoom(this.y));
     }
     this.is_moved=false;
+    
   }
 });
 
@@ -2652,6 +2668,11 @@ function $IsWindow(wndNode) {
   return (!$IsNull(wndNode)) && (wndNode.nodeType == Q.ELEMENT_NODE) && wndNode.getAttribute('__QWindow__');
 }
 
+function $IsWindowVisible(wndNode) {
+  return wndNode.style.display != 'none'; 
+}
+
+
 function $IsMaxWindow(wndNode) {
   return ($IsStyle(wndNode, CONST.STYLE_MAX) && (CONST.SIZE_MAX == $GetWindowStatus(wndNode))); 
 }
@@ -2931,6 +2952,9 @@ function $GetTopZIndexWindow(){
   var top_wnd = null; 
  
   wnds.each(function(wnd) {
+    if( !$IsWindowVisible( wnd ) ) {
+      return true;
+    }
    if(top_wnd) {
      top_zindex = $GetWindowZIndex(top_wnd);
      wnd_zindex = $GetWindowZIndex(wnd);

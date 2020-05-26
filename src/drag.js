@@ -26,7 +26,7 @@
     Q.addEvent(document, 'mousedown', this.mousedown_hanlder);
     Q.addEvent(document, 'mouseup', this.mouseup_handler);
     
-    Q.addEvent( document, 'touchstart', this.mousedown_hanlder, false );
+    Q.addEvent( document, 'touchstart', this.mousedown_hanlder, {passive:false} );
     Q.addEvent( document, 'touchend', ( function( self ) {
       return function( evt ) {
         return self._mouseup( evt );
@@ -99,7 +99,7 @@
     }
 
     if(target_wnd && this.is_drag_handler(target_wnd, drag_handle)) {
-      evt.preventDefault();
+      //evt.preventDefault();
       this.capture_wnd = target_wnd;
       this.is_drag = true; 
 
@@ -119,7 +119,7 @@
         this.capture_wnd.q_onmove_begin(this.begin_left+this.zoom(this.x), this.begin_top+this.zoom(this.y));
       this.timer = setTimeout(Q.bind_handler(this, function() { 
         Q.addEvent(document, 'mousemove', this.mousemove_handler); 
-        Q.addEvent(document, 'touchmove', this.mousemove_handler); 
+        Q.addEvent(document, 'touchmove', this.mousemove_handler, {passive:false}); 
       //  Q.printf("attch move event");
       }), 10);
 

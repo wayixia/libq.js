@@ -179,6 +179,11 @@ function $IsWindow(wndNode) {
   return (!$IsNull(wndNode)) && (wndNode.nodeType == Q.ELEMENT_NODE) && wndNode.getAttribute('__QWindow__');
 }
 
+function $IsWindowVisible(wndNode) {
+  return wndNode.style.display != 'none'; 
+}
+
+
 function $IsMaxWindow(wndNode) {
   return ($IsStyle(wndNode, CONST.STYLE_MAX) && (CONST.SIZE_MAX == $GetWindowStatus(wndNode))); 
 }
@@ -458,6 +463,9 @@ function $GetTopZIndexWindow(){
   var top_wnd = null; 
  
   wnds.each(function(wnd) {
+    if( !$IsWindowVisible( wnd ) ) {
+      return true;
+    }
    if(top_wnd) {
      top_zindex = $GetWindowZIndex(top_wnd);
      wnd_zindex = $GetWindowZIndex(wnd);
