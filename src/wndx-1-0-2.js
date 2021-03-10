@@ -60,8 +60,8 @@ var CONST = {
 }
 
 var __GLOBALS = {};
-__GLOBALS.MIN_HEIGHT = 30;
-__GLOBALS.MIN_WIDTH  = 100;
+__GLOBALS.MIN_HEIGHT = 50;
+__GLOBALS.MIN_WIDTH  = 120;
 __GLOBALS.Z_INDEX    = 10000;
 __GLOBALS.count      = 0;
 __GLOBALS.appid      = -1;
@@ -382,6 +382,9 @@ function $ResizeTo(wndNode, width, height) {
   width = Math.max(parseInt(width,10) - 0, __GLOBALS.MIN_WIDTH);
   height = Math.max(parseInt(height, 10), __GLOBALS.MIN_HEIGHT);
   
+  width = width-( parseInt( wndNode.currentStyle.borderLeftWidth,10) + parseInt( wndNode.currentStyle.borderRightWidth, 10 ) );
+  height = height-( parseInt( wndNode.currentStyle.borderTopWidth,10) + parseInt( wndNode.currentStyle.borderBottomWidth, 10 ) );
+  
   wndNode.nWidth = width;
   wndNode.nHeight = height;
   wndNode.style.width = width + 'px';
@@ -566,7 +569,11 @@ function $CreateCtrlButton(type, text) {
   var btn = document.createElement('button');  
   btn.className = type;
   btn.hideFocus = true;
-  btn.innerHTML = text || '&nbsp;';
+  //if( type != "q-padding") {
+  btn.innerHTML = "<span class=\"iconfont icon-"+type+"\"></span>";
+  //} else {
+  //  btn.innerHTML = text || '&nbsp;';
+  //}
   
   return btn;
 }
@@ -578,6 +585,10 @@ function $ChangeCtrlButton(wndNode, type, dsttype){
   else if( type == CONST.SIZE_MAX )
     btn = $GetMaxCtrlButton(wndNode);
   btn.className = dsttype;
+  if( btn.childNodes[0] )
+  {
+    btn.childNodes[0].className = "iconfont icon-" + dsttype;
+  }
 }
 
 function $CreateWindowTitlebar(hwnd)  {
@@ -599,8 +610,8 @@ function $CreateWindowTitlebar(hwnd)  {
   })(hTitle, hwnd);
   //hTitle.ondblclick    = function() { Q.printf('WINDOW title dblclick');  }
 
-  hTitle.hIcon = document.createElement('div');
-  hTitle.hIcon.className = 'q-icon';
+  //hTitle.hIcon = document.createElement('div');
+  hTitle.hIcon = $CreateCtrlButton('q-icon');
   hTitle.appendChild(hTitle.hIcon);
    
   hTitle.hTitleContent = document.createElement('DIV');
@@ -610,13 +621,13 @@ function $CreateWindowTitlebar(hwnd)  {
   hTitle.hMin = $CreateCtrlButton('q-min');
   hTitle.hMax = $CreateCtrlButton('q-max');
   hTitle.hClose = $CreateCtrlButton('q-close', '&times;');
-  hTitle.hPadding= $CreateCtrlButton('q-padding');
+  //hTitle.hPadding= $CreateCtrlButton('q-padding');
 
   hTitle.hMin.onclick = $BindWindowMessage(hwnd, MESSAGE.MIN);
   hTitle.hMax.onclick = $BindWindowMessage(hwnd, MESSAGE.MAX); 
   hTitle.hClose.onclick = $BindWindowMessage(hwnd, MESSAGE.CLOSE); 
   
-  hTitle.appendChild(hTitle.hPadding);
+  //hTitle.appendChild(hTitle.hPadding);
   hTitle.appendChild(hTitle.hClose);
   hTitle.appendChild(hTitle.hMax);
   hTitle.appendChild(hTitle.hMin);
@@ -840,7 +851,7 @@ function $MakeResizable(obj) {
         s.height= (b-t)+'px';
       }
 
-      $ResizeTo(obj, s.offsetWidth, s.offsetHeight);
+      $ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
       ex+=dx;
       ey+=dy;
     } else if( srcElement == obj ) {

@@ -14,13 +14,17 @@
   <script type="text/javascript" src="../src/drag.js"></script>
   <script type="text/javascript" src="../src/wndx-1-0-2.js"></script>
   <script>
-  <!--
   var g_test_window;
   var g_test_dialog;
   var g_multi_window;
   Q.ready(function() {
     Q.$('btnOpenWindow').onclick = function() {
-      g_test_window = new Q.Window({width:480, height:370, wstyle: "q-attr-no-icon|q-attr-wit1h-bottom|q-attr-fixed"});
+      g_test_window = new Q.Window({
+        title: "Single Window",
+        width:480, height:370, 
+        //wstyle: "q-attr-no-icon|q-attr-wit1h-bottom|q-attr-fixed"
+        wstyle: "",
+      });
       g_test_window.show(true);
       g_test_window.setContent(Q.$('progress'));
       g_test_window.center();
@@ -50,7 +54,6 @@
     }
   });
   
-  -->
   </script>
 </head>
 <body onselectstart="return false;" style="-moz-user-select:none;-webkit-user-select: none;">

@@ -314,7 +314,7 @@ var subclass = Q.extend({
       b.__clickonce__ = false; 
       if(click) 
         click(evt); 
-    }})(r), 200);
+    }})(r), 30);
     }
     return false;
   }})(element));

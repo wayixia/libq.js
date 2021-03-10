@@ -402,7 +402,7 @@ autosize : function() {
     ;
   _this.wndFrame.style.height = frame_height+'px';
   _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
-  _this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
+  //_this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
 },  
 
 // 滚动条同步
@@ -510,7 +510,7 @@ _create_cell : function(nRow, nCol, json) {
     DIV.className += ' ' + json.className;
   }
   DIV.align = json.align;
-  DIV.style.cssText = 'width:'+(json.width) + 'px; height:'+json.height + 'px;line-height: '+json.height+'px;';
+  DIV.style.cssText = 'width:'+(json.width) + 'px; heights:'+json.height + 'px;line-heights: '+json.height+'px;';
   DIV.innerHTML = json.content;
   //if(json.isHTML)  DIV.innerHTML = json.content;
   //else DIV.innerText = json.content;
