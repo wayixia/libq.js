@@ -28,8 +28,9 @@
 --------------------------------------------------------*/
 
 .q-window { 
-  position:absolute; background:#fff; overflow:hidden; margin:0 auto; cursor:default; min-width: 200px; border:1px outset #CCC; z-index:100; outline: 0; -webkit-box-shadow: 0px 5px 30px #505050; box-shadow: 0px 5px 30px #505050; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
-  border: 1px solid #999;
+  position:absolute; background:#fff; overflow:hidden; margin:0 auto; cursor:default; min-width: 200px; border:3px solid transparent; 
+  z-index:100; outline: 0; -webkit-box-shadow: 0px 5px 30px #505050; box-shadow: 0px 5px 30px #505050; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
+  border-radius: 5px;
 }
 
 .q-window .q-title { 
@@ -39,9 +40,12 @@
 
 }
 
+.q-window.q-status-max { border-width:0; }
+
 /* title bar attibute */
-.q-window.q-attr-inactive-title .q-title { background: #CCC; }
+.q-window.q-attr-inactive-title .q-title { backgrounds: #CCC; }
 .q-window.q-attr-no-title .q-title { display: none; }
+.q-window.q-attr-inactive-title { opacity: 0.7; }
 
 
 /* icon attribute */
@@ -425,23 +429,24 @@
 }
 
 .q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color:white; border: 0px solid red;}
-.q-table .q-group-header  {position:relative;overflow:hidden;height:24px;border-bottom: 1px solid #CCC;}
+.q-table .q-group-header  {position:relative;overflow:hidden;height:30px;border-bottom: 1px solid #CCC;}
 .q-table .q-column-header {
   position:relative;
   OVERFLOW:hidden; 
-  height:24px;
-  line-height:24px; 
+  height:30px;
+  line-height:30px; 
   PADDING:0;
   margin:0;
   border-RIGHT: #ddd 1px solid; 
-  text-indent:2px;
+  text-indent:4px;
   font-size: 13px;
+  font-weight: bold;
   text-overflow:ellipsis;
   WHITE-SPACE:nowrap;
 }
 .q-table .q-column-header a { display:block; margin-right: 1px;}
 .q-table .q-column-header a:hover {text-decoration: none; background-color: #ebf3fd; }
-.q-table .q-group-body {position:relative; overflow-y: scroll; border: 0px solid green;}
+.q-table .q-group-body {position:relative;  height:100%; overflow-y: auto; border: 0px solid green;}
 
 .q-table .q-table-cdata {
   PADDING:0; 
@@ -459,6 +464,20 @@
 {
   border-bottom: #EEE 1px solid;
 }
+
+/**Grid mode
+ */
+.q-table.q-attr-grid .q-table-cdata {
+  OVERFLOW: hidden;
+  outline: #CCC 1px solid; 
+  border-width:0;
+  margin: 1px 0px 0px 1px;
+  box-sizing: border-box;
+  display: inline-block;
+  height:100px;
+  width: 33%; 
+}
+
 
 .q-table .q-table-toolbar {
   border-top: 1px solid #99BBE8; 
@@ -861,10 +880,10 @@
 
 #q-task-bar #q-task-list {
   position: absolute;
-  left: 100px;
+  left: 120px;
   top: 0;
 }
-#q-task-bar #q-task-list button { background: none; border:0px; margin:0; padding: 0 15px;;line-height:35px; max-width: 150px; text-overflow: ellipsis;overflow:hidden; outline:0;}
+#q-task-bar #q-task-list button { background: none; border:0px; margin: 7px 0; padding: 0 15px;;line-height:35px; max-width: 150px; text-overflow: ellipsis;overflow:hidden; outline:0;}
 #q-task-bar #q-task-list button.item { color:#000;}
 #q-task-bar #q-task-list button.item:hover, 
 #q-task-bar #q-task-list button.selected-item { background: #FF9900; color:#FFF;}
@@ -1028,7 +1047,20 @@
 /* combobox style end*/
 
 
+/** Q.box style */
+.q-box {
+  width: 400px;
+  height: 500px;
+  background-color: #333;
+}
 
-
-
+.q-box .q-box-item {
+  width: 100px;
+  height: 80px;
+  margin: 5px;
+  border: 1px solid blue;
+  overflow: hidden;
+  display: inline-flex;
+  flex-direction: column; 
+}
 

@@ -287,12 +287,14 @@ function $MaxizeWindow(wndNode){
   } else { 
     return;  
   }
+  Q.addClass( wndNode, "q-status-max" );
   $ChangeCtrlButton(wndNode, CONST.SIZE_MAX, "q-normal");
   $SetWindowPosition(wndNode, 0, 0, width, height);
   $SetWindowStatus(wndNode, CONST.SIZE_MAX);
 }
 
 function $RestoreWindow(wndNode){
+  Q.removeClass( wndNode, "q-status-max" );
   $ChangeCtrlButton(wndNode, CONST.SIZE_MAX, "q-max");
   $MoveTo(wndNode, wndNode.rleft, wndNode.rtop);
   $ResizeTo(wndNode, wndNode.rwidth, wndNode.rheight);
@@ -784,7 +786,7 @@ function $DestroyWindow(wndNode) {
 }
 
 function $MakeResizable(obj) {
-  var d=11;
+  var d=10;
   var l,t,r,b,ex,ey,cur;
   // 这里存在内存泄露，不需要的时候Q.removeEvent
   // 由于FireFox的CaptureEvents不支持CaptureEvents指定的Element对象

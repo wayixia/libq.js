@@ -311,10 +311,10 @@ var subclass = Q.extend({
     } else {
       r.__clickonce__ = true;
       r.t = setTimeout((function(b) { return function() { 
-      b.__clickonce__ = false; 
-      if(click) 
-        click(evt); 
-    }})(r), 30);
+        b.__clickonce__ = false; 
+        if(click) 
+          click(evt); 
+      }})(r), 10);
     }
     return false;
   }})(element));
@@ -441,6 +441,13 @@ var subclass = Q.extend({
       target_object[name] = src_object[name];
     }
     return target_object;
+  };
+
+
+  Q.template = function( tpl, record ) {
+    return tpl.replace( /\{([^\}]+)\}/ig, function(k) {
+      return record[arguments[1]];
+    });
   };
 
   /** 获取url查询字段

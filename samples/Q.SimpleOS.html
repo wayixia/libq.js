@@ -23,7 +23,7 @@
 var g_option_window = null;
 var g_table = null;
 var installed_applications = [
-  {name: "MP3播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp3player/ui.htm"},
+  {name: "MP4播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp4player/ui.htm"},
   {name: "挖一下", src: "os-apps/wayixia/app.js", ui: "os-apps/wayixia/ui.htm", single: true},
 ];
 
@@ -126,7 +126,7 @@ Q.ready(function() {
     ]  
   });
 
-  g_option_window = new Q.Dialog({
+  g_option_window = new Q.Window({
     width: 706,
     height: 480,
     title: "test",
@@ -143,10 +143,15 @@ Q.ready(function() {
           return true; 
         }
       },
-    ]  
+    ],
+    on_size: function( w, h ) {
+      g_table.autosize();
+    }  
   });
   Q.$('layer-options').style.visibility = 'visible';
-  g_option_window.domodal($GetDesktopWindow());
+  //g_option_window.domodal($GetDesktopWindow());
+  g_option_window.show(true);
+  g_option_window.center();
   g_table.autosize();
 });
   </script>

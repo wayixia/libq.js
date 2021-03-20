@@ -16,15 +16,19 @@ Q.Store = Q.extend({
 records : null,  // 记录集
 proxy : null,
 currentpage : -1,
+fromproxy: false,
 __init__ : function(config) {
   config = config || {}; 
   this.records = new Q.HashMap;
-  if(config.data)
+  if(config.data) {
+    this.fromproxy = false;
     this.appendData(config.data);
+  }
   
   if(config.proxy) { 
     this.proxy = config.proxy; 
-    this.loadRemote(0, 30, null);
+    //this.loadRemote(0, 30, null);
+    this.fromproxy = true;
   }
 },
 
@@ -53,7 +57,7 @@ appendData : function(arr) {
  */
 loadRemote : function(page, pagesize, callback) {
   var _this = this;
-  Q.Ajax({
+  Q.ajax({
     command: _this.proxy+'&page='+page+'&size='+pagesize,
     oncomplete : function(xmlhttp) {
       var s = Q.json_decode(xmlhttp.responseText);
@@ -283,41 +287,41 @@ wndToolbar : null,
 wndTableHeaderRow : null,
 wndTableData : null,
 wndMoveLine : null,
-
+viewStyle: "list",  // "list", "grid"
 columns: [],
 evtListener : {},
 store : null,
-selected_row: null,
+selected_item: null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
-  _this.row_height = json.row_height || 30;
+  _this.item_height = json.item_height || 30;
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
-
+  _this.grid_render = json.grid_render || function(record) { return record; }
   // method overrides
-  if(typeof json.row_onclick == 'function') {  
-    _this.row_onclick = json.row_onclick; 
+  if(typeof json.item_onclick == 'function') {  
+    _this.item_onclick = json.item_onclick; 
   }
-  if(typeof json.row_ondblclick == 'function') {  
-    _this.row_ondblclick = json.row_ondblclick; 
+  if(typeof json.item_ondblclick == 'function') {  
+    _this.item_ondblclick = json.item_ondblclick; 
   }
-  if(typeof json.row_onmouseover == 'function') { 
-    _this.row_onmouseover = json.row_onmouseover; 
+  if(typeof json.item_onmouseover == 'function') { 
+    _this.item_onmouseover = json.item_onmouseover; 
   }
-  if(typeof json.row_onmouseout == 'function') {  
-    _this.row_onmouseout = json.row_onmouseout; 
+  if(typeof json.item_onmouseout == 'function') {  
+    _this.item_onmouseout = json.item_onmouseout; 
   }
-  _this.row_ondblclick = (typeof json.row_ondblclick == 'function') ? json.row_ondblclick : function(row) {};
-  _this.row_oninsert = (typeof json.row_oninsert == 'function') ? json.row_oninsert : function(row, record) {};
+  _this.item_ondblclick = (typeof json.item_ondblclick == 'function') ? json.item_ondblclick : function(item) {};
+  _this.item_oninsert = (typeof json.item_oninsert == 'function') ? json.item_oninsert : function(item, record) {};
 
   // 初始化父窗口 wndParent,用来显示jtable控件
   // 并初始化jtable视图
   _this.wndParent = Q.$(json.id);
   _this.initview(json);
-
-  _this.render();
+  _this.on_viewstyle_changed();
+  //_this.render();
   _this.autosize();
 },
 
@@ -366,14 +370,24 @@ initview : function(json) {
     '<table cellpadding="0" cellspacing="0" border="0"><tbody></tbody></table>';
   _this.wndTableHeaderRow = _this.wndGroupHeader.firstChild.insertRow(-1);
   _this.wndTableData = _this.wndGroupBody.firstChild;
-
+  // Grid container
+  _this.wndGridData = document.createElement("DIV");
+  _this.wndGridData.className = "q-group-grid";
+  _this.wndGroupBody.appendChild(_this.wndGridData);
+  
   //init style
-   if(json.wstyle) {
-     var wstyle = (json.wstyle+"").replace(/\|+/g, " ");
-     Q.addClass(this.wnd, wstyle);
-   }
-   if(!Q.hasClass(this.wnd, "q-attr-toolbar"))
-     this.wndToolbar.style.display = "none";
+  if(json.wstyle) {
+    var wstyle = (json.wstyle+"").replace(/\|+/g, " ");
+    Q.addClass(this.wnd, wstyle);
+  }
+  if(!Q.hasClass(this.wnd, "q-attr-toolbar"))
+    this.wndToolbar.style.display = "none";
+
+  if(!Q.hasClass(this.wnd, "q-attr-grid")) {
+    this.wndGridData.style.display = "none";
+  } else {
+    //this.viewStyle = "grid";
+  }
 
   // 加载jtable的列
   _this.load_columns();
@@ -384,6 +398,35 @@ initview : function(json) {
   _this.wndGroupBody.onselectstart = function() { return false; };
 },
 
+on_viewstyle_changed: function() {
+  if( Q.hasClass( this.wnd, "q-attr-grid") )
+  { 
+    if( this.viewStyle != "grid" ) {
+      // change to grid 
+      this.viewStyle = "grid";
+      this.wndTitleBar.style.display = 'none';
+      this.wndGroupHeader.style.display = 'none';
+      this.wndTableData.style.display = 'none';
+      this.wndGridData.innerHTML = '';
+      this.wndGridData.style.display = '';
+      this.render();
+    }
+  }
+  else
+  {
+    if( this.viewStyle == "grid" ) {
+      // change to list
+      this.viewStyle = "list";
+      this.wndTitleBar.style.display = '';
+      this.wndGroupHeader.style.display = '';
+      this.wndTableData.innerHTML = '';
+      this.wndTableData.style.display = '';
+      this.wndGridData.style.display = 'none';
+      this.render();
+    }
+  }
+},
+  
 /** 更新控件视图
  *
  * @memberof Q.Table.prototype
@@ -418,6 +461,7 @@ _sync_scroll : function() {
  */
 setStyle: function(wstyle) {
   Q.addClass(this.wnd, wstyle);
+  this.on_viewstyle_changed();
 },
 
 /** 移除表格样式
@@ -427,7 +471,9 @@ setStyle: function(wstyle) {
  */
 removeStyle: function(wstyle) {
   Q.removeClass(this.wnd, wstyle);
+  this.on_viewstyle_changed();
 },
+
 
 /** 在指定行添加一行
  * @memberof Q.Table.prototype
@@ -437,67 +483,84 @@ removeStyle: function(wstyle) {
  */
 append : function(nIndex, record) {
   var _this = this;  
-  var ROW = _this.wndTableData.insertRow(-1);
+  var ROW = null;
+  if( this.viewStyle == "grid") {
+
+    var content = "";
+    if(typeof this.grid_render == 'function') {
+      content = this.grid_render(record);
+      //content = content.replace( /\{([^\}]+)\}/ig, function(k) {
+      //  return record[arguments[1]];
+      //});
+    }
+
+    ROW = _this._create_cell(0, 0, { content : content,
+        className: "",
+    });
+    _this.wndGridData.appendChild( ROW );
+  } else {
+    ROW = _this.wndTableData.insertRow(-1);
+    var len = _this.wndTableHeaderRow.cells.length;
+    for(var j = 0; j < len; j++) {
+      var TD = ROW.insertCell(-1);
+      var theader = _this.wndTableHeaderRow.cells[j];
+      var column = _this.columns[theader.getAttribute('_index')];
+      var content = record[column.name];
+      if(typeof column.renderer == 'function') {
+        content = column.renderer(record);
+      }
+      var width = column.width;
+      var cell = _this._create_cell(ROW.rowIndex, j, { content : content,
+        align : column.align,
+        className: column.className,
+        width : width,
+        height : _this.item_height ,
+        isHTML : column.isHTML
+      });
+      TD.style.display = theader.style.display;
+      TD.appendChild(cell);
+    }
+  }
+
+  ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
+  ROW.data = record;
   ROW.onmouseover = (function(t, r) { return function() { 
-    if(!t.row_is_enabled(r))
+    if(!t.item_is_enabled(r))
       return;
-    if(t.row_is_selected(r)) 
+    if(t.item_is_selected(r)) 
       return;
     Q.addClass(r, "mouseover");
   }})(this, ROW);
   ROW.onmouseout  = (function(t, r) { return function() { 
-    if(!t.row_is_enabled(r))
+    if(!t.item_is_enabled(r))
       return;
-    if(t.row_is_selected(r)) 
+    if(t.item_is_selected(r)) 
       return;
     Q.removeClass(r, "mouseover");
   }})(this, ROW);
  
   Q.click( ROW, 
-    (function(t, r) { return function(evt) { t._rows_onclick( r, evt ) } } )( this, ROW ), 
-    (function(t, r) { return function(evt) { t._rows_ondblclick( r ) } } )( this, ROW )
+    (function(t, r) { return function(evt) { t._items_onclick( r, evt ) } } )( this, ROW ), 
+    (function(t, r) { return function(evt) { t._items_ondblclick( r ) } } )( this, ROW )
   );
   //ROW.onclick = (function(t, r) { return function(evt) {
     /*
     if(r.clickonce) {
       r.clickonce = false;
       clearTimeout(r.t);
-      t._rows_ondblclick(r);
+      t._items_ondblclick(r);
     } else {
       r.clickonce = true;
       r.t = setTimeout((function(b) { return function() { 
-      b.clickonce = false; t._rows_onclick(r); 
+      b.clickonce = false; t._items_onclick(r); 
     }})(r), 200);
     }
     */
-  //  return t._rows_onclick(r, evt );
+  //  return t._items_onclick(r, evt );
   //  //return false;
   //}})(this, ROW);
-  ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
-  ROW.data = record;
-  var len = _this.wndTableHeaderRow.cells.length;
-  for(var j = 0; j < len; j++) {
-    var TD = ROW.insertCell(-1);
-    var theader = _this.wndTableHeaderRow.cells[j];
-    var column = _this.columns[theader.getAttribute('_index')];
-    var content = record[column.name];
-    if(typeof column.renderer == 'function') {
-      content = column.renderer(record);
-    }
-    
-    var width = column.width;
-    var cell = _this._create_cell(ROW.rowIndex, j, { content : content,
-      align : column.align,
-      className: column.className,
-      width : width,
-      height : _this.row_height ,
-      isHTML : column.isHTML
-    });
-    TD.style.display = theader.style.display;
-    TD.appendChild(cell);
-  }
 
-  _this.row_oninsert(ROW, record);
+  _this.item_oninsert(ROW, record);
 },
 
 
@@ -537,9 +600,17 @@ appendData : function(data) {
 },
 
 render : function() {
-  this.store.each((function(t) { return function(record, index) {
-    t.append(index, record);
-  }})(this));
+  if( this.store.fromproxy ) {
+    this.store.loadPage( 0 , 30,  ( function(t) { return function( data ) {
+      for( var i=0; i<data.length; i++) {
+        t.append(i, data[i]);
+      }
+    } } )(this) );
+  } else{
+    this.store.each((function(t) { return function(record, index) {
+      t.append(index, record);
+    }})(this));
+  }
 },
 
 load_columns : function() {
@@ -578,8 +649,8 @@ insert_column : function(arrIndex, json) {
 /** 排序函数原型
  * @callback Q.Table.sortFn
  *
- * @param row1 {dom} - 一个Row
- * @param row2 {dom} - 另一个Row
+ * @param item1 {dom} - 一个Row
+ * @param item2 {dom} - 另一个Row
  * @return {number} 0 - 相等， -1 - 小于， 1 - 大于
  */
 /** 指定列排序函数 
@@ -611,8 +682,8 @@ _column_MouseUp : function(evt, handler) {
   var TD = handler.hwnd;
   if(handler._isResizable) {
     var nCol = TD.cellIndex;
-    _this.rows_each( function(row) { 
-      var div = row.cells[nCol].childNodes[0];
+    _this.items_each( function(item) { 
+      var div = item.cells[nCol].childNodes[0];
       div.style.width = handler._width+'px'; 
     });
     _this.autosize();
@@ -637,96 +708,100 @@ _column_click : function(nCol) {
   
 
   
-// 处理鼠标单击事件，处理之后传递给外部接口_rows_onclick
-_rows_onclick : function(row, evt ) {
+// 处理鼠标单击事件，处理之后传递给外部接口_items_onclick
+_items_onclick : function(item, evt ) {
   var _this = this;
-  if(!this.row_is_enabled(row))
+  if(!this.item_is_enabled(item))
     return false;
-  Q.removeClass(row, "mouseover");
+  Q.removeClass(item, "mouseover");
   
   // 不支持多选
   if(!Q.hasClass(this.wnd, "q-attr-multiselect")) {
-    if(row == this.selected_row)
+    if(item == this.selected_item)
       return false;
-    this.row_set_selected(row, true);
-    this.row_set_selected(this.selected_row, false);
-    this.selected_row = row;
+    this.item_set_selected(item, true);
+    this.item_set_selected(this.selected_item, false);
+    this.selected_item = item;
   } else {
     if(_this.select_mode == SELECT_MODE_CTRL) { // CTRL键按下时
-      _this.row_set_selected(row,!_this.row_is_selected(row));  
+      _this.item_set_selected(item,!_this.item_is_selected(item));  
     } else if(_this.select_mode == SELECT_MODE_SHIFT) { // SHIFT键按下时
     } else {
-      _this.rows_selected.each( function(node, key) { 
-          _this.row_set_selected(_this.rows_selected.item(key),false);
+      _this.items_selected.each( function(node, key) { 
+          _this.item_set_selected(_this.items_selected.item(key),false);
       });
-      _this.row_set_selected(row, true);
+      _this.item_set_selected(item, true);
     }
   }
-  if(_this.row_onclick)
-    return _this.row_onclick(row, evt );
+  if(_this.item_onclick)
+    return _this.item_onclick(item, evt );
 
   return true;
 },
 
-_rows_ondblclick : function(row) {
-  if(!this.row_is_enabled(row)) {
+_items_ondblclick : function(item) {
+  if(!this.item_is_enabled(item)) {
     return false;
   }
-  if(this.row_ondblclick)
-    this.row_ondblclick(row);
+  if(this.item_ondblclick)
+    this.item_ondblclick(item);
 },
   
 
-rows_each : function(callback) {
+items_each : function(callback) {
   var _this = this;
-  for(var i=0; i < _this.wndTableData.rows.length; i++) {
-    callback(_this.wndTableData.rows[i]);
+  for(var i=0; i < _this.wndTableData.items.length; i++) {
+    callback(_this.wndTableData.items[i]);
   }
 },
 
-row_enable : function(row, enabled) {
+item_enable : function(item, enabled) {
   var _this = this;
   // 设置选中颜色
-  //row.style.backgroundColor = '#DFE8F6'; //'#A2CAEA'
+  //item.style.backgroundColor = '#DFE8F6'; //'#A2CAEA'
 },
   
-row_remove : function(row) {
+item_remove : function(item) {
   var _this = this;
-  var record = _this.store.records[_this.row_index(row)];
-  _this.wndTableData.deleteRow(row.rowIndex);
+  var record = _this.getRecord(item);
+  if( this.viewStyle == "grid") {
+    item.parentNode.removeChild( item );
+  } else {
+    _this.wndTableData.deleteRow(item.rowIndex);
+  }
   _this.store.remove(record);
   _this.autosize();
 },
   
-row_insert : function(index, record) {
+item_insert : function(index, record) {
   var _this = this;
   _this.store.push(record);
-  _this.insertrow(index, record);
+  _this.insertitem(index, record);
   _this.autosize();
 },
 
-row_index : function(row) { 
-  return parseInt(row.getAttribute('__dataindex__'),10); 
+item_index : function(item) { 
+  return parseInt(item.getAttribute('__dataindex__'),10); 
 },
-row_is_enabled  : function(row) { return row && (!row.getAttribute('_disabled')); },
-row_is_selected : function(row) { return Q.hasClass(row, "q-selected"); },
+item_is_enabled  : function(item) { return item && (!item.getAttribute('_disabled')); },
+item_is_selected : function(item) { return Q.hasClass(item, "q-selected"); },
 
 // 设置选择
-rows_selected_all : function(bSelectAll) {
+items_selected_all : function(bSelectAll) {
   var _this = this;
-  _this.rows_each(function(row) {
-    _this.row_set_selected(row, bSelectAll);
+  _this.items_each(function(item) {
+    _this.item_set_selected(item, bSelectAll);
   });
 },  
   
-row_set_selected : function(row, bSelected) {
-  if(this.row_is_enabled(row)) {
-    var dataIndex = this.row_index(row);
+item_set_selected : function(item, bSelected) {
+  if(this.item_is_enabled(item)) {
+    var dataIndex = this.item_index(item);
     // 设置颜色
     if(bSelected) {
-      Q.addClass(row, "q-selected");
+      Q.addClass(item, "q-selected");
     } else {
-      Q.removeClass(row, "q-selected");
+      Q.removeClass(item, "q-selected");
     }      
   }  
 },
@@ -734,11 +809,11 @@ row_set_selected : function(row, bSelected) {
 /**
  * 获取行记录数据
  * @memberof Q.Table.prototype
- * @param {dom} row - 行元素
+ * @param {dom} item - 行元素
  * @return {Object} 返回行记录
  */
-getRecord : function(row) {
-  var dataIndex = this.row_index(row);
+getRecord : function(item) {
+  var dataIndex = this.item_index(item);
   return this.store.records.item(dataIndex);
 },
 

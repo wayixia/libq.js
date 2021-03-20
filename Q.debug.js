@@ -311,10 +311,10 @@ var subclass = Q.extend({
     } else {
       r.__clickonce__ = true;
       r.t = setTimeout((function(b) { return function() { 
-      b.__clickonce__ = false; 
-      if(click) 
-        click(evt); 
-    }})(r), 200);
+        b.__clickonce__ = false; 
+        if(click) 
+          click(evt); 
+      }})(r), 10);
     }
     return false;
   }})(element));
@@ -2549,8 +2549,8 @@ var CONST = {
 }
 
 var __GLOBALS = {};
-__GLOBALS.MIN_HEIGHT = 30;
-__GLOBALS.MIN_WIDTH  = 100;
+__GLOBALS.MIN_HEIGHT = 50;
+__GLOBALS.MIN_WIDTH  = 120;
 __GLOBALS.Z_INDEX    = 10000;
 __GLOBALS.count      = 0;
 __GLOBALS.appid      = -1;
@@ -2776,12 +2776,14 @@ function $MaxizeWindow(wndNode){
   } else { 
     return;  
   }
+  Q.addClass( wndNode, "q-status-max" );
   $ChangeCtrlButton(wndNode, CONST.SIZE_MAX, "q-normal");
   $SetWindowPosition(wndNode, 0, 0, width, height);
   $SetWindowStatus(wndNode, CONST.SIZE_MAX);
 }
 
 function $RestoreWindow(wndNode){
+  Q.removeClass( wndNode, "q-status-max" );
   $ChangeCtrlButton(wndNode, CONST.SIZE_MAX, "q-max");
   $MoveTo(wndNode, wndNode.rleft, wndNode.rtop);
   $ResizeTo(wndNode, wndNode.rwidth, wndNode.rheight);
@@ -2870,6 +2872,9 @@ function $ResizeTo(wndNode, width, height) {
    
   width = Math.max(parseInt(width,10) - 0, __GLOBALS.MIN_WIDTH);
   height = Math.max(parseInt(height, 10), __GLOBALS.MIN_HEIGHT);
+  
+  width = width-( parseInt( wndNode.currentStyle.borderLeftWidth,10) + parseInt( wndNode.currentStyle.borderRightWidth, 10 ) );
+  height = height-( parseInt( wndNode.currentStyle.borderTopWidth,10) + parseInt( wndNode.currentStyle.borderBottomWidth, 10 ) );
   
   wndNode.nWidth = width;
   wndNode.nHeight = height;
@@ -3055,7 +3060,11 @@ function $CreateCtrlButton(type, text) {
   var btn = document.createElement('button');  
   btn.className = type;
   btn.hideFocus = true;
-  btn.innerHTML = text || '&nbsp;';
+  //if( type != "q-padding") {
+  btn.innerHTML = "<span class=\"iconfont icon-"+type+"\"></span>";
+  //} else {
+  //  btn.innerHTML = text || '&nbsp;';
+  //}
   
   return btn;
 }
@@ -3067,6 +3076,10 @@ function $ChangeCtrlButton(wndNode, type, dsttype){
   else if( type == CONST.SIZE_MAX )
     btn = $GetMaxCtrlButton(wndNode);
   btn.className = dsttype;
+  if( btn.childNodes[0] )
+  {
+    btn.childNodes[0].className = "iconfont icon-" + dsttype;
+  }
 }
 
 function $CreateWindowTitlebar(hwnd)  {
@@ -3088,8 +3101,8 @@ function $CreateWindowTitlebar(hwnd)  {
   })(hTitle, hwnd);
   //hTitle.ondblclick    = function() { Q.printf('WINDOW title dblclick');  }
 
-  hTitle.hIcon = document.createElement('div');
-  hTitle.hIcon.className = 'q-icon';
+  //hTitle.hIcon = document.createElement('div');
+  hTitle.hIcon = $CreateCtrlButton('q-icon');
   hTitle.appendChild(hTitle.hIcon);
    
   hTitle.hTitleContent = document.createElement('DIV');
@@ -3099,13 +3112,13 @@ function $CreateWindowTitlebar(hwnd)  {
   hTitle.hMin = $CreateCtrlButton('q-min');
   hTitle.hMax = $CreateCtrlButton('q-max');
   hTitle.hClose = $CreateCtrlButton('q-close', '&times;');
-  hTitle.hPadding= $CreateCtrlButton('q-padding');
+  //hTitle.hPadding= $CreateCtrlButton('q-padding');
 
   hTitle.hMin.onclick = $BindWindowMessage(hwnd, MESSAGE.MIN);
   hTitle.hMax.onclick = $BindWindowMessage(hwnd, MESSAGE.MAX); 
   hTitle.hClose.onclick = $BindWindowMessage(hwnd, MESSAGE.CLOSE); 
   
-  hTitle.appendChild(hTitle.hPadding);
+  //hTitle.appendChild(hTitle.hPadding);
   hTitle.appendChild(hTitle.hClose);
   hTitle.appendChild(hTitle.hMax);
   hTitle.appendChild(hTitle.hMin);
@@ -3262,7 +3275,7 @@ function $DestroyWindow(wndNode) {
 }
 
 function $MakeResizable(obj) {
-  var d=11;
+  var d=10;
   var l,t,r,b,ex,ey,cur;
   // 这里存在内存泄露，不需要的时候Q.removeEvent
   // 由于FireFox的CaptureEvents不支持CaptureEvents指定的Element对象
@@ -3329,7 +3342,7 @@ function $MakeResizable(obj) {
         s.height= (b-t)+'px';
       }
 
-      $ResizeTo(obj, s.offsetWidth, s.offsetHeight);
+      $ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
       ex+=dx;
       ey+=dy;
     } else if( srcElement == obj ) {
@@ -4018,15 +4031,19 @@ Q.Store = Q.extend({
 records : null,  // 记录集
 proxy : null,
 currentpage : -1,
+fromproxy: false,
 __init__ : function(config) {
   config = config || {}; 
   this.records = new Q.HashMap;
-  if(config.data)
+  if(config.data) {
+    this.fromproxy = false;
     this.appendData(config.data);
+  }
   
   if(config.proxy) { 
     this.proxy = config.proxy; 
-    this.loadRemote(0, 30, null);
+    //this.loadRemote(0, 30, null);
+    this.fromproxy = true;
   }
 },
 
@@ -4055,7 +4072,7 @@ appendData : function(arr) {
  */
 loadRemote : function(page, pagesize, callback) {
   var _this = this;
-  Q.Ajax({
+  Q.ajax({
     command: _this.proxy+'&page='+page+'&size='+pagesize,
     oncomplete : function(xmlhttp) {
       var s = Q.json_decode(xmlhttp.responseText);
@@ -4404,7 +4421,7 @@ autosize : function() {
     ;
   _this.wndFrame.style.height = frame_height+'px';
   _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
-  _this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
+  //_this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
 },  
 
 // 滚动条同步
@@ -4512,7 +4529,7 @@ _create_cell : function(nRow, nCol, json) {
     DIV.className += ' ' + json.className;
   }
   DIV.align = json.align;
-  DIV.style.cssText = 'width:'+(json.width) + 'px; height:'+json.height + 'px;line-height: '+json.height+'px;';
+  DIV.style.cssText = 'width:'+(json.width) + 'px; heights:'+json.height + 'px;line-heights: '+json.height+'px;';
   DIV.innerHTML = json.content;
   //if(json.isHTML)  DIV.innerHTML = json.content;
   //else DIV.innerText = json.content;
@@ -4539,9 +4556,17 @@ appendData : function(data) {
 },
 
 render : function() {
-  this.store.each((function(t) { return function(record, index) {
-    t.append(index, record);
-  }})(this));
+  if( this.store.fromproxy ) {
+    this.store.loadPage( 0 , 30,  ( function(t) { return function( data ) {
+      for( var i=0; i<data.length; i++) {
+        t.append(i, data[i]);
+      }
+    } } )(this) );
+  } else{
+    this.store.each((function(t) { return function(record, index) {
+      t.append(index, record);
+    }})(this));
+  }
 },
 
 load_columns : function() {
@@ -4872,7 +4897,7 @@ trim : function(s) {
 /*------------------------------------------------------------------------------------
  $ class os
  $ date: 2015-1-10 16:31
- $ author: LovelyLife http://jshtml.com
+ $ author: LovelyLife https://www.jshtml.com
  
  $ bugs Fixed:
 --------------------------------------------------------------------------------------*/
