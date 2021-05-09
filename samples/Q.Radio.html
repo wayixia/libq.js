@@ -49,6 +49,31 @@ Q.ready(function() {
 <a class="q-radio" id="item-3"> 项目3 </a>
 <a class="q-radio" id="item-4"> 项目4 </a>
 
+
+<style>
+.soft-status button {
+  display: none;
+}
+
+.soft-status.install button.q-soft-install,
+.soft-status.installing button.q-soft-installing,
+.soft-status.uninstall button.q-soft-uninstall
+{
+  display: block;
+}
+
+
+
+
+</style>
+<p class="soft-status uninstall">
+  status:
+<button class="q-soft-install">安装</button>
+<button class="q-soft-installing">正在安装</button>
+<button class="q-soft-uninstall">卸载</button>
+</p>
+
+
 <br/>
 <br/>
 <br/>

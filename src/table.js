@@ -61,8 +61,10 @@ loadRemote : function(page, pagesize, callback) {
     command: _this.proxy+'&page='+page+'&size='+pagesize,
     oncomplete : function(xmlhttp) {
       var s = Q.json_decode(xmlhttp.responseText);
-      if(typeof callback == 'function') {
-        callback(s.data);
+      if(typeof callback == 'function' && ( s.data instanceof Array ) && ( s.data.length > 0 ) ) { 
+        var start = _this.records.index;
+        _this.appendData( s.data );
+        callback( start, s.data.length );
       }
     }
   });
@@ -128,7 +130,7 @@ each : function(fnHanlder) {
  * @return {object} 记录
  */
 item : function(index) {
-  return this.records[index];
+  return this.records.item(index);
 }
 
 });
@@ -299,7 +301,8 @@ __init__ : function(json) {
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
-  _this.grid_render = json.grid_render || function(record) { return record; }
+  _this.grid_render = json.grid_render || function(record) { return ""; }
+  _this.item_key = json.item_key || function(record) { return ""; }
   // method overrides
   if(typeof json.item_onclick == 'function') {  
     _this.item_onclick = json.item_onclick; 
@@ -489,13 +492,14 @@ append : function(nIndex, record) {
     var content = "";
     if(typeof this.grid_render == 'function') {
       content = this.grid_render(record);
+      var keyClassName = this.item_key( record );
       //content = content.replace( /\{([^\}]+)\}/ig, function(k) {
       //  return record[arguments[1]];
       //});
     }
 
     ROW = _this._create_cell(0, 0, { content : content,
-        className: "",
+        className: keyClassName,
     });
     _this.wndGridData.appendChild( ROW );
   } else {
@@ -586,7 +590,18 @@ _create_cell : function(nRow, nCol, json) {
  */
 clear : function() {
   this.store.clear();
-  this.wndTableData.innerHTML = ""; //removeChild(_this.wndTableData.firstChild);
+  if( Q.hasClass( this.wnd, "q-attr-grid") )
+  { 
+    if( this.viewStyle == "grid" ) {
+      this.wndGridData.innerHTML = '';
+    }
+  }
+  else
+  {
+    if( this.viewStyle == "list" ) {
+      this.wndTableData.innerHTML = '';
+    }
+  }
 },
 
 /** 追加数据到表格视图 
@@ -601,9 +616,9 @@ appendData : function(data) {
 
 render : function() {
   if( this.store.fromproxy ) {
-    this.store.loadPage( 0 , 30,  ( function(t) { return function( data ) {
-      for( var i=0; i<data.length; i++) {
-        t.append(i, data[i]);
+    this.store.loadPage( 0 , 30,  ( function(t) { return function( start, count ) {
+      for( var i=start; i< (start+count); i++) {
+        t.append(i, t.store.item(i) );
       }
     } } )(this) );
   } else{
@@ -716,13 +731,9 @@ _items_onclick : function(item, evt ) {
   Q.removeClass(item, "mouseover");
   
   // 不支持多选
-  if(!Q.hasClass(this.wnd, "q-attr-multiselect")) {
-    if(item == this.selected_item)
-      return false;
-    this.item_set_selected(item, true);
-    this.item_set_selected(this.selected_item, false);
-    this.selected_item = item;
-  } else {
+  if( Q.hasClass( this.wnd, "q-attr-noselect") ) {
+    // do nothing
+  } else if( Q.hasClass(this.wnd, "q-attr-multiselect")) {
     if(_this.select_mode == SELECT_MODE_CTRL) { // CTRL键按下时
       _this.item_set_selected(item,!_this.item_is_selected(item));  
     } else if(_this.select_mode == SELECT_MODE_SHIFT) { // SHIFT键按下时
@@ -732,7 +743,14 @@ _items_onclick : function(item, evt ) {
       });
       _this.item_set_selected(item, true);
     }
+  } else {
+    if(item == this.selected_item)
+      return false;
+    this.item_set_selected(item, true);
+    this.item_set_selected(this.selected_item, false);
+    this.selected_item = item;
   }
+
   if(_this.item_onclick)
     return _this.item_onclick(item, evt );
 

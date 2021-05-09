@@ -73,16 +73,18 @@ set_active : function(tab_id) {
   this.each( ( function( thiz, tid ) { return function(item) {
     
     if( item.tab == tid ) {
-      if( thiz.active != tab_id ) {
-        if( thiz.onactive ) {
-	  thiz.onactive( tab_id );
-        }
-      }
-      thiz.active = tab_id;
       Q.addClass(Q.$(item.tab), "q-selected");
       if(Q.$(item.content)) {
         Q.$(item.content).style.display = '';
       }
+
+      if( thiz.active != tab_id ) {
+        if( thiz.onactive ) {
+	        thiz.onactive( tab_id );
+        }
+        thiz.active = tab_id;
+      }
+
     } else {
       Q.removeClass(Q.$(item.tab), "q-selected");
       if(Q.$(item.content)) {

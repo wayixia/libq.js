@@ -58,7 +58,7 @@
     g_table = new Q.Table({ 
       id: Q.$('table_container'),
       title: "Q.Table标题栏",
-      wstyle: "q-attr-border q-attr-no-title q-attr-grid",
+      wstyle: "q-attr-border q-attr-no-title q-attr-grid q-attr-noselect",
       store: store,
       columns: columns,  
       grid_render: function( record ) {
@@ -70,9 +70,12 @@
         evt.cancelBubble=true;
         var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
         Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.tagName;
-        this.item_remove( item );
+        //this.item_remove( item );
+        alert(data.url);
       },
-      
+      item_key: function( record ) {
+        return record['url'];
+      },
     });
 
     Q.$('clear').onclick = function() {
