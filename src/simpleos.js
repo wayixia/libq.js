@@ -17,6 +17,7 @@ window_list_bar: null,
 task_bar: null,
 start_button: null,
 skin: "",
+menu_programs: null,
 __init__ : function(json) {
   g_simple_os = this;
   json = json || {};
@@ -76,7 +77,7 @@ _init_menu : function(json) {
     }
   });
 
-  var m2 = new Q.MenuItem({text: "程序", popup_style: "os-start-menu"});
+  this.menu_programs = new Q.MenuItem({text: "程序", popup_style: "os-start-menu"});
   var m3 = new Q.MenuItem({type: MENU_SEPERATOR, text: ""});
  
   var m4 = new Q.MenuItem({
@@ -86,24 +87,28 @@ _init_menu : function(json) {
     }
   });
   
-  g_os_start_menu.addMenuItem(m1);
-  g_os_start_menu.addMenuItem(m2);
+  //g_os_start_menu.addMenuItem(m1);
+  g_os_start_menu.addMenuItem( this.menu_programs );
   g_os_start_menu.addMenuItem(m3);
   g_os_start_menu.addMenuItem(m4);
 
   // init applications menus
   for(var i=0; i < json.apps.length; i++) {
-    var app = json.apps[i];
-    var m2x = new Q.MenuItem({
-      text: app.name,
-      callback : (function(app_info) { return function(menuitem) {
-        _this.run(app_info);
-      }})(app),
-    });
-    m2.addSubMenuItem(m2x);
+    this.installapp( json.apps[i] ); 
   }
 
   g_os_start_menu.hide();
+},
+
+installapp: function( app ) {
+  var _this = this;
+  var m2x = new Q.MenuItem({
+    text: app.name,
+    callback : (function(app_info) { return function(menuitem) {
+      _this.run(app_info);
+    }})(app),
+  });
+  this.menu_programs.addSubMenuItem(m2x);
 },
 
 wnds_hook : function(hwnd, message_id) {
@@ -238,15 +243,15 @@ run :function (app) {
       Q.printf("load from file and create app ok");
       app.klass = app_class;
       // load ui
-      app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
+      //app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
         // init app instance
         Q.printf("load ui -> " + (ok?"ok":"failed"));
-        //try {
+        try {
           _this.create_instance(app); 
-        //} catch(e) {
-        //  _this.run_error(app, err + "<br>" + e.description);
-        //}
-      }});
+        } catch(e) {
+          _this.run_error(app, err + "<br>" + e.description);
+        }
+      //}});
     })
   };
 }

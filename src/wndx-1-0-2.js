@@ -888,14 +888,20 @@ function $MakeResizable(obj) {
 }
 
 
+/*
 // 用于获取指定q:id属性的元素
 function qid(p, q_id) {
+  if( p.querySelector )
+  {
+    return p.querySelector( '[qid="'+q_id+'"]' );
+  }
+
   function find_item(e) {
     var r = null;
     for (var i = 0; i < e.childNodes.length; i ++) {
       var c = e.childNodes[i];
       if(c.nodeType === Q.ELEMENT_NODE) {
-        if(c.getAttribute("q:id") == q_id) {
+        if(c.getAttribute("qid") == q_id) {
           r = c;
           break;
         } else {
@@ -908,6 +914,7 @@ function qid(p, q_id) {
   }
   return find_item(p);
 }
+*/
 
 /** 窗口类封装, 创建窗口，并返回一个窗口操作类
  *
@@ -1068,8 +1075,27 @@ adjust : function() {
  * @return {dom} 网页元素
  */
 item: function(q_id) {
-  return qid($GetClient(this.hwnd), q_id); 
-}
+  //return qid($GetClient(this.hwnd), q_id); 
+  var b = $GetClient(this.hwnd);
+  if( b.querySelector )
+  {
+    return b.querySelector( '[qid="'+q_id+'"]' );
+  }
+
+  return null;
+},
+
+items: function( q_id ) {
+  var b = $GetClient(this.hwnd);
+  if( b.querySelectorAll )
+  {
+    return b.querySelectorAll( '[qid="'+q_id+'"]' );
+  }
+
+  return [];
+},
+
+
 
 });
 

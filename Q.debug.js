@@ -4323,7 +4323,8 @@ __init__ : function(json) {
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
-  _this.grid_render = json.grid_render || function(record) { return record; }
+  _this.grid_render = json.grid_render || function(record) { return ""; }
+  _this.item_key = json.item_key || function(record) { return ""; }
   // method overrides
   if(typeof json.item_onclick == 'function') {  
     _this.item_onclick = json.item_onclick; 
@@ -4513,13 +4514,14 @@ append : function(nIndex, record) {
     var content = "";
     if(typeof this.grid_render == 'function') {
       content = this.grid_render(record);
+      var keyClassName = this.item_key( record );
       //content = content.replace( /\{([^\}]+)\}/ig, function(k) {
       //  return record[arguments[1]];
       //});
     }
 
     ROW = _this._create_cell(0, 0, { content : content,
-        className: "",
+        className: keyClassName,
     });
     _this.wndGridData.appendChild( ROW );
   } else {

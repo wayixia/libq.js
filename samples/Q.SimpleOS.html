@@ -23,13 +23,14 @@
 var g_option_window = null;
 var g_table = null;
 var installed_applications = [
-  {name: "MP4播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp4player/ui.htm"},
-  {name: "挖一下", src: "os-apps/wayixia/app.js", ui: "os-apps/wayixia/ui.htm", single: true},
+  //{name: "MP4播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp3layer/ui.htm"},
+  {name: "挖一下", src: "os-apps/wayixia/app.bundle.js", ui: "os-apps/wayixia/ui.htm", single: true},
 ];
 
+var g_os = null;
 
 Q.ready(function() {
-  new Q.SimpleOS({
+  g_os = new Q.SimpleOS({
     window_list_bar: Q.$("q-task-list"),
     task_bar: Q.$("q-task-bar"),
     start_button: Q.$("q-start-button"),
@@ -51,19 +52,22 @@ Q.ready(function() {
     }
   });
 
+  g_os.installapp( { name: "MP4播放", src: "os-apps/mp3player/app.js", ui:"os-apps/mp3layer/ui.htm" } );
 
+  /*
    var columns = [
-    { name: 'url', title: '地址', align:'left', width: 240, isHTML: true, renderer : function(record) {
-        return "<div style=\"height:25px; line-height:25px;\"><font>"+ record['url'] + "</font></div>";
+    { name: 'url', title: '地址', align:'left', width: 239, isHTML: true, renderer : function(record) {
+        return "<div style=\"height:24px; line-height:25px;\"><font>"+ record['url'] + "</font></div>";
       },
     },
-    { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, renderer : function(record) {
-        return "<div style=\"height:25px; line-height: 25px;\"><button style=\"margin-top: 3px;\" id=\"id_" + record['date'] + "\">" + record['date'] + "</button></div>";}, }
+    { name: 'date', title: '日期', align:'left', width: 139, isHTML: true, renderer : function(record) {
+        return "<div style=\"height:24px; line-height: 25px;\"><button style=\"margin-top: 3px;\" id=\"id_" + record['date'] + "\">" + record['date'] + "</button></div>";}, }
     ];
     
     var store = new Q.Store({
       data: [
-        {url: 'abc', date: '2014-12-11'},
+        {url: 'abc', date: '2013-12-11'},
+        {url: 'abc0', date: '2014-12-11'},
         {url: 'abc1', date: '2014-12-11'},
         {url: 'abc2', date: '2014-12-11'},
         {url: 'abc3', date: '2014-12-11'},
@@ -80,8 +84,7 @@ Q.ready(function() {
         {url: 'abc14', date: '2014-12-11'},
         {url: 'abc15', date: '2014-12-11'},
         {url: 'abc16', date: '2014-12-11'},
-        {url: 'abc17', date: '2014-12-11'},
-        {url: 'abc18', date: '2014-12-11'}
+        {url: 'abc17', date: '2014-12-11'}
       ] 
     });
     //init Q.table
@@ -94,7 +97,7 @@ Q.ready(function() {
       row_onclick : function(row, evt ) {
         var data = this.getRecord(row);
         evt.cancelBubble=true;
-        var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+        var e = Q.isNS5() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
         Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.tagName;
         this.row_remove( row );
       }
@@ -110,7 +113,7 @@ Q.ready(function() {
     tabactive = Q.$('tab-basic');
   }
   
-  var t2 = new Q.tabs({
+  var t1 = new Q.tabs({
     action: "click",
     active: tabactive,
     onactive: function( tid ) {
@@ -119,16 +122,16 @@ Q.ready(function() {
       history.pushState(stateObject,tid.innerText,newUrl);
     },
     items: [
-      {tab: Q.$('tab-basic'), content: Q.$('panel-1-1')},
-      {tab: Q.$('tab-download'), content: Q.$('panel-1-2')},
-      {tab: Q.$('tab-screencapture'), content: Q.$('panel-1-3')},
-      {tab: Q.$('tab-shortcut'), content: Q.$('panel-1-4')},
+      {tab: Q.$('tab-basic'), content: Q.$('panel-2-1')},
+      {tab: Q.$('tab-download'), content: Q.$('panel-2-2')},
+      {tab: Q.$('tab-screencapture'), content: Q.$('panel-2-3')},
+      {tab: Q.$('tab-shortcut'), content: Q.$('panel-2-4')},
     ]  
   });
 
   g_option_window = new Q.Window({
-    width: 706,
-    height: 480,
+    width: 705,
+    height: 479,
     title: "test",
     content: Q.$('layer-options'),
     on_close: function() { window.close(); },
@@ -153,6 +156,7 @@ Q.ready(function() {
   g_option_window.show(true);
   g_option_window.center();
   g_table.autosize();
+  */
 });
   </script>
 </head>
@@ -176,142 +180,5 @@ Q.ready(function() {
 
 
 
-<!-- demo components -->
-<style>
-  #layer-options {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  line-height: 30px;
-  font-size: 16px;
-  padding: 10px 0;
-  overflow:auto;
-  visibility: hidden;
-}
-
-
-.q-tabs.v-property {
-
-}
-
-
-
-.q-tabs.v-property .q-tabs-header {
-  float: left; 
-  width: 150px;
-}
-
-.q-tabs.v-property .q-tabs-header ul {
-  padding: 0 5px 0 5px;
-  list-style: none;
-  margin:0;
-}
-
-.q-tabs.v-property .q-tabs-header ul li {
-  text-indent: 10px;
-  line-height: 30px;
-  height: 30px;
-  margin-bottom: 3px;
-  border-radius: 5px;
-  color: #515151;
-  font-size: 11pt;
-}        
-
-.q-tabs.v-property .q-tabs-header ul li:hover, .q-tabs.v-property .q-tabs-header ul li.q-selected {
-  background-color: #F1F1F1;
-  color: #000;
-}
-
-
-.q-tabs.v-property .q-tabs-header ul li a,
-.q-tabs.v-property .q-tabs-header ul li a:visited {
-  display: block;
-  text-decoration: none;
-	color: #515151;
-}
-
-
-.q-tabs.v-property .q-tabs-header ul li a:hover,
-.q-tabs.v-property .q-tabs-header ul li.q-selected a {
-	color: #000
-}
-
-
-
-.q-tabs-body {
-  margin-left: 150px;
-  border-left: 1px solid #CCCCCC;
-  height: 100%;
-  background-colors: yellow;
-}
-
-.q-tabs-body .q-panel {
-  padding: 0px 10px;
-}
-</style>
-<div id="layer-options">
-  <div class="q-tabs v-property">
-    <div class="q-tabs-header">
-	    <ul>
-		    <li id="tab-basic"> Table </li>
-		    <li id="tab-download"> Download </li>
-		    <li id="tab-screencapture" href=""> Security </li>
-		    <li id="tab-shortcut"> Shortcut </li>
-	    </ul>
-    </div>
-    <div class="q-tabs-body">
-      <div id="panel-1-1" class="q-panel">
-        <div id="table-container" style="width:100%; height:100%; border-top: 1px solid #EEE;">
-        </div>
-    </div>
-    <div id="panel-1-2" class="q-panel">
-      <b> __MSG_savePath__</b>(<font color="#999">__MSG_savePathAttention__</font>)<br>
-      <div class="q-placeholder" id="label_save_path"> wayixia <input id="save_path" size="50"> </div> 
-      <a id="date_folder" class="q-checkbox">__MSG_saveWithDateFolder__</a> 
-      <a id="save_lastconfig" class="q-checkbox">__MSG_saveLastConfig__</a> 
-      <br><br>
-      <b class="q-checkbox" id="filter_rules_enable">__MSG_filterRulesEnable__</b>（<font color="#999">__MSG_filterRulesWarning__</font>）<br>
-      <button id="manager_filter_rules" size="50">__MSG_setting__</button> 
-      <br><br>
-      <b>__MSG_blockImageManage__</b><br>
-      <button id="manager_block_images" size="50">__MSG_setting__</button> <br>
-      <br> 
-    </div> 
-    <div id="panel-1-3" class="q-panel">
-      <b> __MSG_stringCaptureAssistant__</b>(<font color="#999">__MSG_stringLongPageCapture__</font>)<br>
-      <div id="wayixia-assistant-ing" class="wayixia-assistant ing" style="display: none;"> __MSG_stringChecking__... </div>
-      <div id="wayixia-assistant-ok" class="wayixia-assistant ok" style="display: none;"> __MSG_stringConnected__ <a href="#"></a> </div>
-      <div id="wayixia-assistant-error" class="wayixia-assistant error" style="display: none;"> __MSG_stringDisconnected__ 
-        <a href="https://www.wayixia.com/extension/install" target="_blank">(__MSG_stringAssistantHelp__)</a>
-      </div>
-    </div> 
-    <div id="panel-1-4" class="q-panel">
-      <b>__MSG_shortcut__</b><br>
-       1. __MSG_digImage__（<font color="#999">Ctrl+Q</font>）<br>
-       2. __MSG_closeExtensionWindow__（<font color="#999">ESC</font>）<br>
-    </div> 
-  </div>
-</div>
-<!-- options end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
-
-
-
-
