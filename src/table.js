@@ -279,6 +279,7 @@ var SELECT_MODE_SHIFT  = 2;
 
 
 Q.Table = Q.extend({
+wndOwner: null,
 wndParent : null,
 wnd : null,
 wndTitleBar : null,
@@ -298,6 +299,7 @@ __init__ : function(json) {
   var _this = this;
   json = json || {};
   _this.item_height = json.item_height || 30;
+  _this.wndOwner = json.wnd;
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
@@ -326,6 +328,14 @@ __init__ : function(json) {
   _this.on_viewstyle_changed();
   //_this.render();
   _this.autosize();
+
+  if( _this.wndOwner )
+  {
+
+  }
+  Q.addEvent(window, 'resize', function(evt) {
+    _this.autosize();
+  } );
 },
 
 /**
@@ -439,12 +449,13 @@ autosize : function() {
   var frame_width, frame_height;
   var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
   var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);
-  var currentstyle = _this.wnd.currentStyle;
+  var currentstyle = _this.wndParent.currentStyle;
+  //var currentstyle = _this.wnd.currentStyle;
   frame_height = fullHeight 
     - _this.wndTitleBar.offsetHeight 
     - _this.wndToolbar.offsetHeight
-    //- parseInt(currentstyle['borderTopWidth'],10)
-    //- parseInt(currentstyle['borderBottomWidth'],10)
+    - parseInt(currentstyle['borderTopWidth'],10)
+    - parseInt(currentstyle['borderBottomWidth'],10)
     ;
   _this.wndFrame.style.height = frame_height+'px';
   _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
@@ -768,8 +779,8 @@ _items_ondblclick : function(item) {
 
 items_each : function(callback) {
   var _this = this;
-  for(var i=0; i < _this.wndTableData.items.length; i++) {
-    callback(_this.wndTableData.items[i]);
+  for(var i=0; i < _this.wndTableData.rows.length; i++) {
+    callback(_this.wndTableData.rows[i]);
   }
 },
 
@@ -839,6 +850,8 @@ addToolButton : function( json ) {
   
 },
 
-sync_scroll : function() {}
+sync_scroll : function() {
+  this.wndGroupHeader.scrollLeft = this.wndGroupBody.scrollLeft;
+}
 }); 
 

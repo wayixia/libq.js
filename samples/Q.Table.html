@@ -58,7 +58,7 @@
     g_table = new Q.Table({ 
       id: Q.$('table_container'),
       title: "Q.Table标题栏",
-      wstyle: "q-attr-border q-attr-no-title q-attr-grid q-attr-noselect",
+      wstyle: "q-attr-border q-attr-no-title q-attr2-grid q-attr-noselect",
       store: store,
       columns: columns,  
       grid_render: function( record ) {
@@ -90,9 +90,10 @@
         width:480, height:370,
         buttons: [
           {text:"button1", style:"", onclick: function() { alert(1); return true;} },
-          {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, ], 
+          {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, 
+        ], 
         on_size: function( width, height ) {
-          g_table.autosize();
+          //g_table.autosize();
         },
         });
       }
@@ -123,7 +124,9 @@
 <button id="change2list"> LIST模式 </button> &nbsp;
 <br>
 <br>
-<div id="table_container" style="width: 100%; height: 100%; border:0px solid #CC0; position:relative;background-color:#99bbe8;" onresize="alert('resize')"></div>
+<div id="table_container" style="width: 60%; height: 300px; border:1px solid #F00; position:relative;background-color:#99bbe8;">
+
+</div>
 
 
 

@@ -32,5 +32,9 @@ https://github.com/wayixia/q.js.git
 2. tween.js
 
 
+## 安装 webpack
+npm install webpack webpack-cli --save-dev
+npm install jsdom
+
 ##协议
 MIT license
