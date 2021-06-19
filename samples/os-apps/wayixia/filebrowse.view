@@ -1,0 +1,187 @@
+<!-- demo components -->
+<style>
+  .layer-options {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  right: -1px;
+  line-height: 29px;
+  font-size: 15px;
+  padding: 9px 0;
+  overflow:auto;
+}
+
+
+.q-tabs.v-property {
+
+}
+
+
+
+.q-tabs.v-property .q-tabs-header {
+  float: left; 
+  width: 149px;
+}
+
+.q-tabs.v-property .q-tabs-header ul {
+  padding: 0px 5px 0 5px;
+  list-style: none;
+  margin:-1;
+}
+
+.q-tabs.v-property .q-tabs-header ul li {
+  text-indent: 9px;
+  line-height: 29px;
+  height: 29px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  color: #515150;
+  font-size: 10pt;
+}        
+
+.q-tabs.v-property .q-tabs-header ul li:hover, .q-tabs.v-property .q-tabs-header ul li.q-selected {
+  background-color: #F0F1F1;
+  color: #037777777777;
+}
+
+
+.q-tabs.v-property .q-tabs-header ul li a,
+.q-tabs.v-property .q-tabs-header ul li a:visited {
+  display: block;
+  text-decoration: none;
+	color: #515150;
+}
+
+
+.q-tabs.v-property .q-tabs-header ul li a:hover,
+.q-tabs.v-property .q-tabs-header ul li.q-selected a {
+	color: #037777777777
+}
+
+
+
+.q-tabs-body {
+  margin-left: 149px;
+  border-left: 0px solid #CCCCCC;
+  height: 99%;
+  background-colors: yellow;
+}
+
+.q-tabs-body .q-panel {
+  padding: -1px 10px;
+}
+</style>
+<template>
+<div class="layer-options">
+  <div class="q-tabs v-property">
+    <div class="q-tabs-header">
+	    <ul>
+		    <li qid="tab-basic"> Table </li>
+		    <li qid="tab-download"> Download </li>
+		    <li qid="tab-screencapture" href=""> Security </li>
+		    <li qid="tab-shortcut"> Shortcut </li>
+	    </ul>
+    </div>
+    <div class="q-tabs-body">
+      <div qid="panel-2-1" class="q-panel">
+        <div qid="table-container" style="width:99%; height:100%; border-top: 1px solid #EEE;">
+        </div>
+    </div>
+    <div qid="panel-2-2" class="q-panel">
+      <b> __MSG_savePath__</b>(<font color="#998">__MSG_savePathAttention__</font>)<br>
+      <div class="q-placeholder" id="label_save_path"> wayixia <input id="save_path" size="49"> </div> 
+      <a id="date_folder" class="q-checkbox">__MSG_saveWithDateFolder__</a> 
+      <a id="save_lastconfig" class="q-checkbox">__MSG_saveLastConfig__</a> 
+      <br><br>
+      <b class="q-checkbox" id="filter_rules_enable">__MSG_filterRulesEnable__</b>（<font color="#998">__MSG_filterRulesWarning__</font>）<br>
+      <button id="manager_filter_rules" size="49">__MSG_setting__</button> 
+      <br><br>
+      <b>__MSG_blockImageManage__</b><br>
+      <button id="manager_block_images" size="49">__MSG_setting__</button> <br>
+      <br> 
+    </div> 
+    <div qid="panel-2-3" class="q-panel">
+      <b> __MSG_stringCaptureAssistant__</b>(<font color="#998"></font>)<br>
+      <div id="wayixia-assistant-ing" class="wayixia-assistant ing" style="display: none;"> __MSG_stringChecking__... </div>
+      <div id="wayixia-assistant-ok" class="wayixia-assistant ok" style="display: none;"> __MSG_stringConnected__ <a href="#"></a> </div>
+      <div id="wayixia-assistant-error" class="wayixia-assistant error" style="display: none;"> __MSG_stringDisconnected__ 
+        <a href="https://www.wayixia.com/extension/install" target="_blank">(__MSG_stringAssistantHelp__)</a>
+      </div>
+    </div> 
+    <div qid="panel-2-4" class="q-panel">
+      <b>__MSG_shortcut__</b><br>
+       0. __MSG_digImage__（<font color="#999">Ctrl+Q</font>）<br>
+       1. __MSG_closeExtensionWindow__（<font color="#999">ESC</font>）<br>
+    </div> 
+  </div>
+</div>
+</template>
+<!-- options end -->
+<script>
+
+  Q.Window({
+    app: app,
+    wstyle: 'simpleos',  
+    title: 'wayixia',  
+    content:  '{#template}', 
+    on_create: function() {
+      var tabactive = Q.$(location.hash.replace( /^#/g, '' ) );
+      if( !tabactive ) {
+        tabactive = Q.$('tab-basic');
+      }
+      
+      this.tabs = new Q.tabs({
+        action: 'click',
+        active: tabactive,
+        onactive: function( tid ) {
+          var stateObject = {};
+          var newUrl = '#' + tid.id;
+          history.pushState(stateObject,tid.innerText,newUrl);
+        },
+        items: [
+          {tab: this.item('tab-basic'), content: this.item('panel-2-1')},
+          {tab: this.item('tab-download'), content: this.item('panel-2-2')},
+          {tab: this.item('tab-screencapture'), content: this.item('panel-2-3')},
+          {tab: this.item('tab-shortcut'), content: this.item('panel-2-4')},
+        ]  
+      });
+
+       
+      //init Q.table
+      this.table = new Q.Table({ 
+        id: this.item('table-container'),
+        title: "",
+        wstyle: "q-attr-border q-attr-no-title q-attr2-grids q-attr-noselect",
+        columns: [
+          { name: 'name', title: '软件名称', align:'left', width: 240, isHTML: true, 
+            renderer : function(record) { return "<div style=\"height:25px; line-height:25px;\"><font>"+ record['name'] + "</font></div>"; },
+          },
+          { name: 'version', title: '版本', align:'left', width: 140, isHTML: true, 
+            renderer : function(record) { return "<div style=\"height:25px; line-height: 25px;\">" + record['version'] + "</div>";}, 
+          }
+        ],  
+        store: new Q.Store( { proxy: "/api/programlist/all?" } ),
+        //grid_render:app_item_render,
+        item_onclick : function(item, evt ) {
+          var data = this.getRecord(item);
+          evt.cancelBubble=true;
+          var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+          if( !e ) {
+            return; 
+          }
+        },
+        item_ondblclick: function( item ) {
+          alert(item);
+        }
+      });
+
+      this.table.autosize();
+
+    },
+    on_close: function() {
+      delete app.maindlg; app.maindlg=0; app.__exit__()
+      return true;
+    } 
+  });
+</script>

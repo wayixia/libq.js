@@ -222,7 +222,7 @@ function $CreateMaskLayer(wndNode, extra_style) {
   wndNode.layer_mask.style.display = 'none';
   wndNode.layer_mask.onmousedown = Q.bind_handler(wndNode, function(evt) { 
     evt = evt || window.event;
-    $BindWindowMessage(this, MESSAGE.ACTIVATE)();
+    $BindWindowMessage(this, MESSAGE.ACTIVATE, true )();
     // 取消事件冒泡，防止ActivateWindow被调用到
     evt.cancelBubble = true;
     return false; 
@@ -233,7 +233,7 @@ function $CreateMaskLayer(wndNode, extra_style) {
 function $ShowWindow(wndNode, visible)  {
   if( visible ){
     wndNode.style.display = '';
-    $BindWindowMessage(wndNode, MESSAGE.ACTIVATE)();
+    $BindWindowMessage(wndNode, MESSAGE.ACTIVATE, true)();
   } else {
     wndNode.style.display = 'none';
     $MaskWindow(wndNode, false);
@@ -260,8 +260,8 @@ function $ActivateWindow(wndNode, zindex) {
 function $SetWindowActive(wndNode, IsActive) {
   var active_child = wndNode;
   while(active_child) {
-    if(active_child.on_activate)
-      active_child.on_activate(IsActive);
+    //if(active_child.on_activate)
+    //  active_child.on_activate(IsActive);
     if(IsActive) {
       Q.removeClass(active_child, CONST.inactive_title);
     } else {
@@ -392,8 +392,9 @@ function $ResizeTo(wndNode, width, height) {
   wndNode.style.width = width + 'px';
   wndNode.style.height = height + 'px';
   
-  if(typeof(wndNode.on_size) == 'function') 
-    wndNode.on_size(width, height);
+  $BindWindowMessage(wndNode, MESSAGE.SIZE)( width, height );
+  //if(typeof(wndNode.on_size) == 'function') 
+  //  wndNode.on_size(width, height);
 }
 
 function $GetWindowClientHeight() {
@@ -496,7 +497,8 @@ var MESSAGE = {
   MAX   : 2,
   CLOSE : 3,
   ACTIVATE : 4,
-  MOVE : 5
+  MOVE : 5,
+  SIZE : 6
 }
 
 function $DefaultWindowProc(hwnd, msg, data) {
@@ -752,10 +754,13 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
 function $DestroyWindow(wndNode) {
   // 清除子窗口
   var child_wnds = $GetWnds(wndNode);
-  child_wnds.each(function(wnd) {
-    $BindWindowMessage(wnd, MESSAGE.CLOSE)();
-    return true;
-  });
+  if( child_wnds ) {
+    child_wnds.each(function(wnd) {
+      $BindWindowMessage(wnd, MESSAGE.CLOSE)();
+      return true;
+    });
+  }
+
 
   // 清除弹出的子窗口
   var parent_container = $GetContainerWindow(wndNode);
@@ -948,11 +953,11 @@ __init__ : function(config) {
     parent_wnd = config.parent.wnd() || $GetDesktopWindow();
   this.hwnd = $CreateWindow(parent_wnd, title, config.wstyle, left, top, width, height, config.app);
   this.setContent(config.content);
-  this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
-  this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
-  this.hwnd.on_move_begin = Q.bind_handler(this, config.on_move_begin || function(x,y) {});
-  this.hwnd.on_move     = Q.bind_handler(this, config.on_move || function(x, y) {});
-  this.hwnd.on_move_end = Q.bind_handler(this, config.on_move_end || function(x, y) {});
+  //this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
+  //this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
+  //this.hwnd.on_move_begin = Q.bind_handler(this, config.on_move_begin || function(x,y) {});
+  //this.hwnd.on_move     = Q.bind_handler(this, config.on_move || function(x, y) {});
+  //this.hwnd.on_move_end = Q.bind_handler(this, config.on_move_end || function(x, y) {});
   this.hwnd.on_close    = Q.bind_handler(this, config.on_close || function() { return true; });
   Q.bind_handler(this, config.on_create || function() {})();
 },
@@ -1058,7 +1063,7 @@ center : function() {
  * @memberof Q.Window.prototype
  */
 activate : function() {
-  $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE)(); 
+  $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE, true)(); 
 },
 
 /** 根据窗口内容自动调整窗口大小

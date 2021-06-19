@@ -18,6 +18,15 @@
   var g_table = null;
   var g_test_dialog = null;
   Q.ready(function() {
+    g_test_dialog = new Q.Window({
+      title: 'Table in Dialog', 
+      content: Q.$('table_container'),
+      width:480, height:370,
+      buttons: [
+        {text:"button1", style:"", onclick: function() { alert(1); return true;} },
+        {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, 
+      ], 
+    });
     var columns = [
       { name: 'url', title: '地址', align:'left', width: 540, isHTML: true, 
         renderer : function(record) { 
@@ -56,6 +65,7 @@
     });
     //init Q.table
     g_table = new Q.Table({ 
+      wnd: g_test_dialog,
       id: Q.$('table_container'),
       title: "Q.Table标题栏",
       wstyle: "q-attr-border q-attr-no-title q-attr2-grid q-attr-noselect",
@@ -83,20 +93,6 @@
     }
 
     Q.$('show_in_dlg').onclick = function() {
-      if( !g_test_dialog ) {
-        g_test_dialog = new Q.Window({
-        title: 'Table in Dialog', 
-        content: Q.$('table_container'),
-        width:480, height:370,
-        buttons: [
-          {text:"button1", style:"", onclick: function() { alert(1); return true;} },
-          {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, 
-        ], 
-        on_size: function( width, height ) {
-          //g_table.autosize();
-        },
-        });
-      }
       g_test_dialog.show(true);
       g_test_dialog.adjust();
       g_test_dialog.center();
@@ -124,7 +120,7 @@
 <button id="change2list"> LIST模式 </button> &nbsp;
 <br>
 <br>
-<div id="table_container" style="width: 60%; height: 300px; border:1px solid #F00; position:relative;background-color:#99bbe8;">
+<div id="table_container" style="width: 60%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#99bbe8;">
 
 </div>
 

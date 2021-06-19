@@ -280,6 +280,8 @@ var SELECT_MODE_SHIFT  = 2;
 
 Q.Table = Q.extend({
 wndOwner: null,
+wndOwnerProc: null,
+wndOwnerOldProc: null,
 wndParent : null,
 wnd : null,
 wndTitleBar : null,
@@ -295,6 +297,7 @@ columns: [],
 evtListener : {},
 store : null,
 selected_item: null,
+
 __init__ : function(json) {
   var _this = this;
   json = json || {};
@@ -331,11 +334,32 @@ __init__ : function(json) {
 
   if( _this.wndOwner )
   {
-
+    this.wndOwnerOldProc = _this.wndOwner.setWindowProc( ( function( ctx ) {
+      return function( hwnd, msgid, json ) { 
+        return ctx.window_proc( msgid, json);
+      }
+    })(this) );
   }
-  Q.addEvent(window, 'resize', function(evt) {
-    _this.autosize();
-  } );
+  else
+  {
+    Q.addEvent(window, 'resize', function(evt) {
+      _this.autosize();
+    } );
+  }
+},
+
+/** dialog procedure
+ * @memberof Q.Dialog.prototype
+ * @private
+ */
+window_proc : function(msgid, json) {
+  switch(msgid) {
+  case MESSAGE.SIZE:
+    this.autosize();
+    break;
+  }
+
+  return this.wndOwnerOldProc(this.wndOwner.hwnd, msgid, json);
 },
 
 /**
@@ -438,6 +462,7 @@ on_viewstyle_changed: function() {
       this.render();
     }
   }
+  this.autosize();
 },
   
 /** 更新控件视图
@@ -449,8 +474,8 @@ autosize : function() {
   var frame_width, frame_height;
   var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
   var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);
-  var currentstyle = _this.wndParent.currentStyle;
-  //var currentstyle = _this.wnd.currentStyle;
+  //var currentstyle = _this.wndParent.currentStyle;
+  var currentstyle = _this.wnd.currentStyle;
   frame_height = fullHeight 
     - _this.wndTitleBar.offsetHeight 
     - _this.wndToolbar.offsetHeight
@@ -458,7 +483,15 @@ autosize : function() {
     - parseInt(currentstyle['borderBottomWidth'],10)
     ;
   _this.wndFrame.style.height = frame_height+'px';
-  _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
+  if( Q.hasClass( this.wnd, "q-attr-grid") ) {
+    _this.wndGroupBody.style.height = (frame_height)+'px';
+    _this.wndGroupBody.style.marginTop = 0;
+  } else {
+    _this.wndGroupBody.style.marginTop = _this.wndGroupHeader.offsetHeight + 'px';
+    _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
+  }
+  
+  //_this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
   //_this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
 },  
 
@@ -712,6 +745,7 @@ _column_MouseUp : function(evt, handler) {
       var div = item.cells[nCol].childNodes[0];
       div.style.width = handler._width+'px'; 
     });
+    _this.columns[nCol].width = handler._width;
     _this.autosize();
     _this._sync_scroll();
   }

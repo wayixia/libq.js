@@ -399,6 +399,7 @@
 
 .q-table { background: #99bbe8; overflow:hidden; positions:absolute; left:0; top:0; right:0; bottom:0;}
 .q-table.q-attr-borders {left:1px; top:1px; right:1px; bottom:1px;}
+.q-table.q-attr-border { border: 1px solid red;}
 .q-table TD {CURSOR: default;}
 .q-table TR.q-selected
 { 
