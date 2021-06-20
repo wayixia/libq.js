@@ -232,10 +232,12 @@ function $CreateMaskLayer(wndNode, extra_style) {
 
 function $ShowWindow(wndNode, visible)  {
   if( visible ){
-    wndNode.style.display = '';
+    wndNode.style.visibility = 'visible';
+    //wndNode.style.display = '';
     $BindWindowMessage(wndNode, MESSAGE.ACTIVATE, true)();
   } else {
-    wndNode.style.display = 'none';
+    wndNode.style.visibility = 'hidden';
+    //wndNode.style.display = 'none';
     $MaskWindow(wndNode, false);
   }
 }
@@ -675,7 +677,8 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
 
   // dom attributes
   hwnd.className = 'q-window';
-  hwnd.style.display = 'none';
+  //hwnd.style.display = 'none';
+  hwnd.style.visibility = 'hidden';
   hwnd.style.zIndex = __GLOBALS.Z_INDEX;
 
   if(isNaN(pos_top)) 
@@ -1048,6 +1051,9 @@ removeStyle: function(ws) {
  */
 show : function(isVisible) { 
   $ShowWindow(this.hwnd, isVisible) 
+  if( isVisible ) {
+    this.adjust();
+  }
 },
 
 /** 窗口居中 

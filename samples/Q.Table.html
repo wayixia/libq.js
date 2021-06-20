@@ -17,17 +17,7 @@
   <script>
   var g_table = null;
   var g_test_dialog = null;
-  Q.ready(function() {
-    g_test_dialog = new Q.Window({
-      title: 'Table in Dialog', 
-      content: Q.$('table_container'),
-      width:480, height:370,
-      buttons: [
-        {text:"button1", style:"", onclick: function() { alert(1); return true;} },
-        {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, 
-      ], 
-    });
-    var columns = [
+  var columns = [
       { name: 'url', title: '地址', align:'left', width: 540, isHTML: true, 
         renderer : function(record) { 
           return Q.template( '<div style="height:35px"><font>{url}</font></div>', record );
@@ -40,7 +30,7 @@
       } 
     ];
     
-    var store = new Q.Store({
+  var store = new Q.Store({
       data: [
         {url: 'abc', date: '2014-12-11'},
         {url: 'abc1', date: '2014-12-11'},
@@ -63,29 +53,47 @@
         {url: 'abc18', date: '2014-12-11'}
       ] 
     });
-    //init Q.table
-    g_table = new Q.Table({ 
-      wnd: g_test_dialog,
-      id: Q.$('table_container'),
-      title: "Q.Table标题栏",
-      wstyle: "q-attr-border q-attr-no-title q-attr2-grid q-attr-noselect",
-      store: store,
-      columns: columns,  
-      grid_render: function( record ) {
-        return Q.template( "name={url}x123, date={date}", record );
-      },
-      store: store,
-      item_onclick : function(item, evt ) {
-        var data = this.getRecord(item);
-        evt.cancelBubble=true;
-        var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
-        Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.tagName;
-        //this.item_remove( item );
-        alert(data.url);
-      },
-      item_key: function( record ) {
-        return record['url'];
-      },
+  Q.ready(function() {
+
+    //Q.addEvent( Q.$('table_container'), 'DOMNodeInserted', function(e){ 
+    //    e.relatedNode.style.background = 'pink';
+    //    console.log( e.relatedNode.tagName + '=' + e.relatedNode.offsetHeight );
+    //  } 
+    //);
+
+    g_test_dialog = new Q.Window({
+      title: 'Table in Dialog', 
+      content: '<div id="table_container" style="width: 60%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#099;"> </div>',
+      width:480, height:370,
+      buttons: [
+        {text:"button1", style:"", onclick: function() { alert(1); return true;} },
+        {text:"button2", style:"mycancelstyle", onclick: function() { alert(2); return false;} }, 
+      ],
+      on_create: function() {
+        //init Q.table
+        g_table = new Q.Table({ 
+          wnd: this, 
+          id: Q.$('table_container'), 
+          title: "Q.Table标题栏", 
+          wstyle: "q-attr-border q-attr-no-title q-attr2-grid q-attr-noselect q-dropshadow", 
+          store: store, 
+          columns: columns,  
+          grid_render: function( record ) {
+            return Q.template( "name={url}x123, date={date}", record );
+          },
+          item_onclick : function(item, evt ) {
+            var data = this.getRecord(item);
+            evt.cancelBubble=true;
+            var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+            Q.$('show_text').innerText = "当前选中: " + data.url + ", element: " + e.tagName;
+            //this.item_remove( item );
+            alert(data.url);
+          },
+          item_key: function( record ) {
+            return record['url'];
+          },
+        });
+      }
     });
 
     Q.$('clear').onclick = function() {
@@ -106,6 +114,12 @@
       g_table.removeStyle("q-attr-grid");
     }
 
+    Q.$('testheight').onclick = function() {
+      Q.$('testdiv').innerHTML = '<div id="innerElement" style="width:100%; height: 100%; background-color: yellow;">innerHTML content</div>';
+      console.log( innerElement.offsetHeight );
+    }
+
+
   });
 </script>
 </head>
@@ -118,11 +132,15 @@
 <button id="show_in_dlg"> 对话框中的表格 </button> &nbsp;
 <button id="change2grid"> GRID模式 </button> &nbsp;
 <button id="change2list"> LIST模式 </button> &nbsp;
+<button id="testheight"> Test innerHTML Height </button> &nbsp;
 <br>
 <br>
-<div id="table_container" style="width: 60%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#99bbe8;">
+<div id="testdiv" style="width: 600px; height: 300px; background-color: aqua;">
 
 </div>
+<br/>
+
+<!--div id="table_container" style="width: 60%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#099;"> </div-->
 
 
 

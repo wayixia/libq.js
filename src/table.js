@@ -330,7 +330,7 @@ __init__ : function(json) {
   _this.initview(json);
   _this.on_viewstyle_changed();
   //_this.render();
-  _this.autosize();
+  //_this.autosize();
 
   if( _this.wndOwner )
   {
@@ -346,6 +346,27 @@ __init__ : function(json) {
       _this.autosize();
     } );
   }
+
+
+  // 开始观察
+  this.io = new IntersectionObserver(([change]) => {
+    console.log(change.isVisible) // 被覆盖就是false，反之true
+    _this.isVisible = change.isVisible;
+  }, {
+    threshold: [0, 1.0],
+    delay: 1000, 
+    trackVisibility: true,
+  } ).observe( this.wnd);
+
+
+  // 开始观察
+  //this.io.observe(this.wnd);
+
+  // 停止观察
+  //this.io.unobserve(element);
+
+  // 关闭观察器
+  //this.io.disconnect();
 },
 
 /** dialog procedure
@@ -471,6 +492,9 @@ on_viewstyle_changed: function() {
  */
 autosize : function() {
   var _this = this;
+
+  if( !_this.isVisible )
+    return;
   var frame_width, frame_height;
   var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
   var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);

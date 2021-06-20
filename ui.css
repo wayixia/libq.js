@@ -397,9 +397,8 @@
 
 /* q-table control */
 
-.q-table { background: #99bbe8; overflow:hidden; positions:absolute; left:0; top:0; right:0; bottom:0;}
-.q-table.q-attr-borders {left:1px; top:1px; right:1px; bottom:1px;}
-.q-table.q-attr-border { border: 1px solid red;}
+.q-table { background: #99bbe8; overflow:hidden; height: 100%; positions:absolute; left:0; top:0; right:0; bottom:0;}
+.q-table.q-attr-border { border: 1px solid #047AEC;}
 .q-table TD {CURSOR: default;}
 .q-table TR.q-selected
 { 
@@ -429,8 +428,18 @@
   display: none;
 }
 
+.q-table.q-dropshadows .q-group-header {
+
+  border-bottom: 1px solid transparent;
+  box-shadow: 0 1px 9px rgba(0,0,0,.2);
+  -moz-box-shadow: 0 1px 9px rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 1px 9px rgba(0, 0, 0, 0.5);
+
+}
+
 .q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color:white; border: 0px solid red;}
-.q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 1px solid #CCC;}
+.q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 0px solid #CCC;}
+
 .q-table .q-column-header {
   position:relative;
   OVERFLOW:hidden; 

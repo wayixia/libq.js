@@ -22,6 +22,8 @@
 .q-tabs.v-property .q-tabs-header {
   float: left; 
   width: 149px;
+  border-right: 1px solid #EEE;
+  height: 100%;
 }
 
 .q-tabs.v-property .q-tabs-header ul {
@@ -70,6 +72,7 @@
 
 .q-tabs-body .q-panel {
   padding: -1px 10px;
+  height: 100%;
 }
 </style>
 <template>
@@ -85,8 +88,8 @@
     </div>
     <div class="q-tabs-body">
       <div qid="panel-2-1" class="q-panel">
-        <div qid="table-container" style="width:99%; height:100%; border-top: 1px solid #EEE;">
-        </div>
+        <!--div qid="table-container" style="width:100%; height:100%; ">
+        </div-->
     </div>
     <div qid="panel-2-2" class="q-panel">
       <b> __MSG_savePath__</b>(<font color="#998">__MSG_savePathAttention__</font>)<br>
@@ -126,33 +129,14 @@
     title: 'wayixia',  
     content:  '{#template}', 
     on_create: function() {
-      var tabactive = Q.$(location.hash.replace( /^#/g, '' ) );
-      if( !tabactive ) {
-        tabactive = Q.$('tab-basic');
-      }
       
-      this.tabs = new Q.tabs({
-        action: 'click',
-        active: tabactive,
-        onactive: function( tid ) {
-          var stateObject = {};
-          var newUrl = '#' + tid.id;
-          history.pushState(stateObject,tid.innerText,newUrl);
-        },
-        items: [
-          {tab: this.item('tab-basic'), content: this.item('panel-2-1')},
-          {tab: this.item('tab-download'), content: this.item('panel-2-2')},
-          {tab: this.item('tab-screencapture'), content: this.item('panel-2-3')},
-          {tab: this.item('tab-shortcut'), content: this.item('panel-2-4')},
-        ]  
-      });
-
-       
       //init Q.table
-      this.table = new Q.Table({ 
-        id: this.item('table-container'),
+      this.table = new Q.Table({
+        wnd: this, 
+        //id: this.item('table-container'),
+        id: this.item('panel-2-1'),
         title: "",
-        wstyle: "q-attr-border q-attr-no-title q-attr2-grids q-attr-noselect",
+        wstyle: "q-attr2-border q-attr-no-title q-attr2-grids q-attr-noselect",
         columns: [
           { name: 'name', title: '软件名称', align:'left', width: 240, isHTML: true, 
             renderer : function(record) { return "<div style=\"height:25px; line-height:25px;\"><font>"+ record['name'] + "</font></div>"; },
@@ -176,8 +160,31 @@
         }
       });
 
-      this.table.autosize();
+      var tabactive = Q.$(location.hash.replace( /^#/g, '' ) );
+      if( !tabactive ) {
+        tabactive = this.item('tab-download');
+      }
+      
+      this.tabs = new Q.tabs({
+        action: 'click',
+        active: tabactive,
+        onactive: function( tid ) {
+          var stateObject = {};
+          var newUrl = '#' + tid.id;
+          history.pushState(stateObject,tid.innerText,newUrl);
+          if( tid.id == 'tab-basic') {
+            this.table.autosize();
+          }
+        },
+        items: [
+          {tab: this.item('tab-basic'), content: this.item('panel-2-1')},
+          {tab: this.item('tab-download'), content: this.item('panel-2-2')},
+          {tab: this.item('tab-screencapture'), content: this.item('panel-2-3')},
+          {tab: this.item('tab-shortcut'), content: this.item('panel-2-4')},
+        ]  
+      });
 
+ 
     },
     on_close: function() {
       delete app.maindlg; app.maindlg=0; app.__exit__()
