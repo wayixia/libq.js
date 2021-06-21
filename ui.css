@@ -437,7 +437,7 @@
 
 }
 
-.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color:white; border: 0px solid red;}
+.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #F8F8F8; border: 0px solid red;}
 .q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 0px solid #CCC;}
 
 .q-table .q-column-header {
@@ -456,7 +456,7 @@
 }
 .q-table .q-column-header a { display:block; margin-right: 1px;}
 .q-table .q-column-header a:hover {text-decoration: none; background-color: #ebf3fd; }
-.q-table .q-group-body {position:relative;  margin-top: 31px; height:100%; overflow-y: auto; border: 0px solid green;}
+.q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-y: auto; border: 0px solid green; background-color: white;}
 
 .q-table .q-table-cdata {
   PADDING:0; 

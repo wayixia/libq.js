@@ -68,6 +68,7 @@
   border-left: 0px solid #CCCCCC;
   height: 99%;
   background-colors: yellow;
+  padding: 0 7px 0 7px;
 }
 
 .q-tabs-body .q-panel {
