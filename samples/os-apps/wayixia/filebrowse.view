@@ -34,8 +34,8 @@
 
 .q-tabs.v-property .q-tabs-header ul li {
   text-indent: 9px;
-  line-height: 29px;
-  height: 29px;
+  line-height: 31px;
+  height: 31px;
   margin-bottom: 2px;
   border-radius: 4px;
   color: #515150;
@@ -134,19 +134,22 @@
       //init Q.table
       this.table = new Q.Table({
         wnd: this, 
-        //id: this.item('table-container'),
         id: this.item('panel-2-1'),
-        title: "",
-        wstyle: "q-attr2-border q-attr-no-title q-attr2-grids q-attr-noselect",
+        wstyle: "q-attr2-border q-attr-no-title q-attr2-noselect",
         columns: [
           { name: 'name', title: '软件名称', align:'left', width: 240, isHTML: true, 
-            renderer : function(record) { return "<div style=\"height:25px; line-height:25px;\"><font>"+ record['name'] + "</font></div>"; },
+            //renderer : function(record) { return "<div style=\"height:25px; line-height:25px;\"><font>"+ record['name'] + "</font></div>"; },
           },
           { name: 'version', title: '版本', align:'left', width: 140, isHTML: true, 
-            renderer : function(record) { return "<div style=\"height:25px; line-height: 25px;\">" + record['version'] + "</div>";}, 
-          }
+            //renderer : function(record) { return "<div style=\"height:25px; line-height: 25px;\">" + record['version'] + "</div>";}, 
+          },
         ],  
-        store: new Q.Store( { proxy: "/api/programlist/all?" } ),
+        store: new Q.Store( {
+          data: [
+            { name: 'NGINX', version: '1.1.0'},
+            { name: 'MYSQL', version: '5.1.0'}
+          ]
+        } ),
         //grid_render:app_item_render,
         item_onclick : function(item, evt ) {
           var data = this.getRecord(item);
@@ -163,7 +166,7 @@
 
       var tabactive = Q.$(location.hash.replace( /^#/g, '' ) );
       if( !tabactive ) {
-        tabactive = this.item('tab-download');
+        tabactive = this.item('tab-basic');
       }
       
       this.tabs = new Q.tabs({
@@ -185,7 +188,6 @@
         ]  
       });
 
- 
     },
     on_close: function() {
       delete app.maindlg; app.maindlg=0; app.__exit__()

@@ -329,7 +329,7 @@ __init__ : function(json) {
   _this.wndParent = Q.$(json.id);
   _this.initview(json);
   _this.on_viewstyle_changed();
-  //_this.render();
+  _this.render();
   //_this.autosize();
 
   if( _this.wndOwner )

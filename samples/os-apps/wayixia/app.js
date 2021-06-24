@@ -16,8 +16,6 @@ __init__: function(json) {
   this.maindlg.show(true);
   this.maindlg.center();
 
-  // init action
-  //d.get("list-ctrl");
 },
 
 __active__ : function() {

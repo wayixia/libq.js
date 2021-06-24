@@ -402,12 +402,12 @@
 .q-table TD {CURSOR: default;}
 .q-table TR.q-selected
 { 
-  background-color:#DFE8F6; 
+  background-color:#fcf8c8; 
 }
 
 .q-table TR.mouseover
 { 
-  background-color:#F8F8F8; 
+  background-color:#e4f8be; 
 }
 
 .q-table .q-table-titlebar 
@@ -437,7 +437,7 @@
 
 }
 
-.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #F8F8F8; border: 0px solid red;}
+.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #718bb7; border: 0px solid red;}
 .q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 0px solid #CCC;}
 
 .q-table .q-column-header {
@@ -454,8 +454,8 @@
   text-overflow:ellipsis;
   WHITE-SPACE:nowrap;
 }
-.q-table .q-column-header a { display:block; margin-right: 1px;}
-.q-table .q-column-header a:hover {text-decoration: none; background-color: #ebf3fd; }
+.q-table .q-column-header a { display:block; margin-right: 1px; color: #FFF;}
+.q-table .q-column-header a:hover {text-decoration: none; background-colors: #04b4fa;  }
 .q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-y: auto; border: 0px solid green; background-color: white;}
 
 .q-table .q-table-cdata {
@@ -464,9 +464,12 @@
   BORDER-BOTTOM: transparent 1px solid; 
   border-RIGHT: #EEE 1px solid; 
   WHITE-SPACE: nowrap;
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
   text-indent:5px;
   text-overflow:ellipsis;
-  height:100%;
+  heights:100%;
 }
 
 .q-table TR.q-selected .q-table-cdata,
