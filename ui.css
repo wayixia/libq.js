@@ -28,9 +28,8 @@
 --------------------------------------------------------*/
 
 .q-window { 
-  position:absolute; background:#fff; overflow:hidden; margin:0 auto; cursor:default; min-width: 200px; border:3px solid transparent; 
+  position:absolute; background:#fff; overflow:hidden; margin:0 auto; cursor:default; min-width: 200px;  
   z-index:100; outline: 0; -webkit-box-shadow: 0px 5px 30px #505050; box-shadow: 0px 5px 30px #505050; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
-  border-radius: 5px;
 }
 
 .q-window .q-title { 
@@ -38,6 +37,11 @@
   background-color: #FFF;
   border-bottom: 1px solid #EEE;
 
+}
+
+.q-window-border {
+  border-radius: 5px;
+  border:3px solid transparent;
 }
 
 .q-window.q-status-max { border-width:0; }
@@ -402,12 +406,12 @@
 .q-table TD {CURSOR: default;}
 .q-table TR.q-selected
 { 
-  background-color:#fcf8c8; 
+  background-color:#EEE;
 }
 
 .q-table TR.mouseover
 { 
-  background-color:#e4f8be; 
+  background-color:#F8F8F8; 
 }
 
 .q-table .q-table-titlebar 
@@ -437,7 +441,7 @@
 
 }
 
-.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #718bb7; border: 0px solid red;}
+.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #83caf2; border: 0px solid red;}
 .q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 0px solid #CCC;}
 
 .q-table .q-column-header {
@@ -456,13 +460,13 @@
 }
 .q-table .q-column-header a { display:block; margin-right: 1px; color: #FFF;}
 .q-table .q-column-header a:hover {text-decoration: none; background-colors: #04b4fa;  }
-.q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-y: auto; border: 0px solid green; background-color: white;}
+.q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-x: hidden;overflow-y: auto; border: 0px solid green; background-color: white;}
 
 .q-table .q-table-cdata {
   PADDING:0; 
   OVERFLOW: hidden;
-  BORDER-BOTTOM: transparent 1px solid; 
-  border-RIGHT: #EEE 1px solid; 
+  BORDER-BOTTOM: #EEE 1px solid; 
+  border-RIGHT: transparent 1px solid; 
   WHITE-SPACE: nowrap;
   font-size: 12px;
   height: 30px;

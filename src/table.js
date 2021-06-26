@@ -1,11 +1,4 @@
 
-// 当有true返回是，说明结束循环
-var BindAsEventHandler = function(object, func) {
-  return function(event) {
-    return func.call(object, (event || window.event));
-  };
-};
- 
 /** 数据管理类
  * @constructor
  * @param {Object} config - 构造参数
@@ -22,7 +15,7 @@ __init__ : function(config) {
   this.records = new Q.HashMap;
   if(config.data) {
     this.fromproxy = false;
-    this.appendData(config.data);
+    this.append_data(config.data);
   }
   
   if(config.proxy) { 
@@ -45,7 +38,7 @@ clear : function() {
  * @memberof Q.Store.prototype
  * @param {Object[]} arr - 数据集
  */
-appendData : function(arr) {
+append_data : function(arr) {
   for(var i=0; i<arr.length; i++) {
     this.push(arr[i]);
   }
@@ -63,7 +56,7 @@ loadRemote : function(page, pagesize, callback) {
       var s = Q.json_decode(xmlhttp.responseText);
       if(typeof callback == 'function' && ( s.data instanceof Array ) && ( s.data.length > 0 ) ) { 
         var start = _this.records.index;
-        _this.appendData( s.data );
+        _this.append_data( s.data );
         callback( start, s.data.length );
       }
     }
@@ -161,10 +154,10 @@ var __TH = Q.extend({
     this.hwnd_moveline.style.display = 'none';
     
     //事件对象(用于绑定移除事件)
-    this._fMove = BindAsEventHandler(this, this.Move);
-    this._fStop = BindAsEventHandler(this, this.Stop);
-    Q.addEvent(this.hwnd, "mousedown", BindAsEventHandler(this, this.Start));
-    Q.addEvent(this.hwnd, "mousemove", BindAsEventHandler(this, this.Move));
+    this._fMove = Q.bind_handler( this, this.Move);
+    this._fStop = Q.bind_handler(this, this.Stop);
+    Q.addEvent(this.hwnd, "mousedown", Q.bind_handler(this, this.Start));
+    Q.addEvent(this.hwnd, "mousemove", Q.bind_handler(this, this.Move));
   },
   
   Start : function(oEvent) {
@@ -297,6 +290,7 @@ columns: [],
 evtListener : {},
 store : null,
 selected_item: null,
+oldframewidth: 0,
 
 __init__ : function(json) {
   var _this = this;
@@ -348,15 +342,15 @@ __init__ : function(json) {
   }
 
 
-  // 开始观察
-  this.io = new IntersectionObserver(([change]) => {
-    console.log(change.isVisible) // 被覆盖就是false，反之true
-    _this.isVisible = change.isVisible;
-  }, {
-    threshold: [0, 1.0],
-    delay: 1000, 
-    trackVisibility: true,
-  } ).observe( this.wnd);
+//  // 开始观察
+  //this.io = new IntersectionObserver(([change]) => {
+    //console.log(change.isVisible) // 被覆盖就是false，反之true
+    //_this.isVisible = change.isVisible;
+  //}, {
+    //threshold: [0, 1.0],
+    //delay: 1000, 
+    //trackVisibility: true,
+  //} ).observe( this.wnd);
 
 
   // 开始观察
@@ -448,7 +442,7 @@ initview : function(json) {
   }
 
   // 加载jtable的列
-  _this.load_columns();
+  _this._load_columns();
 
   // 添加事件
   _this.wndGroupHeader.onselectstart = function(evt) {return false;};
@@ -491,13 +485,18 @@ on_viewstyle_changed: function() {
  * @memberof Q.Table.prototype
  */
 autosize : function() {
+  Q.printf("table auto size");
   var _this = this;
 
-  if( !_this.isVisible )
-    return;
+  //if( !_this.isVisible )
+  //  return;
+
   var frame_width, frame_height;
   var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
   var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);
+
+  if( fullHeight == 0 || fullWidth == 0)
+    return;
   //var currentstyle = _this.wndParent.currentStyle;
   var currentstyle = _this.wnd.currentStyle;
   frame_height = fullHeight 
@@ -513,8 +512,11 @@ autosize : function() {
   } else {
     _this.wndGroupBody.style.marginTop = _this.wndGroupHeader.offsetHeight + 'px';
     _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
+    _this._column_autosize();
   }
-  
+ 
+  // Save old frame width
+  _this.oldframewidth = _this.wndFrame.offsetWidth;
   //_this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
   //_this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
 },  
@@ -678,8 +680,8 @@ clear : function() {
  * @param data {Object[]} - 数据记录集
  */
 
-appendData : function(data) {
-  this.store.appendData(data);
+append_data : function(data) {
+  this.store.append_data(data);
 },
 
 render : function() {
@@ -696,12 +698,22 @@ render : function() {
   }
 },
 
-load_columns : function() {
+_load_columns : function() {
+  var totalwidth = 0;
+  // Push last fix column with end
+  this.columns.push( { title: "", width: 17, fixed: true, renderer: function(r) { return ''; } } );
   for(var i=0; i < this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
+    totalwidth += column.width;
+    if( i == ( this.columns.length - 1 ) )
+    {
+      column.fixed = true;
+    }
     this.insert_column(i, column);
   }
+
+  this.oldframewidth = totalwidth;
 },
 
 insert_column : function(arrIndex, json) {
@@ -764,15 +776,83 @@ _column_MouseUp : function(evt, handler) {
   var _this = this;
   var TD = handler.hwnd;
   if(handler._isResizable) {
-    var nCol = TD.cellIndex;
-    _this.items_each( function(item) { 
-      var div = item.cells[nCol].childNodes[0];
-      div.style.width = handler._width+'px'; 
+    _this._column_setwidth( TD.cellIndex, handler._width );
+
+    _this.items_each( function(item) {
+      for( var i = 0; i < _this.columns.length; i++ )
+      {
+        var div = item.cells[i].childNodes[0];
+        div.style.width = _this.columns[i].width+'px'; 
+      }
     });
-    _this.columns[nCol].width = handler._width;
     _this.autosize();
     _this._sync_scroll();
   }
+},
+
+_column_setwidth: function( nCol, width ) {
+  var fullwidth = this.wndFrame.offsetWidth;
+  var restwidth = width - this.columns[nCol].width; 
+  var dx = 0;
+  var cols = [];
+  for( var i = 0; i < this.columns.length; i++ ) {
+    if( ( i != nCol ) && ( !this.columns[i].fixed ) ) {
+      cols.push( i );
+    }
+  }
+ 
+   if( this.columns.length > 1 )
+   {
+      dx = Math.floor( restwidth/cols.length );
+   }
+
+   
+   this.columns[nCol].width = width;
+
+  for( var i = 0; i < cols.length; i++ )
+  {
+    var index = cols[i];
+    if( i == ( cols.length - 1 ) ) {
+      this.columns[index].width -= restwidth; 
+    } else {
+      this.columns[index].width -= dx; 
+      restwidth -= dx;
+    }
+    var div = this.wndTableHeaderRow.cells[index].firstChild;
+    div.style.width = this.columns[index].width + 'px';
+  }
+},
+
+_column_autosize: function() {
+  var fullwidth = this.wndFrame.offsetWidth - 4;
+  var restwidth = fullwidth; 
+  Q.printf( "current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
+
+  for( var i = 0; i < this.columns.length; i++ )
+  {
+    if( this.columns[i].fixed )
+      continue;
+    var oldwidth = this.columns[i].width;
+    var f = oldwidth / this.oldframewidth;
+    if( i == ( this.columns.length - 1 ) ) {
+      this.columns[i].width = restwidth; 
+    } else {
+      this.columns[i].width = Math.floor( f * fullwidth );
+      restwidth -= this.columns[i].width;
+    }
+    
+    var div = this.wndTableHeaderRow.cells[i].firstChild;
+    div.style.width = this.columns[i].width + 'px';
+  }
+
+  var _this = this;
+  this.items_each( function(item) {
+    for( var i = 0; i < _this.columns.length; i++ )
+    {
+      var div = item.cells[i].childNodes[0];
+      div.style.width = _this.columns[i].width+'px'; 
+    }
+  });
 },
 
 //! 列表头单击事件

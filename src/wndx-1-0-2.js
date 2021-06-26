@@ -676,7 +676,7 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
   hwnd.app.add_window(hwnd); 
 
   // dom attributes
-  hwnd.className = 'q-window';
+  hwnd.className = 'q-window q-window-border';
   //hwnd.style.display = 'none';
   hwnd.style.visibility = 'hidden';
   hwnd.style.zIndex = __GLOBALS.Z_INDEX;
@@ -802,6 +802,13 @@ function $MakeResizable(obj) {
   Q.addEvent(document, 'mouseup',   mouseup);
   Q.addEvent(document, 'mousemove', mousemove);
 
+  if( !__GLOBALS.wndsize ) {
+    __GLOBALS.wndsize = document.createElement('div');
+    __GLOBALS.wndsize.style.cssText = "border-color: #000; background-color: transparent; z-index: 1000000000; position: absolute; left:0; right:0; right:0; bottom:0; display: none;";
+    __GLOBALS.wndsize.className = 'q-window-border';
+    document.body.appendChild( __GLOBALS.wndsize);
+  }
+
   function mousedown(evt){
     evt = evt || window.event;
     var status = $GetWindowStatus(obj);
@@ -810,6 +817,13 @@ function $MakeResizable(obj) {
     {
       Q.printf('mousedown in' + status);
       $SetWindowStatus(obj, CONST.SIZE_RESIZING);
+      __GLOBALS.wndsize.style.left = obj.style.left;
+      __GLOBALS.wndsize.style.top = obj.style.top;
+      __GLOBALS.wndsize.style.width = obj.style.width;
+      __GLOBALS.wndsize.style.height = obj.style.height;
+      __GLOBALS.wndsize.style.display = '';
+      __GLOBALS.wndsize.style.cursor = obj.style.cursor;
+
       if(obj.setCapture)
         obj.setCapture();
       else if(window.captureEvents)
@@ -824,6 +838,10 @@ function $MakeResizable(obj) {
     {
       Q.printf('mouseup in '+status);
       $SetWindowStatus(obj, CONST.SIZE_NORMAL);
+
+      $ResizeTo(obj, __GLOBALS.wndsize.offsetWidth, __GLOBALS.wndsize.offsetHeight);
+      __GLOBALS.wndsize.style.display = 'none';
+
       if(obj.releaseCapture)
         obj.releaseCapture();
       else if(window.releaseEvents)
@@ -850,7 +868,8 @@ function $MakeResizable(obj) {
       if(cur.indexOf('n')>-1) t+=dy;
       else if(cur.indexOf('s')>-1) b+=dy;
 
-      var s = obj.style;
+      //var s = obj.style;
+      var s = __GLOBALS.wndsize.style;
       if(r-l > __GLOBALS.MIN_WIDTH){
         s.left=l+'px';
         s.width = (r-l) +'px';
@@ -861,7 +880,9 @@ function $MakeResizable(obj) {
         s.height= (b-t)+'px';
       }
 
-      $ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
+      //__GLOBALS.wndsize.style.width = obj.offsetWidth + 'px';
+      //__GLOBALS.wndsize.style.height = obj.offsetHeight + 'px';
+      //$ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
       ex+=dx;
       ey+=dy;
     } else if( srcElement == obj ) {
