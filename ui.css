@@ -451,15 +451,21 @@
   line-height:30px; 
   PADDING:0;
   margin:0;
-  border-RIGHT: #ddd 1px solid; 
+  border-right: #ddd 1px solid; 
   text-indent:4px;
   font-size: 13px;
   font-weight: bold;
   text-overflow:ellipsis;
   WHITE-SPACE:nowrap;
 }
+
+.q-table .q-column-header.q-column-header-last
+{
+  border-right-width: 0px;
+}
+
 .q-table .q-column-header a { display:block; margin-right: 1px; color: #FFF;}
-.q-table .q-column-header a:hover {text-decoration: none; background-colors: #04b4fa;  }
+.q-table .q-column-header a:hover {text-decoration: none; background-colors: #F90;  }
 .q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-x: hidden;overflow-y: auto; border: 0px solid green; background-color: white;}
 
 .q-table .q-table-cdata {

@@ -701,7 +701,7 @@ render : function() {
 _load_columns : function() {
   var totalwidth = 0;
   // Push last fix column with end
-  this.columns.push( { title: "", width: 17, fixed: true, renderer: function(r) { return ''; } } );
+  this.columns.push( { title: "", width: 17, fixed: true, renderer: function(r) { return ''; }, islast: true } );
   for(var i=0; i < this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
@@ -721,9 +721,11 @@ insert_column : function(arrIndex, json) {
   var TD = _this.wndTableHeaderRow.insertCell(-1);
   
   json.isHidden = !!json.isHidden;
+  var className = json.islast ? 'q-column-header-last' : '';
+  
   TD.style.display = json.isHidden ? 'none' : '';
   TD.setAttribute('_index', arrIndex);
-  TD.innerHTML = '<DIV align="'+json.align+'" class="q-column-header" style="width:'+json.width+'px;"><a HideFocus>'
+  TD.innerHTML = '<DIV align="'+json.align+'" class="q-column-header '+className+'" style="width:'+json.width+'px;"><a HideFocus>'
           +json.title+'</a></DIV>';
   
   TD.firstChild.onclick = function() { _this._column_click(this.parentNode.cellIndex); };
@@ -785,37 +787,50 @@ _column_MouseUp : function(evt, handler) {
         div.style.width = _this.columns[i].width+'px'; 
       }
     });
-    _this.autosize();
     _this._sync_scroll();
   }
+},
+
+_column_dynamic : function( exclude_col ) {
+  var cols = [];
+  var fixedwidth = 0;
+  for( var i = 0; i < this.columns.length; i++ ) {
+    if( ( i != exclude_col ) && ( !this.columns[i].fixed ) ) {
+      cols.push( i );
+    } else {
+      fixedwidth += this.columns[i].width;
+    }
+  }
+  return { cols: cols, fixedwidth: fixedwidth };
 },
 
 _column_setwidth: function( nCol, width ) {
   var fullwidth = this.wndFrame.offsetWidth;
   var restwidth = width - this.columns[nCol].width; 
   var dx = 0;
-  var cols = [];
-  for( var i = 0; i < this.columns.length; i++ ) {
-    if( ( i != nCol ) && ( !this.columns[i].fixed ) ) {
-      cols.push( i );
-    }
-  }
- 
-   if( this.columns.length > 1 )
-   {
-      dx = Math.floor( restwidth/cols.length );
-   }
 
-   
-   this.columns[nCol].width = width;
+  // get dynamic cols
+  var dynamic = this._column_dynamic( nCol );
+  var cols = dynamic.cols;
+  var fixedwidth = dynamic.fixedwidth;
+  var restwidth = width - this.columns[nCol].width; 
+
+  // calculate dx
+  if( cols.length > 1 )
+  {
+    dx = Math.floor( restwidth/cols.length );
+  }
+
+
+  this.columns[nCol].width = width;
 
   for( var i = 0; i < cols.length; i++ )
   {
     var index = cols[i];
     if( i == ( cols.length - 1 ) ) {
-      this.columns[index].width -= restwidth; 
+      this.columns[index].width -= restwidth-1;  // last calculate column
     } else {
-      this.columns[index].width -= dx; 
+      this.columns[index].width -= dx+1;  // border-right-width
       restwidth -= dx;
     }
     var div = this.wndTableHeaderRow.cells[index].firstChild;
@@ -824,33 +839,39 @@ _column_setwidth: function( nCol, width ) {
 },
 
 _column_autosize: function() {
-  var fullwidth = this.wndFrame.offsetWidth - 4;
-  var restwidth = fullwidth; 
+  var fullwidth = this.wndFrame.offsetWidth;
   Q.printf( "current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
 
-  for( var i = 0; i < this.columns.length; i++ )
+  // get dynamic cols
+  var dynamic = this._column_dynamic( -1 );
+  var cols = dynamic.cols;
+  var fixedwidth = dynamic.fixedwidth;
+  var restwidth = fullwidth-fixedwidth; 
+
+  for( var i = 0; i < cols.length; i++ )
   {
-    if( this.columns[i].fixed )
-      continue;
-    var oldwidth = this.columns[i].width;
+    var index = cols[i];
+
+    var oldwidth = this.columns[index].width;
     var f = oldwidth / this.oldframewidth;
-    if( i == ( this.columns.length - 1 ) ) {
-      this.columns[i].width = restwidth; 
+    if( i == ( cols.length - 1 ) ) {
+      this.columns[index].width = restwidth-1;  //// last calculate column
     } else {
-      this.columns[i].width = Math.floor( f * fullwidth );
-      restwidth -= this.columns[i].width;
+      this.columns[index].width = Math.floor( f * fullwidth );
+      restwidth -= this.columns[index].width+1; // border-right-width
     }
     
-    var div = this.wndTableHeaderRow.cells[i].firstChild;
-    div.style.width = this.columns[i].width + 'px';
+    var div = this.wndTableHeaderRow.cells[index].firstChild;
+    div.style.width = (this.columns[index].width ) + 'px';
   }
 
   var _this = this;
   this.items_each( function(item) {
-    for( var i = 0; i < _this.columns.length; i++ )
+    for( var i = 0; i < cols.length; i++ )
     {
-      var div = item.cells[i].childNodes[0];
-      div.style.width = _this.columns[i].width+'px'; 
+      var index = cols[i];
+      var div = item.cells[index].childNodes[0];
+      div.style.width = _this.columns[index].width+'px'; 
     }
   });
 },
