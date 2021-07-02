@@ -25,7 +25,7 @@
       },
       { name: 'date', title: '日期', align:'left', width: 140, isHTML: true, 
         renderer : function(record) {
-          return Q.template( '<div style="height:35px"><button id="id_{date}">{date}</button></div>', record )
+          return Q.template( '<div style="height:35px"><span id="id_{date}">{date}</span></div>', record )
         }, 
       } 
     ];
@@ -63,7 +63,7 @@
 
     g_test_dialog = new Q.Window({
       title: 'Table in Dialog', 
-      content: '<div id="table_container" style="width: 60%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#099;"> </div>',
+      content: '<div id="table_container" style="width: 100%; height: 100%; border:0px solid #F00; position:relative;box-sizing: content-box;background-color:#099;"> </div>',
       width:480, height:370,
       buttons: [
         {text:"button1", style:"", onclick: function() { alert(1); return true;} },
@@ -75,7 +75,7 @@
           wnd: this, 
           id: Q.$('table_container'), 
           title: "Q.Table标题栏", 
-          wstyle: "q-attr-border q-attr-no-title q-attr2-grid q-attr-noselect q-dropshadow", 
+          wstyle: "q-attr2-border q-attr-no-title q-attr2-grid q-attr-noselect q-dropshadow", 
           store: store, 
           columns: columns,  
           grid_render: function( record ) {

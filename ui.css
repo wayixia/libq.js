@@ -457,11 +457,12 @@
   font-weight: bold;
   text-overflow:ellipsis;
   WHITE-SPACE:nowrap;
+  background-color: #FF9900;
 }
 
 .q-table .q-column-header.q-column-header-last
 {
-  border-right-width: 0px;
+  border-right-color: transparent;
 }
 
 .q-table .q-column-header a { display:block; margin-right: 1px; color: #FFF;}
@@ -472,7 +473,7 @@
   PADDING:0; 
   OVERFLOW: hidden;
   BORDER-BOTTOM: #EEE 1px solid; 
-  border-RIGHT: transparent 1px solid; 
+  border-RIGHT: #CCC 1px solid; 
   WHITE-SPACE: nowrap;
   font-size: 12px;
   height: 30px;
@@ -493,6 +494,7 @@
 .q-table.q-attr-grid .q-table-cdata {
   OVERFLOW: hidden;
   outline: #CCC 1px solid; 
+  border-RIGHT: transparent 1px solid; 
   border-width:0;
   margin: 1px 0px 0px 1px;
   box-sizing: border-box;
@@ -520,7 +522,7 @@
 }
 
 
-.q-table-moveline{position: absolute;z-index: 199997;width: 1px; height: 0px; background: red;}
+.q-table-moveline{position: absolute; top:0; bottom:0px; z-index: 199997;width: 1px; background: red;}
 
 .q-table_div_dashbox{position: absolute; border: 1px solid #99BBE8; filter: alpha(opacity=50);  -moz-opacity: .5; background: #DFE8F6; display: none;}
 .q-table_div_dragbox_top {position: absolute; border: 0px solid #99BBE8; width: 8px; height: 9px; background: url(images/table/col-move-top.gif) no-repeat left top; display: none;}

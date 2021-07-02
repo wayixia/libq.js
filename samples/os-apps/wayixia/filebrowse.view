@@ -14,7 +14,7 @@
 
 
 .q-tabs.v-property {
-
+  height: 100%;
 }
 
 
@@ -22,14 +22,14 @@
 .q-tabs.v-property .q-tabs-header {
   float: left; 
   width: 149px;
-  border-right: 1px solid #EEE;
+  border-right: 0px solid #EEE;
   height: 100%;
 }
 
 .q-tabs.v-property .q-tabs-header ul {
   padding: 0px 5px 0 5px;
   list-style: none;
-  margin:-1;
+  margin:0;
 }
 
 .q-tabs.v-property .q-tabs-header ul li {
@@ -72,7 +72,7 @@
 }
 
 .q-tabs-body .q-panel {
-  padding: -1px 10px;
+  padding: 0px 0px;
   height: 100%;
 }
 </style>

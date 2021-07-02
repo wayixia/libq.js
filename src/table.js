@@ -128,7 +128,7 @@ item : function(index) {
 
 });
 
-var __TH = Q.extend({
+Q.TableColumn = Q.extend({
   hwnd : null,
   hwnd_moveline : null,
   _width : 0,
@@ -161,15 +161,16 @@ var __TH = Q.extend({
   },
   
   Start : function(oEvent) {
-    var pos = Q.absPosition(this.hwnd);
+    var pos = Q.absPositionEx(this.hwnd);
     
     if(this.hwnd.style.cursor) {
       this._isResizable = true;
       this._dx = pos.left + pos.width - oEvent.clientX;
       // 显示和定位法线
+      var parent = Q.absPosition(this.hwnd_moveline.parentNode);
       this.hwnd_moveline.style.display = '';
-      this.hwnd_moveline.style.left = (oEvent.clientX) + 'px';
-      this.hwnd_moveline.style.top = (pos.top) + 'px';
+      this.hwnd_moveline.style.left = (oEvent.clientX-parent.left ) + 'px';
+      //this.hwnd_moveline.style.top = (pos.top) + 'px';
       //this.div_moveline.style.height = (this.hwnd.offsetHeight - 1 - this.hwnd_title.offsetHeight) + 'px';
     }
     
@@ -194,18 +195,18 @@ var __TH = Q.extend({
   
   //拖动
   Move : function(oEvent) {
-    //alert("mousemove")
     var scrollinfo = Q.scrollInfo();
     if(this._isDragable ) {
       // on drag 
     } else if(this._isResizable) {
+      var parent = Q.absPositionEx(this.hwnd_moveline.parentNode);
       if( this._left > oEvent.clientX ) {
-        this.hwnd_moveline.style.left = this._left + 'px';
+        this.hwnd_moveline.style.left = (this._left-parent.left) + 'px';
         return;
       }
-      this.hwnd_moveline.style.left = oEvent.clientX + 'px';
+      this.hwnd_moveline.style.left = (oEvent.clientX-parent.left) + 'px';
     } else {
-      var pos = Q.absPosition(this.hwnd);
+      var pos = Q.absPositionEx(this.hwnd);
       this._left = pos.left;
       this._right = pos.left + pos.width;
       var x = oEvent.clientX - scrollinfo.l;
@@ -225,7 +226,9 @@ var __TH = Q.extend({
   Stop : function(oEvent) {
     this.hwnd_moveline.style.display = "none";
     if(this._isResizable) {
-      this._width = oEvent.clientX - this._left + this._dx;
+      var div = this.hwnd.firstChild;
+      this._width = oEvent.clientX - this._left + this._dx; // - div.style.borderLeftWidth - div.style.borderRightWidth;
+      Q.printf( "column width " + this._width );
       this.hwnd.firstChild.style.width = (this._width) + 'px';
     }
     
@@ -394,13 +397,13 @@ initview : function(json) {
   
   //!移动法线
   _this.wndMoveLine = document.createElement('DIV');
-  document.body.appendChild(_this.wndMoveLine);
 
   //! 组合主框架
   _this.wnd.appendChild(_this.wndTitleBar);
   _this.wnd.appendChild(_this.wndFrame);
     _this.wndFrame.appendChild(_this.wndGroupHeader);
     _this.wndFrame.appendChild(_this.wndGroupBody);
+    _this.wndFrame.appendChild(_this.wndMoveLine);
   _this.wnd.appendChild(_this.wndToolbar);
 
   //! 设置UI样式
@@ -731,8 +734,9 @@ insert_column : function(arrIndex, json) {
   TD.firstChild.onclick = function() { _this._column_click(this.parentNode.cellIndex); };
 
   //!固定宽度
-  if(!json.fixed) {
-    new __TH(TD, {moveline: _this.wndMoveLine, 
+  if( !json.fixed ) {
+    new Q.TableColumn( TD, {
+      moveline: _this.wndMoveLine, 
       onStart: function(evt, handler) { 
         _this._column_MouseDown(evt, handler); 
       }, 
@@ -779,14 +783,6 @@ _column_MouseUp : function(evt, handler) {
   var TD = handler.hwnd;
   if(handler._isResizable) {
     _this._column_setwidth( TD.cellIndex, handler._width );
-
-    _this.items_each( function(item) {
-      for( var i = 0; i < _this.columns.length; i++ )
-      {
-        var div = item.cells[i].childNodes[0];
-        div.style.width = _this.columns[i].width+'px'; 
-      }
-    });
     _this._sync_scroll();
   }
 },
@@ -798,7 +794,7 @@ _column_dynamic : function( exclude_col ) {
     if( ( i != exclude_col ) && ( !this.columns[i].fixed ) ) {
       cols.push( i );
     } else {
-      fixedwidth += this.columns[i].width;
+      fixedwidth += this.columns[i].width+1; // border-width
     }
   }
   return { cols: cols, fixedwidth: fixedwidth };
@@ -806,7 +802,7 @@ _column_dynamic : function( exclude_col ) {
 
 _column_setwidth: function( nCol, width ) {
   var fullwidth = this.wndFrame.offsetWidth;
-  var restwidth = width - this.columns[nCol].width; 
+  var restwidth = width - this.columns[nCol].width;
   var dx = 0;
 
   // get dynamic cols
@@ -821,6 +817,10 @@ _column_setwidth: function( nCol, width ) {
     dx = Math.floor( restwidth/cols.length );
   }
 
+  var dump = { fullwidth: fullwidth, restwidth:restwidth, dx:dx, cols: cols };
+  console.log( dump );
+
+
 
   this.columns[nCol].width = width;
 
@@ -828,14 +828,30 @@ _column_setwidth: function( nCol, width ) {
   {
     var index = cols[i];
     if( i == ( cols.length - 1 ) ) {
-      this.columns[index].width -= restwidth-1;  // last calculate column
+      this.columns[index].width -= restwidth;  // last calculate column
+      restwidth -= restwidth;
     } else {
-      this.columns[index].width -= dx+1;  // border-right-width
+      this.columns[index].width -= dx;  // border-right-width
       restwidth -= dx;
     }
+    console.log( restwidth );
     var div = this.wndTableHeaderRow.cells[index].firstChild;
     div.style.width = this.columns[index].width + 'px';
   }
+
+
+  console.log( this.columns );
+
+  var _this = this;
+  cols.push(nCol);
+  _this.items_each( function(item) {
+    for( var i = 0; i < cols.length; i++ )
+    {
+      var index = cols[i];
+      var div = item.cells[index].childNodes[0];
+      div.style.width = _this.columns[index].width+'px'; 
+    }
+  });
 },
 
 _column_autosize: function() {
@@ -855,10 +871,10 @@ _column_autosize: function() {
     var oldwidth = this.columns[index].width;
     var f = oldwidth / this.oldframewidth;
     if( i == ( cols.length - 1 ) ) {
-      this.columns[index].width = restwidth-1;  //// last calculate column
+      this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
     } else {
       this.columns[index].width = Math.floor( f * fullwidth );
-      restwidth -= this.columns[index].width+1; // border-right-width
+      restwidth -= this.columns[index].width+1; // with border-right-width
     }
     
     var div = this.wndTableHeaderRow.cells[index].firstChild;
