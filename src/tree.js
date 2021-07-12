@@ -350,9 +350,9 @@ createNode : function(parentId, text, isopen, isshow) {
       lastChildNode.isLastChild = false;
       if(lastChildNode.expand.expandable) {
         if(lastChildNode.subarea.style.display=='') {
-          lastChildNode.expand.className = 'expand expand_on';
+          lastChildNode.expand.className = 'expand iconfont icon-expand-on' ; // expand_on';
         } else {
-          lastChildNode.expand.className = 'expand expand_off';
+          lastChildNode.expand.className = 'expand iconfont icon-expand-off'; // expand_off
         }
       } else {
         lastChildNode.expand.className = 'expand child';
@@ -362,10 +362,10 @@ createNode : function(parentId, text, isopen, isshow) {
     if(parentNode.firstChild == TREEITEM_NULL) {
       parentNode.firstChild = id;
             
-      var className = 'expand_';
-      if(parentNode.isLastChild) {
-        className = 'last_expand_';
-      }
+      var className = 'iconfont icon-expand-';
+      //if(parentNode.isLastChild) {
+      //  className = 'last-expand-';
+      //}
       if(parentNode.subarea.style.display == '') {
         className += 'on';
       } else {
@@ -432,9 +432,9 @@ createNode : function(parentId, text, isopen, isshow) {
   node.expand.onclick = function() {
     _this.expandClick(_this.idx);
     var className = '';
-    if(node.isLastChild) { className = 'last_'; }
+    //if(node.isLastChild) { className = 'last_'; }
     if(this.expandable) {
-      className += 'expand_';
+      className += 'icon-expand-';
       if(node.subarea.style.display=='none') {
         node.subarea.style.display='';
         className += 'on';
@@ -442,7 +442,7 @@ createNode : function(parentId, text, isopen, isshow) {
         node.subarea.style.display='none';
         className += 'off';
       }
-      this.className = 'expand ' + className;
+      this.className = 'expand iconfont ' + className;
     }
   };
         
@@ -570,11 +570,11 @@ traverseNode : function(nItem, lpCallBack) {
 
 MeasureNodeExpand : function(Node) {
   // 插入nNewItem DOM操作
-  var className = 'expand ';
-  if(Node.isLastChild) { className += 'last_'; }
+  var className = 'expand iconfont ';
+  //if(Node.isLastChild) { className += 'last_'; }
   if(Node.firstChild != TREEITEM_NULL) {
     // 存在子节点
-    className += 'expand_';
+    className += 'icon-expand-';
     className += (Node.subarea.style.display == '') ? 'on':'off';
   } else {
     // 叶节点

@@ -251,8 +251,8 @@
 }
 
 .q-simpletree .q-tree-item a  {
-  font-size: 14px;
-  line-height: 14px;
+  font-sizes: 14px;
+  line-heights: 14px;
   text-decoration: none;
   display: block;
   padding-left: 23px;
@@ -262,22 +262,24 @@
 }
 
 .q-simpletree .q-tree-item a:hover  {
-  background: #ffffcc;
+  background: #F8F8F8;
 }
 
 .q-simpletree .expand {
   position:absolute;
-  left:0;
+  lefts:0;
   cursor: pointer;
   padding: 0;
-  width: 21px; 
-  height:18px;
-  line-height:18px;
+  widths: 21px; 
+  heights:18px;
+  line-heights:18px;
   margin: auto 0; 
   white-space: nowrap;
   z-index: 2;
 }
 
+
+/*
 .q-simpletree .expand.child {
   backgrounds: url(images/tree/child.png) no-repeat top left; 
 }
@@ -301,10 +303,12 @@
 .q-simpletree .expand.last_expand_off {
   background: url(images/tree/expand_off.png) no-repeat center center; 
 }
+*/
 
 .q-simpletree .icon {
-  position: absolute;
-  top: 0;
+  positions: absolute;
+  float: left;
+  margin-top: 5px;
   width: 18px;
   height: 20px;
   background-repeat: no-repeat;
@@ -313,10 +317,11 @@
 
 .q-simpletree .default {
   background-image: url(images/tree/icon.png);
+  display: inline-block;
 }
 
 .q-simpletree .textNode {
-    padding-left:20px;
+    paddings-left:20px;
     cursor: default;
 }
 
@@ -473,7 +478,7 @@
   PADDING:0; 
   OVERFLOW: hidden;
   BORDER-BOTTOM: #EEE 1px solid; 
-  border-RIGHT: #CCC 1px solid; 
+  border-RIGHT: transparent 1px solid; 
   WHITE-SPACE: nowrap;
   font-size: 12px;
   height: 30px;

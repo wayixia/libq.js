@@ -229,7 +229,9 @@ Q.TableColumn = Q.extend({
       var div = this.hwnd.firstChild;
       this._width = oEvent.clientX - this._left + this._dx; // - div.style.borderLeftWidth - div.style.borderRightWidth;
       Q.printf( "column width " + this._width );
-      this.hwnd.firstChild.style.width = (this._width) + 'px';
+      if( this.hwnd.firstChild.style ) {
+        this.hwnd.firstChild.style.width = (this._width) + 'px';
+      }
     }
     
     if(this._isDragable) {}

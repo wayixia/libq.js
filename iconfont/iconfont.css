@@ -1,10 +1,8 @@
-@font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1615132652931'); /* IE9 */
-  src: url('iconfont.eot?t=1615132652931#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAOsAAsAAAAACFAAAANgAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDSAqDRIJ7ATYCJAMYCw4ABCAFhG0HVRsuB8ieAe4ipOi4u02RjORN8hGRRfD8GO7et6m0LYlGi57maSEumWCeoZEqbSHTyV4C97/W5swTfV4/T5jYyvxd//sFvJJJNEInJUK8i5dAvxu/MZzzL0IrLySE5P/fX90BnadRpzO+kIZYARFK0unM67RJien///dT/8oSMK89G9jUKi06rGlngOMBDSwq6dPECmSivmHsJoKGuJ9At0lNqZ3V7WMoKsCwQJx5jgHFjFdRjESn0Crmlo0bhZzOdPBXAD7z78c/6AcVkpoBxh6frtgw/5M0+iS0Yq24phhIpjsMKjKWgEK8rLQ+yETRJRndXuesXaBXp6RM9Yn6qDVCbyMYRkYOnKEX/uWRJUWoRIOc3wv2VX/lJ0ZkfrIRiZ9GROEnQgQ/R8pU0Cbs04cXwFdQqUsmJE0WomhyS9LTmmKtludS0nXisO9TE3v/XE1aubBy9s5U9OkNOvuuCYlT6yLOzKYE1afbJJypVmGmLAgMwYx1G8rQHR3dtXARaw1Stzr0pULP7Z9snWJw3kzbdJH2mX3osCNyDsYzgEdvqzIQxp2lJ7zCAX6PX9ZhGzioYWCH6vpX9Kqv87/uRsWjd6vi1cbJqiLC6pgQlqmiROTgBnNftg4+PKlenHv6/Z3x5Vzd7VX0Wu/ex3bvUwfQ+z7vZjyPDRk0BSbepPEfMaUvi2zwDtjzWwLfAf/P/3NZCQEA8hpuXrJvpC//6288+6Yt3zVc30WGAD+S0j9ZPizWKdFZ8hfLShcAZc2UAV0rrgTXfUqKBJqd234hoVs3/p1z2HAq7VjnfEKnsQSSDhOQdZoiFMoSVD2Woem0Dt0WrS3uMULKiJLBgg8JwqAfSPo9Qjbol1AoA6jG/UMzGATodhKCNXvMRLwclGRostF8Qc/iMUMGXRaFh+Q8hIZMyzjrlKTyAthrd/OJNYpJTjFBPTp9rRkyySNclQ6jMOSYSO6Tpduu1slkp8OqcGpbPIKybRIxaMSGTC+Qx8LFGG2ulQufP0QcD0IG2VDT4z9FJMVrH/W0dTsQ1tRxp5pbeUR55OjTNAYxEhdBq5KZhDDKoaS6l49YtDZ3QDgxqaM0Yl3V7eW10VtugW5gvRaOnmJgZEK9bkXGc56KnkBRZBkxl5ERVjC9uJBphVwRAA==') format('woff2'),
-  url('iconfont.woff?t=1615132652931') format('woff'),
-  url('iconfont.ttf?t=1615132652931') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('iconfont.svg?t=1615132652931#iconfont') format('svg'); /* iOS 4.1- */
+@font-face {
+  font-family: "iconfont"; /* Project id 2403385 */
+  src: url('iconfont.woff2?t=1625327694728') format('woff2'),
+       url('iconfont.woff?t=1625327694728') format('woff'),
+       url('iconfont.ttf?t=1625327694728') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +11,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-expand-on:before {
+  content: "\e635";
+}
+
+.icon-Other-4:before {
+  content: "\e636";
+}
+
+.icon-expand-off:before {
+  content: "\e637";
+}
+
+.icon-Other-8:before {
+  content: "\e638";
 }
 
 .icon-q-max:before {

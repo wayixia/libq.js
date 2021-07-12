@@ -2,10 +2,10 @@
 <style>
   .layer-options {
   position: absolute;
-  left: -1px;
-  top: -1px;
-  bottom: -1px;
-  right: -1px;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
   line-height: 29px;
   font-size: 15px;
   padding: 9px 0;
@@ -21,46 +21,17 @@
 
 .q-tabs.v-property .q-tabs-header {
   float: left; 
-  width: 149px;
-  border-right: 0px solid #EEE;
+  width: 129px;
+  border-right: 1px solid #EEE;
   height: 100%;
+  padding: 0 10px;
 }
 
-.q-tabs.v-property .q-tabs-header ul {
-  padding: 0px 5px 0 5px;
-  list-style: none;
-  margin:0;
+.q-tabs.v-property .q-tabs-split {
+  height:100%;
+  width: 1px;
+  background-color: #EEE;
 }
-
-.q-tabs.v-property .q-tabs-header ul li {
-  text-indent: 9px;
-  line-height: 31px;
-  height: 31px;
-  margin-bottom: 2px;
-  border-radius: 4px;
-  color: #515150;
-  font-size: 10pt;
-}        
-
-.q-tabs.v-property .q-tabs-header ul li:hover, .q-tabs.v-property .q-tabs-header ul li.q-selected {
-  background-color: #F0F1F1;
-  color: #037777777777;
-}
-
-
-.q-tabs.v-property .q-tabs-header ul li a,
-.q-tabs.v-property .q-tabs-header ul li a:visited {
-  display: block;
-  text-decoration: none;
-	color: #515150;
-}
-
-
-.q-tabs.v-property .q-tabs-header ul li a:hover,
-.q-tabs.v-property .q-tabs-header ul li.q-selected a {
-	color: #037777777777
-}
-
 
 
 .q-tabs-body {
@@ -79,45 +50,14 @@
 <template>
 <div class="layer-options">
   <div class="q-tabs v-property">
-    <div class="q-tabs-header">
-	    <ul>
-		    <li qid="tab-basic"> Table </li>
-		    <li qid="tab-download"> Download </li>
-		    <li qid="tab-screencapture" href=""> Security </li>
-		    <li qid="tab-shortcut"> Shortcut </li>
-	    </ul>
+    <div class="q-tabs-header" qid="q-frame-left">
+      <div class="q-table-moveline" qid="q-moveline"></div>
     </div>
-    <div class="q-tabs-body">
+    <div class="q-tabs-body" qid="q-frame-right">
       <div qid="panel-2-1" class="q-panel">
         <!--div qid="table-container" style="width:100%; height:100%; ">
         </div-->
     </div>
-    <div qid="panel-2-2" class="q-panel">
-      <b> __MSG_savePath__</b>(<font color="#998">__MSG_savePathAttention__</font>)<br>
-      <div class="q-placeholder" id="label_save_path"> wayixia <input id="save_path" size="49"> </div> 
-      <a id="date_folder" class="q-checkbox">__MSG_saveWithDateFolder__</a> 
-      <a id="save_lastconfig" class="q-checkbox">__MSG_saveLastConfig__</a> 
-      <br><br>
-      <b class="q-checkbox" id="filter_rules_enable">__MSG_filterRulesEnable__</b>（<font color="#998">__MSG_filterRulesWarning__</font>）<br>
-      <button id="manager_filter_rules" size="49">__MSG_setting__</button> 
-      <br><br>
-      <b>__MSG_blockImageManage__</b><br>
-      <button id="manager_block_images" size="49">__MSG_setting__</button> <br>
-      <br> 
-    </div> 
-    <div qid="panel-2-3" class="q-panel">
-      <b> __MSG_stringCaptureAssistant__</b>(<font color="#998"></font>)<br>
-      <div id="wayixia-assistant-ing" class="wayixia-assistant ing" style="display: none;"> __MSG_stringChecking__... </div>
-      <div id="wayixia-assistant-ok" class="wayixia-assistant ok" style="display: none;"> __MSG_stringConnected__ <a href="#"></a> </div>
-      <div id="wayixia-assistant-error" class="wayixia-assistant error" style="display: none;"> __MSG_stringDisconnected__ 
-        <a href="https://www.wayixia.com/extension/install" target="_blank">(__MSG_stringAssistantHelp__)</a>
-      </div>
-    </div> 
-    <div qid="panel-2-4" class="q-panel">
-      <b>__MSG_shortcut__</b><br>
-       0. __MSG_digImage__（<font color="#999">Ctrl+Q</font>）<br>
-       1. __MSG_closeExtensionWindow__（<font color="#999">ESC</font>）<br>
-    </div> 
   </div>
 </div>
 </template>
@@ -130,6 +70,9 @@
     title: 'wayixia',  
     content:  '{#template}', 
     on_create: function() {
+      var _this = this;
+      var frame_left = this.item( 'q-frame-left' ); 
+      var frame_right = this.item( 'q-frame-right' ); 
       
       //init Q.table
       this.table = new Q.Table({
@@ -175,31 +118,51 @@
         }
       });
 
-      var tabactive = Q.$(location.hash.replace( /^#/g, '' ) );
-      if( !tabactive ) {
-        tabactive = this.item('tab-basic');
-      }
+      this.dirtree = new Q.Tree( {
+        id: frame_left,
+		    name : "站点根目录",
+		    open : true,
+	    } );
+
+	    this.dirtree.setItemData(0, '/');
+
+	    //this.dirtree.setItemIcon(0, 'treeIconFolder');
+	    this.dirtree.itemClick = function(nItem) {
+		    //var path = this.getItemData(nItem);
+		    //OnUpdateJtable(path, nItem);
+        Q.printf("item click " + nItem);
+	    }
       
-      this.tabs = new Q.tabs({
-        action: 'click',
-        active: tabactive,
-        onactive: function( tid ) {
-          var stateObject = {};
-          var newUrl = '#' + tid.id;
-          history.pushState(stateObject,tid.innerText,newUrl);
-          if( tid.id == 'tab-basic') {
-            this.table.autosize();
-          }
-        },
-        items: [
-          {tab: this.item('tab-basic'), content: this.item('panel-2-1')},
-          {tab: this.item('tab-download'), content: this.item('panel-2-2')},
-          {tab: this.item('tab-screencapture'), content: this.item('panel-2-3')},
-          {tab: this.item('tab-shortcut'), content: this.item('panel-2-4')},
-        ]  
+      var rootItem = this.dirtree.getRoot();
+      var child1 = this.dirtree.createNode(rootItem, "111");
+      var child11 = this.dirtree.createNode(child1, "111-1");
+      var child12 = this.dirtree.createNode(child1, "111-2");
+      var child13 = this.dirtree.createNode(child1, "111-312778278318723");
+      var child2 = this.dirtree.createNode(rootItem, "222");
+      var child21 = this.dirtree.createNode(child2, "22200120301203");
+      var child22 = this.dirtree.createNode(child2, "222");
+      var child3 = this.dirtree.createNode(rootItem, "333");
+      var child4 = this.dirtree.createNode(rootItem, "444");
+
+
+      // init layout
+      this.layout = new Q.TableColumn( frame_left, {
+        moveline: this.item( 'q-moveline' ), 
+        onStart: function(evt, handler) { 
+          //_this._column_MouseDown(evt, handler);
+        }, 
+        onStop: function(evt, handler) { 
+          //_this._column_MouseUp(evt, handler);
+          console.log( handler._width );
+          frame_left.style.width = handler._width + 'px'; 
+          frame_right.style.marginLeft = ( handler._width + 20 ) + 'px';
+          _this.table.autosize();
+        }
       });
 
+
     },
+
     on_close: function() {
       delete app.maindlg; app.maindlg=0; app.__exit__()
       return true;
