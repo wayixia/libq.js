@@ -118,6 +118,7 @@
 
       this.dirtree = new Q.Tree( {
         id: frame_left,
+        wstyle: "q-attr-no-icon",
 		    name : "站点根目录",
 		    open : true,
 	    } );

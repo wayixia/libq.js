@@ -244,6 +244,7 @@
   height: 100%;
 }
 
+
 .q-simpletree .q-tree-item {
   position:relative;
 }
@@ -308,6 +309,11 @@
 }
 */
 
+
+.q-simpletree.q-attr-no-icon .icon {
+  display: none;
+}
+
 .q-simpletree .icon {
   positions: absolute;
   clear: left;
@@ -326,6 +332,7 @@
 
 .q-simpletree .textNode {
     paddings-left:20px;
+    font-size: 14px;
     cursor: default;
 }
 

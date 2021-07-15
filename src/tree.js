@@ -136,6 +136,8 @@ onMoveLineMove_ : null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
+  json.wstyle = json.wstyle || "";
+
   _this.ID2Nodes = {};
   _this.Acceptable = !!json.Acceptable;
   _this.onItemAccept = json.onItemAccept || function(srcid, targid) {};
@@ -154,7 +156,7 @@ __init__ : function(json) {
   _this.hwndTree.appendChild(node.hwnd);
   _this.hwnd.appendChild(_this.hwndTree);
         
-  _this.hwnd.className = 'q-simpletree';
+  _this.hwnd.className = 'q-simpletree ' + json.wstyle;
   _this.hwndMoveLine.className = 'moveline';
   _this.hwndMoveLine.style.display = 'none';
     //! 渲染树
