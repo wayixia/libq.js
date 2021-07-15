@@ -6,8 +6,6 @@
   top: 0px;
   bottom: 0px;
   right: 0px;
-  line-height: 29px;
-  font-size: 15px;
   padding: 9px 0;
   overflow:auto;
 }
