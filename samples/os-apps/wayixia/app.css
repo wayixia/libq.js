@@ -1,0 +1,386 @@
+
+.q-list-ctrl {
+  /*font-family: arial, 'helvetica neue', sans-serif;*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  hasLayout: -1;
+  overflow:auto;
+  padding-bottom: 15px;
+  background: transparent;
+  border: 0px solid #CCC;
+}
+
+.q-list-ctrl .q-box {
+  position: relative;
+  padding: 0;
+  margin: 5;
+  float: left;
+  height: 90px;
+  width: 80px;
+  opacity: 1;
+  text-align: center;
+  overflow: hidden;
+  margin:15px 0px 0 15px;
+  background:#FFF;
+  text-align:center;
+  border:1px solid transparent;
+  /*
+  box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -moz-box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -webkit-box-shadow:0 1px 5px rgba(0,0,0,.3) 
+  */
+}
+
+.q-list-ctrl .q-box .q-box-title {
+  position:absolute;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+}
+
+.q-list-ctrl .q-box:hover
+{ 
+  background-color: #EEE;
+  border: 1px solid #CCC;
+}
+
+.q-list-ctrl .q-box .wayixia-image {
+  border: none;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.q-list-ctrl .q-box .wayixia-image .image {
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.q-list-ctrl .q-box .wayixia-image a {
+  text-align: center;
+}
+
+
+.q-list-ctrl .q-box.mouseout, .select-mask {display:none;}
+
+.q-list-ctrl .q-box.mouseover .select-mask {
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.5;
+  background: #FFF url(asserts/images/hover-picture.png) right top no-repeat;
+}
+
+.q-list-ctrl .q-box.mouseselected .select-mask 
+{
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.8;
+  background: #FFF  url(asserts/images/selected-picture.png) right top no-repeat; 
+}
+
+.q-list-ctrl .q-box.folder {
+
+  background-image: url(asserts/images/folder.png);
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.wndx-container {
+  position: relative;
+  width: 500px; 
+  height: 300px;
+}
+
+.q-frame {
+  background: #FFF;
+  overflow: auto;
+  position:absolute;
+  top: 0px;
+  bottom: 0;
+}
+
+.q-frame.q-frame-left {
+  position:absolute;
+  left: 0;
+  width: 160px;
+}
+
+.q-frame.q-frame-right {
+  position:absolute;
+  left: 160px;
+  right: 0;
+  background-color: #CCC;
+}
+
+.menu-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 30px;
+}
+
+.menu-bar a {
+  
+}
+
+.wnd-x-editor {
+}
+
+.wnd-x-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  visibility: hidden;
+}
+
+
+/*
+.q-tabs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right:0;
+  bottom:0;
+  text-align: left;
+}
+
+.q-tabs h3 {
+  font-weight: normal;
+  margin: 0;
+  padding:0;
+  height: 30px;
+  background: #f7f8fd;
+}
+
+.q-tabs h3 a {
+  display:inline-block;
+  margin:0;
+  padding: 0;
+  height: 30px;
+  line-height: 30px;
+  color: #aaa;
+  text-align:center;
+  text-decoration: none;
+}
+
+.q-tabs h3 a:hover {
+}
+
+.q-tabs h3 a.q-selected {
+  background: #FFF;
+  color: #333;
+}
+
+.q-tabs .q-panel {
+  background: #FFF;
+  position: absolute;
+  left: 0;
+  top: 30px;
+  right: 0;
+  bottom: 0;
+  line-height: 22px;
+}
+*/
+
+
+.clstab {
+  margin-bottom: 10px;
+  background: url(images/tab-line.gif) bottom repeat-x;
+  float: left;
+  width: 100%;
+}
+ 
+* html .clstab {
+  width: 100%;
+}
+ 
+.clstab br, .boxed br, #searchform br
+{
+  clear: both;
+}
+ 
+.clstab h2 {
+  background: none;
+  min-height: 15px;
+  margin-bottom: 0;
+}
+.clstab ul {
+  margin: 0.5em 0 0 0;
+  padding: 0 0 0 1em;
+  list-style: none;
+  font-size: 12px;
+}
+.clstab li {
+  margin: 0 1px 0 0;
+  padding: 0 5px 0 0;
+  background: url(images/tab-back.png) 100% -100px;
+  float: left;
+  border-bottom: 1px solid #bbb;
+}
+.clstab li.selected
+{
+  border-bottom: 1px solid #fff;
+  background: url(images/tab-back.png) 100% 0;
+}
+.clstab li a, .clstab li a:visited, .clstab li span
+{
+  display: block;
+  float: left;
+  padding: 5px 11px 5px 16px;
+  text-align: center;
+  white-space: nowrap;
+  background: url(images/tab-back.png) 0 -100px;
+  text-decoration: none;
+  min-height: 17px; /* fixes FX/Mac issue */
+  color: #322F29;
+}
+ 
+.clstab li.selected a, .clstab li.selected span
+{
+  background: url(images/tab-back.png) 0 0;
+}
+ 
+.clstab li.sub-comments a, .clstab li.sub-comments a:visited, .clstab li.sub-comments span,
+{
+  background-image: url(images/tab-back-comment.png);
+  padding-left: 28px;
+}
+ 
+.clstab li span {
+  color: #000;
+}
+ 
+ 
+.clstab li img {
+  vertical-align: middle;
+}
+.clstab li:hover {
+  background-position: 100% -200px;
+}
+ 
+.clstab li:hover a, .extra-nav li:hover a
+{
+  background-position: 0 -200px;
+}
+ 
+.clstab li.selected:hover, .extra-nav li.selected:hover
+{
+  background-position: 100% 0;
+}
+ 
+.clstab li.selected:hover a, .extra-nav li.selected:hover a
+{
+  background-position: 0 0;
+  text-decoration: underline;
+}
+
+
+.q-contextmenu.wayixia-menu {
+  border-width: 0;
+  box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -moz-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -webkit-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  min-width: 170px;
+  background-image: none; 
+  background-repeat: repeat-y;
+  background-position: left top;
+  background-color: #FFF;
+  z-index: 910000;
+}
+
+.q-contextmenu.wayixia-menu .q-item {
+  height: 30px;
+  line-height: 30px;
+}
+
+.q-contextmenu.wayixia-menu .q-item .q-item-icon {
+  width: 15px;
+}
+
+.q-contextmenu.wayixia-menu .q-item.q-seperator,
+.q-contextmenu.wayixia-menu .q-item.q-seperator:hover
+{
+  height: 15px;
+  background-color: none;
+}
+
+.q-contextmenu.wayixia-menu .q-item-seperator .q-line {
+  left: 5px;
+  background-color: #CCC;
+}
+
+.q-contextmenu.wayixia-menu .q-item .q-item-title {
+  line-height: 30px;
+  font-size: 14px;
+}
+
+.q-contextmenu.wayixia-menu .q-item:hover, 
+.q-contextmenu.wayixia-menu .q-item.q-active 
+{
+  background-color: blue;
+}
+
+.q-select.wayixia-menu {
+  height: 42px;
+  min-width: 50px;
+  font-size: 15px;
+  font-family: 'Segoe UI', Arial, 'Microsoft Yahei', Simsun, sans-serif;
+  text-indent: 15px;
+  background: transparent;
+  border-color: transparent;
+}
+
+.q-select.wayixia-menu {
+  background: transparent url(images/view-type.png) left center no-repeat;
+}
+
+.q-select.wayixia-menu.checked {
+  background: transparent url(images/view-type.png) left center no-repeat;
+}
+
+
+
+
+.swfupload {
+  float: left;
+  margin: 4px;
+}
+
+.progressWrapper {
+}
+
+.q-alert-content {
+  padding: 20px;
+  padding-left: 60px;
+  padding-right: 40px;
+  background-repeat: no-repeat;
+  background-position: 20px 23px;
+
+}
+
+.q-alert-content.q-alert-info {
+  background-image: url(images/sprite_warn.png);
+}
+
+.q-alert-content.q-alert-error {
+  background-image: url(images/sprite_error.png);
+}
+
+.q-alert-content.q-alert-ok {
+  background-image: url(images/sprite_ok.png);
+}
