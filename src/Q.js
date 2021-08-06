@@ -513,6 +513,43 @@ var subclass = Q.extend({
     header.appendChild(s);
   }
 
+  /** 加载js模块
+   *
+   * @function Q.loadCss
+   * @param src {string} - javascript模块地址
+   * @param oncomplete(bool) {function} - 加载完成调用， ok 为true 加载成功，否则失败
+   */
+  Q.loadCss = function(src, oncomplete) {
+    var header = document.getElementsByTagName("head")[0];
+    //<link type="text/css" rel="stylesheet" href="../ui.css" />
+    var s = document.createElement("link");  
+    s.type = "text/css";
+    s.rel = "stylesheet";
+    s.href = src + '?' + new Date().getTime(); //Math.floor(+new Date/1E7);
+    // 对于IE浏览器，使用readystatechange事件判断是否载入成功  
+    // 对于其他浏览器，使用onload事件判断载入是否成功  
+    s.done = false;
+    s.onload = s.onreadystatechange = (function() {
+      if( !this.done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete"))
+      {
+        this.done = true;
+        oncomplete(true);
+        this.onload = this.onreadystatechange = null; // Handle memory leak in IE
+        //header.removeChild( this );
+      }
+    });
+    
+    s.onerror = (function() { 
+      // Handle memory leak in IE
+      this.onload = this.onreadystatechange = null;
+      //header.removeChild(this); 
+      oncomplete(false);
+    });
+        
+    // 获取head结点，并将<script>插入到其中  
+    header.appendChild(s);
+  }
+
   /** 获取浏览器客户端版本信息 
    *
    * @function Q.agent

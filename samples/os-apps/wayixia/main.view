@@ -1,0 +1,62 @@
+<!-- demo components -->
+<style>
+
+</style>
+<template>
+<div id="wnd-x-icons" style="position:absolute; left:0; top:0;right:0;bottom:0;">
+  <div class="q-list-ctrl" qid="abc">
+      <!-- template -->
+      <div class="q-box folder" qid="wnd-x-icons-item">
+        <div class="q-box-title" qid="title">title</div>
+        <!--div class="select-mask"></div-->
+      </div>
+      <div id="dummy-div" style="height: 0px;"></div>
+  </div>
+</div>
+
+</template>
+<!-- options end -->
+<script>
+Q.Window.extend({
+  app: null,
+  __init__: function( json ) {
+    this.app = json.app;
+    json.content = '{#template}';
+    json.wstyle = "simpleos";
+    json.title = "wayixia";
+
+    json.on_create = Q.bind_handler(this, this.on_create);
+    json.on_close = Q.bind_handler(this, this.on_close);
+    Q.Window.prototype.__init__.call(this, json);
+  },
+  on_create: function() {
+    var _this = this; 
+    // item template
+    var list_ctrl = this.item("abc");
+    // init action
+    _this.app.service.modules_list(function(code, data) {
+      var item_tpl = _this.item("wnd-x-icons-item");
+      item_tpl.style.display = 'none';
+      for(var i=0; i<data.length; i++) {
+        var c = item_tpl.cloneNode(true);
+        c.style.display = '';
+        var e = qid(c, "title");
+        e.innerHTML = data[i].menu_name;
+        c.onclick = (function(btn, app, d) { return function(evt) {
+          if(btn.clickonce) {
+            btn.clickonce = false;
+            clearTimeout(btn.t);
+            app.open_item(d);
+          } else {
+            btn.clickonce = true;
+            btn.t = setTimeout((function(b) { return function() { b.clickonce = false; }})(btn), 300);
+          }
+          return false;
+        }})(c, _this.app, data[i]);
+        list_ctrl.appendChild(c);
+      }
+    });
+  },
+  on_close: function() { delete this.main_wnd; this.main_wnd=0; _this.__exit__();} 
+});
+</script>

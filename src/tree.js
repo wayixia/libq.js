@@ -216,13 +216,15 @@ setItemSelected : function(nItem) {
   
   var node = _this.getItemNode(nItem);
   if(node) {
-    node.link.style.background = '#C2CFF1'; 
+    Q.addClass( node.hwnd, 'q-selected')
+    //node.link.style.background = '#C2CFF1'; 
     _this.selected = nItem; 
   }
   
   var selectedNode = _this.getItemNode(selectedItem);
   if(selectedNode) {
-    selectedNode.link.style.background = '';
+    Q.removeClass( selectedNode.hwnd, 'q-selected')
+    //selectedNode.link.style.background = '';
   }  
 },
 

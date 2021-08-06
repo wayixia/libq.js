@@ -242,16 +242,16 @@ run :function (app) {
       
       Q.printf("load from file and create app ok");
       app.klass = app_class;
-      // load ui
-      //app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
+      // load css 
+      Q.loadCss( app.ui, function(ok) {
         // init app instance
-        Q.printf("load ui -> " + (ok?"ok":"failed"));
+        Q.printf("load ui csss -> " + (ok?"ok":"failed"));
         try {
           _this.create_instance(app); 
         } catch(e) {
           _this.run_error(app, err + "<br>" + e.description);
         }
-      //}});
+      });
     })
   };
 }

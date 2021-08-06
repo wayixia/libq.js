@@ -2718,7 +2718,7 @@ function $CreateMaskLayer(wndNode, extra_style) {
   wndNode.layer_mask.style.display = 'none';
   wndNode.layer_mask.onmousedown = Q.bind_handler(wndNode, function(evt) { 
     evt = evt || window.event;
-    $BindWindowMessage(this, MESSAGE.ACTIVATE)();
+    $BindWindowMessage(this, MESSAGE.ACTIVATE, true )();
     // 取消事件冒泡，防止ActivateWindow被调用到
     evt.cancelBubble = true;
     return false; 
@@ -2728,10 +2728,12 @@ function $CreateMaskLayer(wndNode, extra_style) {
 
 function $ShowWindow(wndNode, visible)  {
   if( visible ){
-    wndNode.style.display = '';
-    $BindWindowMessage(wndNode, MESSAGE.ACTIVATE)();
+    wndNode.style.visibility = 'visible';
+    //wndNode.style.display = '';
+    $BindWindowMessage(wndNode, MESSAGE.ACTIVATE, true)();
   } else {
-    wndNode.style.display = 'none';
+    wndNode.style.visibility = 'hidden';
+    //wndNode.style.display = 'none';
     $MaskWindow(wndNode, false);
   }
 }
@@ -2756,8 +2758,8 @@ function $ActivateWindow(wndNode, zindex) {
 function $SetWindowActive(wndNode, IsActive) {
   var active_child = wndNode;
   while(active_child) {
-    if(active_child.on_activate)
-      active_child.on_activate(IsActive);
+    //if(active_child.on_activate)
+    //  active_child.on_activate(IsActive);
     if(IsActive) {
       Q.removeClass(active_child, CONST.inactive_title);
     } else {
@@ -2888,8 +2890,9 @@ function $ResizeTo(wndNode, width, height) {
   wndNode.style.width = width + 'px';
   wndNode.style.height = height + 'px';
   
-  if(typeof(wndNode.on_size) == 'function') 
-    wndNode.on_size(width, height);
+  $BindWindowMessage(wndNode, MESSAGE.SIZE)( width, height );
+  //if(typeof(wndNode.on_size) == 'function') 
+  //  wndNode.on_size(width, height);
 }
 
 function $GetWindowClientHeight() {
@@ -2992,7 +2995,8 @@ var MESSAGE = {
   MAX   : 2,
   CLOSE : 3,
   ACTIVATE : 4,
-  MOVE : 5
+  MOVE : 5,
+  SIZE : 6
 }
 
 function $DefaultWindowProc(hwnd, msg, data) {
@@ -3168,8 +3172,9 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
   hwnd.app.add_window(hwnd); 
 
   // dom attributes
-  hwnd.className = 'q-window';
-  hwnd.style.display = 'none';
+  hwnd.className = 'q-window q-window-border';
+  //hwnd.style.display = 'none';
+  hwnd.style.visibility = 'hidden';
   hwnd.style.zIndex = __GLOBALS.Z_INDEX;
 
   if(isNaN(pos_top)) 
@@ -3248,10 +3253,13 @@ function $CreateWindow(parent_wnd, title, wstyle, pos_left, pos_top, width, heig
 function $DestroyWindow(wndNode) {
   // 清除子窗口
   var child_wnds = $GetWnds(wndNode);
-  child_wnds.each(function(wnd) {
-    $BindWindowMessage(wnd, MESSAGE.CLOSE)();
-    return true;
-  });
+  if( child_wnds ) {
+    child_wnds.each(function(wnd) {
+      $BindWindowMessage(wnd, MESSAGE.CLOSE)();
+      return true;
+    });
+  }
+
 
   // 清除弹出的子窗口
   var parent_container = $GetContainerWindow(wndNode);
@@ -3290,6 +3298,13 @@ function $MakeResizable(obj) {
   Q.addEvent(document, 'mouseup',   mouseup);
   Q.addEvent(document, 'mousemove', mousemove);
 
+  if( !__GLOBALS.wndsize ) {
+    __GLOBALS.wndsize = document.createElement('div');
+    __GLOBALS.wndsize.style.cssText = "border-color: #000; background-color: transparent; z-index: 1000000000; position: absolute; left:0; right:0; right:0; bottom:0; display: none;";
+    __GLOBALS.wndsize.className = 'q-window-border';
+    document.body.appendChild( __GLOBALS.wndsize);
+  }
+
   function mousedown(evt){
     evt = evt || window.event;
     var status = $GetWindowStatus(obj);
@@ -3298,6 +3313,13 @@ function $MakeResizable(obj) {
     {
       Q.printf('mousedown in' + status);
       $SetWindowStatus(obj, CONST.SIZE_RESIZING);
+      __GLOBALS.wndsize.style.left = obj.style.left;
+      __GLOBALS.wndsize.style.top = obj.style.top;
+      __GLOBALS.wndsize.style.width = obj.style.width;
+      __GLOBALS.wndsize.style.height = obj.style.height;
+      __GLOBALS.wndsize.style.display = '';
+      __GLOBALS.wndsize.style.cursor = obj.style.cursor;
+
       if(obj.setCapture)
         obj.setCapture();
       else if(window.captureEvents)
@@ -3312,6 +3334,10 @@ function $MakeResizable(obj) {
     {
       Q.printf('mouseup in '+status);
       $SetWindowStatus(obj, CONST.SIZE_NORMAL);
+
+      $ResizeTo(obj, __GLOBALS.wndsize.offsetWidth, __GLOBALS.wndsize.offsetHeight);
+      __GLOBALS.wndsize.style.display = 'none';
+
       if(obj.releaseCapture)
         obj.releaseCapture();
       else if(window.releaseEvents)
@@ -3338,7 +3364,8 @@ function $MakeResizable(obj) {
       if(cur.indexOf('n')>-1) t+=dy;
       else if(cur.indexOf('s')>-1) b+=dy;
 
-      var s = obj.style;
+      //var s = obj.style;
+      var s = __GLOBALS.wndsize.style;
       if(r-l > __GLOBALS.MIN_WIDTH){
         s.left=l+'px';
         s.width = (r-l) +'px';
@@ -3349,7 +3376,9 @@ function $MakeResizable(obj) {
         s.height= (b-t)+'px';
       }
 
-      $ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
+      //__GLOBALS.wndsize.style.width = obj.offsetWidth + 'px';
+      //__GLOBALS.wndsize.style.height = obj.offsetHeight + 'px';
+      //$ResizeTo(obj, obj.offsetWidth, obj.offsetHeight);
       ex+=dx;
       ey+=dy;
     } else if( srcElement == obj ) {
@@ -3384,14 +3413,20 @@ function $MakeResizable(obj) {
 }
 
 
+/*
 // 用于获取指定q:id属性的元素
 function qid(p, q_id) {
+  if( p.querySelector )
+  {
+    return p.querySelector( '[qid="'+q_id+'"]' );
+  }
+
   function find_item(e) {
     var r = null;
     for (var i = 0; i < e.childNodes.length; i ++) {
       var c = e.childNodes[i];
       if(c.nodeType === Q.ELEMENT_NODE) {
-        if(c.getAttribute("q:id") == q_id) {
+        if(c.getAttribute("qid") == q_id) {
           r = c;
           break;
         } else {
@@ -3404,6 +3439,7 @@ function qid(p, q_id) {
   }
   return find_item(p);
 }
+*/
 
 /** 窗口类封装, 创建窗口，并返回一个窗口操作类
  *
@@ -3437,11 +3473,11 @@ __init__ : function(config) {
     parent_wnd = config.parent.wnd() || $GetDesktopWindow();
   this.hwnd = $CreateWindow(parent_wnd, title, config.wstyle, left, top, width, height, config.app);
   this.setContent(config.content);
-  this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
-  this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
-  this.hwnd.on_move_begin = Q.bind_handler(this, config.on_move_begin || function(x,y) {});
-  this.hwnd.on_move     = Q.bind_handler(this, config.on_move || function(x, y) {});
-  this.hwnd.on_move_end = Q.bind_handler(this, config.on_move_end || function(x, y) {});
+  //this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
+  //this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
+  //this.hwnd.on_move_begin = Q.bind_handler(this, config.on_move_begin || function(x,y) {});
+  //this.hwnd.on_move     = Q.bind_handler(this, config.on_move || function(x, y) {});
+  //this.hwnd.on_move_end = Q.bind_handler(this, config.on_move_end || function(x, y) {});
   this.hwnd.on_close    = Q.bind_handler(this, config.on_close || function() { return true; });
   Q.bind_handler(this, config.on_create || function() {})();
 },
@@ -3532,6 +3568,9 @@ removeStyle: function(ws) {
  */
 show : function(isVisible) { 
   $ShowWindow(this.hwnd, isVisible) 
+  if( isVisible ) {
+    this.adjust();
+  }
 },
 
 /** 窗口居中 
@@ -3547,7 +3586,7 @@ center : function() {
  * @memberof Q.Window.prototype
  */
 activate : function() {
-  $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE)(); 
+  $BindWindowMessage(this.hwnd, MESSAGE.ACTIVATE, true)(); 
 },
 
 /** 根据窗口内容自动调整窗口大小
@@ -3564,8 +3603,27 @@ adjust : function() {
  * @return {dom} 网页元素
  */
 item: function(q_id) {
-  return qid($GetClient(this.hwnd), q_id); 
-}
+  //return qid($GetClient(this.hwnd), q_id); 
+  var b = $GetClient(this.hwnd);
+  if( b.querySelector )
+  {
+    return b.querySelector( '[qid="'+q_id+'"]' );
+  }
+
+  return null;
+},
+
+items: function( q_id ) {
+  var b = $GetClient(this.hwnd);
+  if( b.querySelectorAll )
+  {
+    return b.querySelectorAll( '[qid="'+q_id+'"]' );
+  }
+
+  return [];
+},
+
+
 
 });
 
@@ -4021,13 +4079,6 @@ Q.CheckBox = Q.extend({
   }
 });
 
-// 当有true返回是，说明结束循环
-var BindAsEventHandler = function(object, func) {
-  return function(event) {
-    return func.call(object, (event || window.event));
-  };
-};
- 
 /** 数据管理类
  * @constructor
  * @param {Object} config - 构造参数
@@ -4044,7 +4095,7 @@ __init__ : function(config) {
   this.records = new Q.HashMap;
   if(config.data) {
     this.fromproxy = false;
-    this.appendData(config.data);
+    this.append_data(config.data);
   }
   
   if(config.proxy) { 
@@ -4067,7 +4118,7 @@ clear : function() {
  * @memberof Q.Store.prototype
  * @param {Object[]} arr - 数据集
  */
-appendData : function(arr) {
+append_data : function(arr) {
   for(var i=0; i<arr.length; i++) {
     this.push(arr[i]);
   }
@@ -4085,7 +4136,7 @@ loadRemote : function(page, pagesize, callback) {
       var s = Q.json_decode(xmlhttp.responseText);
       if(typeof callback == 'function' && ( s.data instanceof Array ) && ( s.data.length > 0 ) ) { 
         var start = _this.records.index;
-        _this.appendData( s.data );
+        _this.append_data( s.data );
         callback( start, s.data.length );
       }
     }
@@ -4157,7 +4208,7 @@ item : function(index) {
 
 });
 
-var __TH = Q.extend({
+Q.TableColumn = Q.extend({
   hwnd : null,
   hwnd_moveline : null,
   _width : 0,
@@ -4183,22 +4234,23 @@ var __TH = Q.extend({
     this.hwnd_moveline.style.display = 'none';
     
     //事件对象(用于绑定移除事件)
-    this._fMove = BindAsEventHandler(this, this.Move);
-    this._fStop = BindAsEventHandler(this, this.Stop);
-    Q.addEvent(this.hwnd, "mousedown", BindAsEventHandler(this, this.Start));
-    Q.addEvent(this.hwnd, "mousemove", BindAsEventHandler(this, this.Move));
+    this._fMove = Q.bind_handler( this, this.Move);
+    this._fStop = Q.bind_handler(this, this.Stop);
+    Q.addEvent(this.hwnd, "mousedown", Q.bind_handler(this, this.Start));
+    Q.addEvent(this.hwnd, "mousemove", Q.bind_handler(this, this.Move));
   },
   
   Start : function(oEvent) {
-    var pos = Q.absPosition(this.hwnd);
+    var pos = Q.absPositionEx(this.hwnd);
     
     if(this.hwnd.style.cursor) {
       this._isResizable = true;
       this._dx = pos.left + pos.width - oEvent.clientX;
       // 显示和定位法线
+      var parent = Q.absPosition(this.hwnd_moveline.parentNode);
       this.hwnd_moveline.style.display = '';
-      this.hwnd_moveline.style.left = (oEvent.clientX) + 'px';
-      this.hwnd_moveline.style.top = (pos.top) + 'px';
+      this.hwnd_moveline.style.left = (oEvent.clientX-parent.left ) + 'px';
+      //this.hwnd_moveline.style.top = (pos.top) + 'px';
       //this.div_moveline.style.height = (this.hwnd.offsetHeight - 1 - this.hwnd_title.offsetHeight) + 'px';
     }
     
@@ -4223,18 +4275,18 @@ var __TH = Q.extend({
   
   //拖动
   Move : function(oEvent) {
-    //alert("mousemove")
     var scrollinfo = Q.scrollInfo();
     if(this._isDragable ) {
       // on drag 
     } else if(this._isResizable) {
+      var parent = Q.absPositionEx(this.hwnd_moveline.parentNode);
       if( this._left > oEvent.clientX ) {
-        this.hwnd_moveline.style.left = this._left + 'px';
+        this.hwnd_moveline.style.left = (this._left-parent.left) + 'px';
         return;
       }
-      this.hwnd_moveline.style.left = oEvent.clientX + 'px';
+      this.hwnd_moveline.style.left = (oEvent.clientX-parent.left) + 'px';
     } else {
-      var pos = Q.absPosition(this.hwnd);
+      var pos = Q.absPositionEx(this.hwnd);
       this._left = pos.left;
       this._right = pos.left + pos.width;
       var x = oEvent.clientX - scrollinfo.l;
@@ -4254,8 +4306,12 @@ var __TH = Q.extend({
   Stop : function(oEvent) {
     this.hwnd_moveline.style.display = "none";
     if(this._isResizable) {
-      this._width = oEvent.clientX - this._left + this._dx;
-      this.hwnd.firstChild.style.width = (this._width) + 'px';
+      var div = this.hwnd.firstChild;
+      this._width = oEvent.clientX - this._left + this._dx; // - div.style.borderLeftWidth - div.style.borderRightWidth;
+      Q.printf( "column width " + this._width );
+      if( this.hwnd.firstChild.style ) {
+        this.hwnd.firstChild.style.width = (this._width) + 'px';
+      }
     }
     
     if(this._isDragable) {}
@@ -4301,6 +4357,9 @@ var SELECT_MODE_SHIFT  = 2;
 
 
 Q.Table = Q.extend({
+wndOwner: null,
+wndOwnerProc: null,
+wndOwnerOldProc: null,
 wndParent : null,
 wnd : null,
 wndTitleBar : null,
@@ -4316,10 +4375,13 @@ columns: [],
 evtListener : {},
 store : null,
 selected_item: null,
+oldframewidth: 0,
+
 __init__ : function(json) {
   var _this = this;
   json = json || {};
   _this.item_height = json.item_height || 30;
+  _this.wndOwner = json.wnd;
   _this.title = json.title;
   _this.store = json.store;
   _this.columns = json.columns || [];
@@ -4346,8 +4408,58 @@ __init__ : function(json) {
   _this.wndParent = Q.$(json.id);
   _this.initview(json);
   _this.on_viewstyle_changed();
-  //_this.render();
-  _this.autosize();
+  _this.render();
+  //_this.autosize();
+
+  if( _this.wndOwner )
+  {
+    this.wndOwnerOldProc = _this.wndOwner.setWindowProc( ( function( ctx ) {
+      return function( hwnd, msgid, json ) { 
+        return ctx.window_proc( msgid, json);
+      }
+    })(this) );
+  }
+  else
+  {
+    Q.addEvent(window, 'resize', function(evt) {
+      _this.autosize();
+    } );
+  }
+
+
+//  // 开始观察
+  //this.io = new IntersectionObserver(([change]) => {
+    //console.log(change.isVisible) // 被覆盖就是false，反之true
+    //_this.isVisible = change.isVisible;
+  //}, {
+    //threshold: [0, 1.0],
+    //delay: 1000, 
+    //trackVisibility: true,
+  //} ).observe( this.wnd);
+
+
+  // 开始观察
+  //this.io.observe(this.wnd);
+
+  // 停止观察
+  //this.io.unobserve(element);
+
+  // 关闭观察器
+  //this.io.disconnect();
+},
+
+/** dialog procedure
+ * @memberof Q.Dialog.prototype
+ * @private
+ */
+window_proc : function(msgid, json) {
+  switch(msgid) {
+  case MESSAGE.SIZE:
+    this.autosize();
+    break;
+  }
+
+  return this.wndOwnerOldProc(this.wndOwner.hwnd, msgid, json);
 },
 
 /**
@@ -4367,13 +4479,13 @@ initview : function(json) {
   
   //!移动法线
   _this.wndMoveLine = document.createElement('DIV');
-  document.body.appendChild(_this.wndMoveLine);
 
   //! 组合主框架
   _this.wnd.appendChild(_this.wndTitleBar);
   _this.wnd.appendChild(_this.wndFrame);
     _this.wndFrame.appendChild(_this.wndGroupHeader);
     _this.wndFrame.appendChild(_this.wndGroupBody);
+    _this.wndFrame.appendChild(_this.wndMoveLine);
   _this.wnd.appendChild(_this.wndToolbar);
 
   //! 设置UI样式
@@ -4415,7 +4527,7 @@ initview : function(json) {
   }
 
   // 加载jtable的列
-  _this.load_columns();
+  _this._load_columns();
 
   // 添加事件
   _this.wndGroupHeader.onselectstart = function(evt) {return false;};
@@ -4450,6 +4562,7 @@ on_viewstyle_changed: function() {
       this.render();
     }
   }
+  this.autosize();
 },
   
 /** 更新控件视图
@@ -4457,19 +4570,39 @@ on_viewstyle_changed: function() {
  * @memberof Q.Table.prototype
  */
 autosize : function() {
+  Q.printf("table auto size");
   var _this = this;
+
+  //if( !_this.isVisible )
+  //  return;
+
   var frame_width, frame_height;
   var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
   var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);
+
+  if( fullHeight == 0 || fullWidth == 0)
+    return;
+  //var currentstyle = _this.wndParent.currentStyle;
   var currentstyle = _this.wnd.currentStyle;
   frame_height = fullHeight 
     - _this.wndTitleBar.offsetHeight 
     - _this.wndToolbar.offsetHeight
-    //- parseInt(currentstyle['borderTopWidth'],10)
-    //- parseInt(currentstyle['borderBottomWidth'],10)
+    - parseInt(currentstyle['borderTopWidth'],10)
+    - parseInt(currentstyle['borderBottomWidth'],10)
     ;
   _this.wndFrame.style.height = frame_height+'px';
-  _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
+  if( Q.hasClass( this.wnd, "q-attr-grid") ) {
+    _this.wndGroupBody.style.height = (frame_height)+'px';
+    _this.wndGroupBody.style.marginTop = 0;
+  } else {
+    _this.wndGroupBody.style.marginTop = _this.wndGroupHeader.offsetHeight + 'px';
+    _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
+    _this._column_autosize();
+  }
+ 
+  // Save old frame width
+  _this.oldframewidth = _this.wndFrame.offsetWidth;
+  //_this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
   //_this.wndGroupHeader.style.width = _this.wndGroupBody.scrollWidth + 'px';
 },  
 
@@ -4632,8 +4765,8 @@ clear : function() {
  * @param data {Object[]} - 数据记录集
  */
 
-appendData : function(data) {
-  this.store.appendData(data);
+append_data : function(data) {
+  this.store.append_data(data);
 },
 
 render : function() {
@@ -4650,12 +4783,22 @@ render : function() {
   }
 },
 
-load_columns : function() {
+_load_columns : function() {
+  var totalwidth = 0;
+  // Push last fix column with end
+  this.columns.push( { title: "", width: 17, fixed: true, renderer: function(r) { return ''; }, islast: true } );
   for(var i=0; i < this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
+    totalwidth += column.width;
+    if( i == ( this.columns.length - 1 ) )
+    {
+      column.fixed = true;
+    }
     this.insert_column(i, column);
   }
+
+  this.oldframewidth = totalwidth;
 },
 
 insert_column : function(arrIndex, json) {
@@ -4663,16 +4806,19 @@ insert_column : function(arrIndex, json) {
   var TD = _this.wndTableHeaderRow.insertCell(-1);
   
   json.isHidden = !!json.isHidden;
+  var className = json.islast ? 'q-column-header-last' : '';
+  
   TD.style.display = json.isHidden ? 'none' : '';
   TD.setAttribute('_index', arrIndex);
-  TD.innerHTML = '<DIV align="'+json.align+'" class="q-column-header" style="width:'+json.width+'px;"><a HideFocus>'
+  TD.innerHTML = '<DIV align="'+json.align+'" class="q-column-header '+className+'" style="width:'+json.width+'px;"><a HideFocus>'
           +json.title+'</a></DIV>';
   
   TD.firstChild.onclick = function() { _this._column_click(this.parentNode.cellIndex); };
 
   //!固定宽度
-  if(!json.fixed) {
-    new __TH(TD, {moveline: _this.wndMoveLine, 
+  if( !json.fixed ) {
+    new Q.TableColumn( TD, {
+      moveline: _this.wndMoveLine, 
       onStart: function(evt, handler) { 
         _this._column_MouseDown(evt, handler); 
       }, 
@@ -4718,14 +4864,114 @@ _column_MouseUp : function(evt, handler) {
   var _this = this;
   var TD = handler.hwnd;
   if(handler._isResizable) {
-    var nCol = TD.cellIndex;
-    _this.items_each( function(item) { 
-      var div = item.cells[nCol].childNodes[0];
-      div.style.width = handler._width+'px'; 
-    });
-    _this.autosize();
+    _this._column_setwidth( TD.cellIndex, handler._width );
     _this._sync_scroll();
   }
+},
+
+_column_dynamic : function( exclude_col ) {
+  var cols = [];
+  var fixedwidth = 0;
+  for( var i = 0; i < this.columns.length; i++ ) {
+    if( ( i != exclude_col ) && ( !this.columns[i].fixed ) ) {
+      cols.push( i );
+    } else {
+      fixedwidth += this.columns[i].width+1; // border-width
+    }
+  }
+  return { cols: cols, fixedwidth: fixedwidth };
+},
+
+_column_setwidth: function( nCol, width ) {
+  var fullwidth = this.wndFrame.offsetWidth;
+  var restwidth = width - this.columns[nCol].width;
+  var dx = 0;
+
+  // get dynamic cols
+  var dynamic = this._column_dynamic( nCol );
+  var cols = dynamic.cols;
+  var fixedwidth = dynamic.fixedwidth;
+  var restwidth = width - this.columns[nCol].width; 
+
+  // calculate dx
+  if( cols.length > 1 )
+  {
+    dx = Math.floor( restwidth/cols.length );
+  }
+
+  var dump = { fullwidth: fullwidth, restwidth:restwidth, dx:dx, cols: cols };
+  console.log( dump );
+
+
+
+  this.columns[nCol].width = width;
+
+  for( var i = 0; i < cols.length; i++ )
+  {
+    var index = cols[i];
+    if( i == ( cols.length - 1 ) ) {
+      this.columns[index].width -= restwidth;  // last calculate column
+      restwidth -= restwidth;
+    } else {
+      this.columns[index].width -= dx;  // border-right-width
+      restwidth -= dx;
+    }
+    console.log( restwidth );
+    var div = this.wndTableHeaderRow.cells[index].firstChild;
+    div.style.width = this.columns[index].width + 'px';
+  }
+
+
+  console.log( this.columns );
+
+  var _this = this;
+  cols.push(nCol);
+  _this.items_each( function(item) {
+    for( var i = 0; i < cols.length; i++ )
+    {
+      var index = cols[i];
+      var div = item.cells[index].childNodes[0];
+      div.style.width = _this.columns[index].width+'px'; 
+    }
+  });
+},
+
+_column_autosize: function() {
+  var fullwidth = this.wndFrame.offsetWidth;
+  Q.printf( "current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
+
+  // get dynamic cols
+  var dynamic = this._column_dynamic( -1 );
+  var cols = dynamic.cols;
+  var fixedwidth = dynamic.fixedwidth;
+  var restwidth = fullwidth-fixedwidth; 
+
+  for( var i = 0; i < cols.length; i++ )
+  {
+    var index = cols[i];
+
+    var oldwidth = this.columns[index].width;
+    var f = oldwidth / this.oldframewidth;
+    if( i == ( cols.length - 1 ) ) {
+      this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
+    } else {
+      this.columns[index].width = Math.floor( f * fullwidth );
+      restwidth -= this.columns[index].width+1; // with border-right-width
+    }
+    
+    var div = this.wndTableHeaderRow.cells[index].firstChild;
+    div.style.width = (this.columns[index].width ) + 'px';
+  }
+
+  var _this = this;
+  this.items_each( function(item) {
+    for( var i = 0; i < cols.length; i++ )
+    {
+      var index = cols[i];
+      var div = item.cells[index].childNodes[0];
+      div.style.width = _this.columns[index].width+'px'; 
+    }
+  });
 },
 
 //! 列表头单击事件
@@ -4790,8 +5036,8 @@ _items_ondblclick : function(item) {
 
 items_each : function(callback) {
   var _this = this;
-  for(var i=0; i < _this.wndTableData.items.length; i++) {
-    callback(_this.wndTableData.items[i]);
+  for(var i=0; i < _this.wndTableData.rows.length; i++) {
+    callback(_this.wndTableData.rows[i]);
   }
 },
 
@@ -4861,7 +5107,9 @@ addToolButton : function( json ) {
   
 },
 
-sync_scroll : function() {}
+sync_scroll : function() {
+  this.wndGroupHeader.scrollLeft = this.wndGroupBody.scrollLeft;
+}
 }); 
 
 
@@ -5001,6 +5249,7 @@ window_list_bar: null,
 task_bar: null,
 start_button: null,
 skin: "",
+menu_programs: null,
 __init__ : function(json) {
   g_simple_os = this;
   json = json || {};
@@ -5060,7 +5309,7 @@ _init_menu : function(json) {
     }
   });
 
-  var m2 = new Q.MenuItem({text: "程序", popup_style: "os-start-menu"});
+  this.menu_programs = new Q.MenuItem({text: "程序", popup_style: "os-start-menu"});
   var m3 = new Q.MenuItem({type: MENU_SEPERATOR, text: ""});
  
   var m4 = new Q.MenuItem({
@@ -5070,24 +5319,28 @@ _init_menu : function(json) {
     }
   });
   
-  g_os_start_menu.addMenuItem(m1);
-  g_os_start_menu.addMenuItem(m2);
+  //g_os_start_menu.addMenuItem(m1);
+  g_os_start_menu.addMenuItem( this.menu_programs );
   g_os_start_menu.addMenuItem(m3);
   g_os_start_menu.addMenuItem(m4);
 
   // init applications menus
   for(var i=0; i < json.apps.length; i++) {
-    var app = json.apps[i];
-    var m2x = new Q.MenuItem({
-      text: app.name,
-      callback : (function(app_info) { return function(menuitem) {
-        _this.run(app_info);
-      }})(app),
-    });
-    m2.addSubMenuItem(m2x);
+    this.installapp( json.apps[i] ); 
   }
 
   g_os_start_menu.hide();
+},
+
+installapp: function( app ) {
+  var _this = this;
+  var m2x = new Q.MenuItem({
+    text: app.name,
+    callback : (function(app_info) { return function(menuitem) {
+      _this.run(app_info);
+    }})(app),
+  });
+  this.menu_programs.addSubMenuItem(m2x);
 },
 
 wnds_hook : function(hwnd, message_id) {
@@ -5222,15 +5475,15 @@ run :function (app) {
       Q.printf("load from file and create app ok");
       app.klass = app_class;
       // load ui
-      app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
+      //app.ui_runtime = new Q.UI({src: app.ui, oncomplete: function(ok) {
         // init app instance
         Q.printf("load ui -> " + (ok?"ok":"failed"));
-        //try {
+        try {
           _this.create_instance(app); 
-        //} catch(e) {
-        //  _this.run_error(app, err + "<br>" + e.description);
-        //}
-      }});
+        } catch(e) {
+          _this.run_error(app, err + "<br>" + e.description);
+        }
+      //}});
     })
   };
 }
@@ -5425,6 +5678,8 @@ onMoveLineMove_ : null,
 __init__ : function(json) {
   var _this = this;
   json = json || {};
+  json.wstyle = json.wstyle || "";
+
   _this.ID2Nodes = {};
   _this.Acceptable = !!json.Acceptable;
   _this.onItemAccept = json.onItemAccept || function(srcid, targid) {};
@@ -5443,7 +5698,7 @@ __init__ : function(json) {
   _this.hwndTree.appendChild(node.hwnd);
   _this.hwnd.appendChild(_this.hwndTree);
         
-  _this.hwnd.className = 'q-simpletree';
+  _this.hwnd.className = 'q-simpletree ' + json.wstyle;
   _this.hwndMoveLine.className = 'moveline';
   _this.hwndMoveLine.style.display = 'none';
     //! 渲染树
@@ -5503,13 +5758,15 @@ setItemSelected : function(nItem) {
   
   var node = _this.getItemNode(nItem);
   if(node) {
-    node.link.style.background = '#C2CFF1'; 
+    Q.addClass( node.hwnd, 'q-selected')
+    //node.link.style.background = '#C2CFF1'; 
     _this.selected = nItem; 
   }
   
   var selectedNode = _this.getItemNode(selectedItem);
   if(selectedNode) {
-    selectedNode.link.style.background = '';
+    Q.removeClass( selectedNode.hwnd, 'q-selected')
+    //selectedNode.link.style.background = '';
   }  
 },
 
@@ -5639,9 +5896,9 @@ createNode : function(parentId, text, isopen, isshow) {
       lastChildNode.isLastChild = false;
       if(lastChildNode.expand.expandable) {
         if(lastChildNode.subarea.style.display=='') {
-          lastChildNode.expand.className = 'expand expand_on';
+          lastChildNode.expand.className = 'expand iconfont icon-expand-on' ; // expand_on';
         } else {
-          lastChildNode.expand.className = 'expand expand_off';
+          lastChildNode.expand.className = 'expand iconfont icon-expand-off'; // expand_off
         }
       } else {
         lastChildNode.expand.className = 'expand child';
@@ -5651,10 +5908,10 @@ createNode : function(parentId, text, isopen, isshow) {
     if(parentNode.firstChild == TREEITEM_NULL) {
       parentNode.firstChild = id;
             
-      var className = 'expand_';
-      if(parentNode.isLastChild) {
-        className = 'last_expand_';
-      }
+      var className = 'iconfont icon-expand-';
+      //if(parentNode.isLastChild) {
+      //  className = 'last-expand-';
+      //}
       if(parentNode.subarea.style.display == '') {
         className += 'on';
       } else {
@@ -5706,6 +5963,7 @@ createNode : function(parentId, text, isopen, isshow) {
   };
 
   node.link.oncontextmenu = function(evt) {
+    return true;
       // this.fireEvent('onclick');
       _this.itemClick(this.idx);
       _this.setItemSelected(this.idx);
@@ -5721,9 +5979,9 @@ createNode : function(parentId, text, isopen, isshow) {
   node.expand.onclick = function() {
     _this.expandClick(_this.idx);
     var className = '';
-    if(node.isLastChild) { className = 'last_'; }
+    //if(node.isLastChild) { className = 'last_'; }
     if(this.expandable) {
-      className += 'expand_';
+      className += 'icon-expand-';
       if(node.subarea.style.display=='none') {
         node.subarea.style.display='';
         className += 'on';
@@ -5731,7 +5989,7 @@ createNode : function(parentId, text, isopen, isshow) {
         node.subarea.style.display='none';
         className += 'off';
       }
-      this.className = 'expand ' + className;
+      this.className = 'expand iconfont ' + className;
     }
   };
         
@@ -5859,11 +6117,11 @@ traverseNode : function(nItem, lpCallBack) {
 
 MeasureNodeExpand : function(Node) {
   // 插入nNewItem DOM操作
-  var className = 'expand ';
-  if(Node.isLastChild) { className += 'last_'; }
+  var className = 'expand iconfont ';
+  //if(Node.isLastChild) { className += 'last_'; }
   if(Node.firstChild != TREEITEM_NULL) {
     // 存在子节点
-    className += 'expand_';
+    className += 'icon-expand-';
     className += (Node.subarea.style.display == '') ? 'on':'off';
   } else {
     // 叶节点

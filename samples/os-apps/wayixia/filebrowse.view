@@ -22,7 +22,7 @@
   width: 129px;
   border-right: 1px solid #EEE;
   height: 100%;
-  padding: 0 10px;
+  padding: 0 8px;
 }
 
 .q-tabs.v-property .q-tabs-split {
@@ -31,6 +31,10 @@
   background-color: #EEE;
 }
 
+.q-tabs.v-property .q-panel {
+
+  top: 0;
+}
 
 .q-tabs-body {
   margin-left: 149px;
@@ -38,6 +42,7 @@
   height: 100%;
   background-colors: yellow;
   padding: 0 7px 0 7px;
+  position: relative;
 }
 
 .q-tabs-body .q-panel {
@@ -62,15 +67,27 @@
 <!-- options end -->
 <script>
 
-  Q.Window({
-    app: app,
-    wstyle: 'simpleos',  
-    title: 'wayixia',  
-    content:  '{#template}', 
-    on_create: function() {
-      var _this = this;
-      var frame_left = this.item( 'q-frame-left' ); 
-      var frame_right = this.item( 'q-frame-right' ); 
+Q.Window.extend({
+app: null,
+__init__: function( json ) {
+  this.app = json.app;
+  json = json || {};
+  json.content = '{#template}',
+  json.wstyle = "simpleos";
+  json.width = 780;
+  json.height = 550;
+  json.on_create = Q.bind_handler(this, this.on_create);
+  json.on_size = Q.bind_handler(this, this.on_size);
+  //json.on_close = Q.bind_handler(this, this.on_close);
+  Q.Window.prototype.__init__.call(this, json);
+ 
+
+},
+
+on_create: function() {
+  var _this = this;
+  var frame_left = this.item( 'q-frame-left' ); 
+  var frame_right = this.item( 'q-frame-right' ); 
       
       //init Q.table
       this.table = new Q.Table({
@@ -145,6 +162,7 @@
 
 
       // init layout
+      
       this.layout = new Q.TableColumn( frame_left, {
         moveline: this.item( 'q-moveline' ), 
         onStart: function(evt, handler) { 
@@ -152,13 +170,15 @@
         }, 
         onStop: function(evt, handler) { 
           //_this._column_MouseUp(evt, handler);
+          if( !this._isResizable )
+            return;
           console.log( handler._width );
           frame_left.style.width = handler._width + 'px'; 
           frame_right.style.marginLeft = ( handler._width + 20 ) + 'px';
           _this.table.autosize();
         }
       });
-
+      
 
     },
 

@@ -23,7 +23,7 @@ module.exports = function (src) {
     //console.log( $('script').html() );
     tpl = '<style>' + $('style').html()  + '</style>'+ $('template').html();
 
-    script = 'function( app ) { return new ' + $('script').html() + ' }';
+    script = 'function( args ) { var cls = ' + $('script').html() + '; return new cls(args);  }';
     //script = $('script').html();
     script = template( script, { 
       template: tpl.replace(/\r|\n/g,"") 

@@ -15,8 +15,9 @@ module.exports = {
   },
   "output": {
     path: __dirname + '/',
+    //path: 'D:/_web/wayixia.com/www.wayixia.com/themes/default/os/apps/wayixia/',
     filename: 'app.bundle.js',
-    publicPath: '/assert/',
+    publicPath: '/',
   },
   "module": {
     rules: [
@@ -36,8 +37,10 @@ module.exports = {
 
   devServer : {
     contentBase: path.join(__dirname, '/../../..'),
+    //contentBase: path.join(__dirname, ''),
     compress: true,
-    port: 9000,
+    port: 8080,
     hot: true,
+    headers: {'Access-Control-Allow-Origin': '*' },
   }
 }

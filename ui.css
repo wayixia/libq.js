@@ -247,6 +247,7 @@
 
 .q-simpletree .q-tree-item {
   position:relative;
+  line-height: 27px;
 }
 
 .q-simpletree .q-tree-item.q-root {
@@ -260,13 +261,20 @@
   display: block;
   padding-left: 23px;
   positions: relative;
-  height: 21px;
+  height: 27px;
   zoom: 1;
   white-space: nowrap;
+  border-radius: 3px;
 }
 
 .q-simpletree .q-tree-item a:hover  {
   background: #F8F8F8;
+}
+.q-tree-item.q-selected > a,
+.q-tree-item.q-selected > a:visited,
+.q-tree-item.q-selected > a:hover
+ {
+  background: #EEEEEE;
 }
 
 .q-simpletree .expand {
@@ -473,7 +481,7 @@
   font-weight: bold;
   text-overflow:ellipsis;
   WHITE-SPACE:nowrap;
-  background-color: #FF9900;
+  background-colors: #FF9900;
 }
 
 .q-table .q-column-header.q-column-header-last
@@ -1088,7 +1096,7 @@
 /* combobox style end*/
 
 
-/** Q.box style */
+/** Q.box style 
 .q-box {
   width: 400px;
   height: 500px;
@@ -1105,3 +1113,4 @@
   flex-direction: column; 
 }
 
+*/
