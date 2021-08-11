@@ -162,18 +162,26 @@ init_ui_table: function() {
   this.doc_listctrl = new Q.Table({
     wnd: this, 
     id: this.item('panel-2-1'),
-    wstyle :  'q-attr-no-title q-attr2-border',
+    wstyle :  'q-attr-no-title q-attr2-border q-attr-noselect',
     row_height: 22,
     auto_height : true,
     columns : [ 
-      { name: 'id', title: 'ID', width: 30, align: 'center', issortable: true, fixedWidth: true}, 
-      { name: 'title', title: '标题', width: 300, align: 'left', issortable: true, isHTML : true, fixedWidth: false},
+      { name: 'id', title: 'ID', width: 20, align: 'center', issortable: true, fixed: true}, 
+      { name: 'title', title: '标题', width: 300, align: 'left', issortable: true, isHTML : true},
+      { name: 'id', title: '操作', width: 100, align: 'center', issortable: false, isHTML : true, renderer : function(record) {
+        return "<button style=\"height:25px; line-height: 25px;\" class=\"q-btn-edit\">编辑</button>";}},
     ],
     store : new Q.Store({data: []}),
-    row_ondblclick : function(row) {
-      var record = this.getRecord(row);
-      if(record && record.id) {
-        _this.app.service.document_content(record.id, function(r, data) {
+    item_onclick : function(item, evt ) {
+      var rc = this.getRecord(item);
+      evt.cancelBubble=true;
+      var e = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+      if( !e ) {
+        return; 
+      }
+
+      if( Q.hasClass( e, "q-btn-edit" ) ) {
+        _this.app.service.document_content( rc.id, function(r, data) {
           _this.app.document_editor(r, data);
         });
       }

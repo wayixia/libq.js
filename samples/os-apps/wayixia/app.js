@@ -3,7 +3,7 @@
  * author Q
  */
 
-function fck_userdefine_command(action, instance) {
+window.fck_userdefine_command = function (action, instance) {
   var re = /deditor\/(\d+)\/(\d+)/i;
   if(!re.test(instance.Name))
     return;
@@ -16,7 +16,7 @@ function fck_userdefine_command(action, instance) {
   app.document_property(did);
 }
 
-function format_size( bytes ) {
+window.format_size = function( bytes ) {
     var kb = bytes / 1024;
     var mb = kb / 1024;
     var gb = mb / 1024;
@@ -38,7 +38,7 @@ function format_size( bytes ) {
 
 const LENGTH = 1024 * 1024;//每次上传的大小 
 
-function async_uploadfile( url, objprogress, fn )
+window.async_uploadfile = function( url, objprogress, fn )
 {
   return function( file, start, end, res ) {
     var c = arguments.callee;
@@ -95,7 +95,7 @@ function async_uploadfile( url, objprogress, fn )
   };
 }
 
-function selfile( obj, objprogress, fn ){ 
+window.selfile = function( obj, objprogress, fn ){ 
       const LENGTH = 1024 * 1024 * 10;//每次上传的大小 
       var file = obj.files[0];//文件对象 
       var filename=obj.files[0].name; 
@@ -103,7 +103,7 @@ function selfile( obj, objprogress, fn ){
       var start = 0;//每次上传的开始字节 
       var end = start + LENGTH;//每次上传的结尾字节 
 
-      async_uploadfile( "/?mod=attachment&action=do-upload-file&inajax=true", objprogress, fn )( file, start, end, "" );
+      async_uploadfile( "https://www.wayixia.com/?mod=attachment&action=do-upload-file&inajax=true", objprogress, fn )( file, start, end, "" );
       //async_uploadfile( "testupload.php", objprogress )( file, start, end );
 } 
 
@@ -302,7 +302,8 @@ open_images : function( item ) {
     return;
   }
 
-  this.images_wnd = new images_window( {
+  //this.images_wnd = new images_window( {
+  this.images_wnd = require( './images.view' )( {
     title: item.menu_name,
     app: _this,
     on_close: function() { delete _this.images_wnd; _this.images_wnd=null; return true; }
@@ -321,7 +322,7 @@ open_attachments: function( item ) {
     return;
   }
 
-  g_attachments_window = this.attachments_wnd = new attachments_window( {
+  g_attachments_window = this.attachments_wnd = require( './attachments.view' )( {  //new attachments_window( {
     title: item.menu_name,
     app: _this,
     on_close: function() {
@@ -341,60 +342,26 @@ document_editor : function(r, data) {
     return false;
   }
 
+  
   var _this = this;
   var document_data = _this.documents[data.id] = data;
-  var edit_dialog = new Q.Dialog({
-    parent: _this.category_wnd,
-    title: document_data.title,
-    wstyle: "simpleos q-attr-",
-    width: 900, height: 600, 
-    content: _this.ui.template('wnd-x-editor'),
-    on_create: function() {
-      this.removeStyle("q-attr-fixed q-attr-no-min q-attr-no-max");
-      var form = this.item("editor-form");
-      var textarea = this.item("deditor");
-      textarea.value = document_data.message;
-      textarea.name += ('/'+_this.id+'/'+(document_data.id));
-      var editor = new FCKeditor( textarea.name) ;
-      editor.Width = "100%"; 
-      editor.Height = "100%";
-      editor.ReplaceTextarea();
-      // register function
-      form.onsubmit = (function(f, name) { return function() {
-          var oEditor = FCKeditorAPI.GetInstance(name);
-          _this.service.document_save_content(document_data.id, oEditor.GetXHTML(true), function(rr, data) {
-              if(rr != 0) {
-                Q.alert({app:_this, wstyle: "simpleos", title: "编辑文档", content: data});
-              } else {
-                Q.alert({app:_this, wstyle: "simpleos", title: "编辑文档", content: "保存成功"});
-              }
-          })
-          return false;
-      }})(form, textarea.name);
-    },
-    on_activate: function(is_activate) {
-      this.item("mask-div").style.visibility = is_activate? "hidden":"visible";
-    },
-
-    on_move_begin : function(x, y) {
-      this.item("mask-div").style.visibility = "visible";
-    },
-
-    on_move_end : function(x, y) {
-      this.item("mask-div").style.visibility = "hidden";
-    },
-
-    on_size: function() {
-      this.item("mask-div").style.visibility = "visible";
-    }
-  });
+  var edit_dialog = require( './doceditor.view' )( {
+    app: this,
+    doc: data,
+  } );
 
   edit_dialog.domodal();
 },
 
 document_property : function(did) {
   var _this = this;
-  var dlg = new document_create_title({app: _this, title: "属性", did: did, data: _this.documents[did]});
+  //var dlg = new document_create_title({app: _this, title: "属性", did: did, data: _this.documents[did]});
+  var dlg = require( './docproperty.view' )( {
+    app: this,
+    title: "属性", 
+    did: did, 
+    data: this.documents[did]
+  } );
   dlg.domodal();
 },
 
@@ -474,181 +441,6 @@ dummy : function() {
 }
 
 }));
-
-var category_window = Q.Dialog.extend({
-app: null,
-doc_listctrl: null,
-category_tree: null,
-context_menu : null,
-__init__ : function(json) {
-  var _this = this;
-  json = json || {};
-  this.app = json.app;
-  json.content = this.app.ui.template("wnd-x-category"),
-  json.wstyle = "simpleos";
-  json.width = 780;
-  json.height = 550;
-  json.on_create = Q.bind_handler(this, this.on_create);
-  json.on_size = Q.bind_handler(this, this.on_size);
-  //json.on_close = Q.bind_handler(this, this.on_close);
-  Q.Dialog.prototype.__init__.call(this, json);
-  //this.removeStyle('q-attr-fixed|q-attr-no-max|q-attr-no-min');
-},
-
-on_create : function() {
-  var _this = this;
-  this.init_ui_table();
-  this.init_ui_tree();
-  this.removeStyle('q-attr-fixed q-attr-no-max q-attr-no-min');
-  this.app.service.category_list(function(r, data) {
-    if(r == 0) {
-      function get_childs(cid, items, tid, f) {
-        for(var i=0; i < items.length; i++) {
-          if(items[i].category_pid == cid) {
-            var new_tid = f(tid, items[i]);
-            get_childs(items[i].category_id, items, new_tid, f); 
-          }
-        }
-      }
-      // save category data
-      for(var i=0; i < data.length; i++) {
-        _this.app.categories[data[i].category_id] = data[i];
-      }
-
-      get_childs(0, data, _this.category_tree.getRoot(), (function(thiz) { 
-        return function(tid, obj) {
-          var new_tid = thiz.createNode(tid, "[id:"+obj.category_id+"]["+obj.orders+"]" + obj.category_name, false);
-          thiz.setItemData(new_tid, obj.category_id);
-          return new_tid;
-        } 
-      })(_this.category_tree));
-    }
-  });
-},
-
-on_size: function(w, h) {
-  this.doc_listctrl.autosize(); 
-},
-
-init_ui_tree: function() {
-  var _this = this;
- // init tree ui
-  this.category_tree = new Q.Tree({
-    id : _this.item("frame-left"),
-    name : "站点根目录",
-    open : true,
-    onContextMenu : function(nItem, evt) {
-      var cid = this.getItemData(nItem) || 0;
-      if(cid < 1) {
-        _this.show_root_menu(cid, evt);
-      } else {
-        _this.show_normal_menu(cid, evt);
-      }
-    }
-  });
-
-  this.category_tree.itemClick = function(nItem) {
-    var cid = this.getItemData(nItem);
-    _this.update_ui_table(cid);
-  }
-},
-
-init_ui_table: function() {
-  var _this = this;
-  var frame_right = this.item("frame-right");
-  this.doc_listctrl = new Q.Table({
-    id: frame_right, 
-    wstyle :  'q-attr-no-title q-attr-border',
-    row_height: 22,
-    auto_height : true,
-    columns : [ 
-      { name: 'id', title: 'ID', width: 30, align: 'center', issortable: true, fixedWidth: true}, 
-      { name: 'title', title: '标题', width: 300, align: 'left', issortable: true, isHTML : true, fixedWidth: false},
-    ],
-    store : new Q.Store({data: []}),
-    row_ondblclick : function(row) {
-      var record = this.getRecord(row);
-      if(record && record.id) {
-        _this.app.service.document_content(record.id, function(r, data) {
-          _this.app.document_editor(r, data);
-        });
-      }
-    },
-  });
-  setTimeout(function() { _this.doc_listctrl.autosize(); }, 300);
-},
-
-update_ui_table : function(cid) {
-  var _this = this;
-  this.app.service.document_list(cid, function(r, data) {
-    _this.doc_listctrl.clear();
-    _this.doc_listctrl.appendData(data);
-    _this.doc_listctrl.render();
-    //g_tbl.sortTable(0, true, compare0);
-  });
-},
-
-show_root_menu : function(cid, evt) {
-  var d = this;
-  // init menu
-  var menu_file = new Q.Menu({});
-  var menu_create = d.create_contenttype_menu(cid);
-  menu_file.addMenuItem(menu_create);
-  menu_file.show(evt); 
-},
-
-show_normal_menu : function(cid, evt) {
-  var d = this;
-  // init menu
-  var menu_file = new Q.Menu({});
-  var menu_create = d.create_contenttype_menu(cid); 
-  var menu_edit = new Q.MenuItem({
-    text: "属性", 
-    callback : function(menuitem) {
-      var dlg = new category_editor({app: d.app, title: "栏目属性", contenttype: 1, cid: cid, edit: true});
-      dlg.domodal();
-    }
-  });
-  menu_file.addMenuItem(menu_create);
-  menu_file.addMenuItem(menu_edit);
-  menu_file.show(evt); 
-
-},
-
-create_contenttype_menu : function(cid) {
-  var d = this;
-  var m4 = new Q.MenuItem({text: "创建"});
-  var m40 = new Q.MenuItem({
-    text: "新文档",
-    callback : function(menuitem) {
-      var dlg = new document_create_title({app: d.app, title: "新文档", cid: cid});
-      dlg.domodal();
-    }
-  });
-  var m41 = new Q.MenuItem({
-    text: "文章栏目",
-    callback : function(menuitem) {
-      var dlg = new category_editor({app: d.app, title: "创建文章栏目", pid: cid, contenttype: 1, edit: false});
-      dlg.domodal();
-    }
-  });
-
-  var m42 = new Q.MenuItem({
-    text: "网址栏目", 
-    callback : function(menuitem) {
-      var dlg = new category_editor({app: d.app, title: "创建网址栏目", pid: cid, contenttype: 5, edit: false});
-      dlg.domodal();
-    }
-  });
-    
-  m4.addSubMenuItem(m40);
-  m4.addSubMenuItem(m41);
-  m4.addSubMenuItem(m42);
-  m4.hidePopup(); 
-  return m4;
-},
-
-});
 
 
 var images_window = Q.Window.extend( {
@@ -838,6 +630,7 @@ __init__: function( json ) {
 } );
 
 
+/*
 var document_create_title = Q.Dialog.extend({
 app: null,
 document_data : null,
@@ -918,6 +711,7 @@ on_close : function() {}
 
 });
 
+*/
 
 var category_editor = Q.Dialog.extend({
 app: null,
@@ -1145,7 +939,7 @@ change_to_display : function(val) {
 
 });
 
-
+/*
 
 var attachments_window = Q.Dialog.extend({
 app: null,
@@ -1261,7 +1055,7 @@ dummy : function() {
 
 }); // attachments_window end
 
-
+*/
 
 function message_box( json ) {
   var json = json || {};

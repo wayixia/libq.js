@@ -57,6 +57,6 @@ Q.Window.extend({
       }
     });
   },
-  on_close: function() { delete this.main_wnd; this.main_wnd=0; _this.__exit__();} 
+  on_close: function() { delete this.main_wnd; this.main_wnd=0; this.app.__exit__();} 
 });
 </script>
