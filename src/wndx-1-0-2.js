@@ -3,7 +3,7 @@
  * @readonly
  * @enum {*}
  */
-var CONST = {
+window.CONST = {
   /** Q.Window窗口样式, 无标题栏
    * @type {string}
    */
@@ -157,7 +157,7 @@ function $IsStyle(wndNode, style) { return Q.hasClass(wndNode, style); }
 /*-----------------------------------------------------------------
   windows APIs
 -------------------------------------------------------------------*/
-function register_hook(h) {
+window.register_hook = function(h) {
   __GLOBALS.desktop.hook.append(h);
 }
 
@@ -165,7 +165,7 @@ function unregister_hook(h) {
   __GLOBALS.desktop.hook.erase(h);
 }
 
-function invoke_hook(hwnd, message_id) {
+window.invoke_hook = function(hwnd, message_id) {
   __GLOBALS.desktop.hook.each(function(f) {
     f(hwnd, message_id);
   });
@@ -444,7 +444,7 @@ function $GetParentWindow(wndNode) { return wndNode.parent_wnd;  }
 function $GetWnds(wndNode)         { return wndNode.wnds;        }
 function $GetMinCtrlButton(wndNode){ return wndNode.hTitle.hMin; }
 function $GetMaxCtrlButton(wndNode){ return wndNode.hTitle.hMax; }
-function $GetTitleText(wndNode)    { return wndNode.title_text;  }
+window.$GetTitleText = function(wndNode)    { return wndNode.title_text;  }
 function $GetTitleContent(wndNode) { return wndNode.hTitleContent; }
 function $GetTitle(wndNode)        { return wndNode.hTitle;      }
 function $GetBottomBar(wndNode)    { return wndNode.hBottomBar;  }
@@ -493,7 +493,7 @@ function $GetTopZIndexWindow(){
 /**
  * @enum MESSAGE
  */
-var MESSAGE = {
+window.MESSAGE = {
   CREATE: 0,
   MIN   : 1,
   MAX   : 2,

@@ -3,10 +3,10 @@
  * @type {string}
  * @readonly
  */
-var MENU_SEPERATOR = "seperator";
-var MENU_ITEM = "item";
-var MENU_ITEM_CHECKBOX = "checkbox";
-var MENU_ITEM_RADIO = "radio";
+window.MENU_SEPERATOR = "seperator";
+window.MENU_ITEM = "item";
+window.MENU_ITEM_CHECKBOX = "checkbox";
+window.MENU_ITEM_RADIO = "radio";
 
 /** 菜单项
  *
