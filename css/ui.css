@@ -7,6 +7,16 @@
 @import url('iconfont/iconfont.css');
 
 /* globals */
+/* Document
+//
+// Change from `box-sizing: content-box` so that `width` is not affected by `padding` or `border`.
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 /* .q-window * { margin: 0px; padding: 0px;  border:none; } */
 

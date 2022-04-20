@@ -256,8 +256,44 @@ Q.TableColumn = Q.extend({
 
 
 // 0 是单选， 1 代表多选 2代表shift键按下时的多选
-var SELECT_MODE_CTRL  = 1;
-var SELECT_MODE_SHIFT  = 2;
+window.SELECT_MODE_CTRL  = 1;
+window.SELECT_MODE_SHIFT  = 2;
+
+
+//window.cached;
+window.get_scrollbar_size = function (fresh) {
+    const inner = document.createElement('div');
+    inner.style.width = '100%';
+    inner.style.height = '200px';
+
+    const outer = document.createElement('div');
+    const outerStyle = outer.style;
+
+    outerStyle.position = 'absolute';
+    outerStyle.top = 0;
+    outerStyle.left = 0;
+    outerStyle.pointerEvents = 'none';
+    outerStyle.visibility = 'hidden';
+    outerStyle.width = '200px';
+    outerStyle.height = '150px';
+    outerStyle.overflow = 'hidden';
+
+    outer.appendChild(inner);
+
+    document.body.appendChild(outer);
+
+    const widthContained = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    let widthScroll = inner.offsetWidth;
+
+    if (widthContained === widthScroll) {
+        widthScroll = outer.clientWidth;
+    }
+
+    document.body.removeChild(outer);
+    return widthContained - widthScroll;
+}
+
 
 /**
  * Q.Table 表格控件
@@ -299,6 +335,11 @@ oldframewidth: 0,
 
 __init__ : function(json) {
   var _this = this;
+  if( !window.scrollbarwidth )
+  {
+    window.scrollbarwidth = get_scrollbar_size( 1 );
+    console.log( "scrollbar size " + window.scrollbarwidth );
+  }
   json = json || {};
   _this.item_height = json.item_height || 30;
   _this.wndOwner = json.wnd;
@@ -706,7 +747,8 @@ render : function() {
 _load_columns : function() {
   var totalwidth = 0;
   // Push last fix column with end
-  this.columns.push( { title: "", width: 17, fixed: true, renderer: function(r) { return ''; }, islast: true } );
+  // 1px border-width, 1px is adjust 
+  this.columns.push( { title: "", width: window.scrollbarwidth-3, fixed: true, renderer: function(r) { return ''; }, islast: true } );
   for(var i=0; i < this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
@@ -873,10 +915,11 @@ _column_autosize: function() {
     var oldwidth = this.columns[index].width;
     var f = oldwidth / this.oldframewidth;
     if( i == ( cols.length - 1 ) ) {
+      //this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
       this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
     } else {
       this.columns[index].width = Math.floor( f * fullwidth );
-      restwidth -= this.columns[index].width+1; // with border-right-width
+      restwidth -= this.columns[index].width; // with border-right-width
     }
     
     var div = this.wndTableHeaderRow.cells[index].firstChild;
