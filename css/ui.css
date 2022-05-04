@@ -68,7 +68,7 @@
 .q-window.q-attr-no-icon .q-title-content { left: 6px;}
 
 /* title ctrl buttons */
-.q-window .q-title button { float:right; background-color: transparent;color: #999; outline: 0; border: none; padding:15px 10px;}
+.q-window .q-title button { float:right; background-color: transparent;color: #999; outline: 0; border: none; height:100%; paddings:15px 10px;}
 .q-window .q-title button:hover   {  color: #000; }
 .q-window .q-title button.q-min   { background-position: 0 0}
 .q-window .q-title button.q-max   { background-position: -16px 0}
@@ -80,7 +80,7 @@
 .q-window .q-title button.q-icon  { 
     /*position: absolute; width:16px; height:16px; left:6px; top: 16px; border-width: 0; background: transparent url(../images/wnd/q-icon.png) no-repeat center center; */
     float: left;
-    padding: 13px 6px;
+    paddings: 13px 6px;
   }
 .q-window.q-attr-no-icon .q-icon { display: none;}
 
