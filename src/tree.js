@@ -421,12 +421,13 @@ createNode : function(parentId, text, isopen, isshow) {
   };
 
   node.link.oncontextmenu = function(evt) {
-    return true;
-      // this.fireEvent('onclick');
-      _this.itemClick(this.idx);
-      _this.setItemSelected(this.idx);
-      _this.onContextMenu(this.idx, evt);
-      return false;
+    //return true;
+    // this.fireEvent('onclick');
+    _this.itemClick(this.idx);
+    _this.setItemSelected(this.idx);
+    _this.onContextMenu(this.idx, evt);
+    evt.preventDefault();
+    return false;
   };
   node.link.onselectstart = function(){ return false;};
   node.link.ondblclick=function(){

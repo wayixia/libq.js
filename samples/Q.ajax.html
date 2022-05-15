@@ -13,21 +13,22 @@
 
 <script>
 <!--
-var urls = ["http://q.wayixia.com/index.html", "http://q.wayixia.com/samples/Q.ajax.htmls"];
-for( var j=0; j < 150; j++) {
-  urls.push("http://q.wayixia.com/index.html");
-  urls.push("http://q.wayixia.com/samples/Q.ajax.html");
-}
+//var urls = ["http://q.wayixia.com/index.html", "http://q.wayixia.com/samples/Q.ajax.htmls"];
+//for( var j=0; j < 150; j++) {
+//  urls.push("http://q.wayixia.com/index.html");
+//  urls.push("http://q.wayixia.com/samples/Q.ajax.html");
+//}
 
 Q.ready(function() {
 
   Q.$('ajax-button').onclick = function() {
-    //var url = Q.$('url').value;
-    //if(url == "") {
-    //  Q.$('url').focus();
-    //  return;
-    //}
-    
+    var url = Q.$('url').value;
+    if(url == "") {
+      Q.$('url').focus();
+      return;
+    }
+   
+    var urls=[url];  
     var continueError = Q.$('continueError').checked;
     var queue = Q.$('queue').checked;
     
@@ -53,7 +54,7 @@ Q.ready(function() {
 -->
 </script>
 </head>
-<body onmouseup="document.selection && document.selection.empty()" onselectstart="return false" ondragstart="return false" onbeforecopy="return false" oncopy="document.selection.empty()" onselect="document.selection.empty()">
+<body>
 <br>
 <h3>Q.ajax </h3>
 <hr>
