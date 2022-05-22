@@ -114,6 +114,16 @@
       g_table.removeStyle("q-attr-grid");
     }
 
+    Q.$('change2header').onclick = function() {
+      g_table.removeStyle("q-attr-no-header");
+    }
+    Q.$('change2noheader').onclick = function() {
+      g_table.setStyle("q-attr-no-header");
+    }
+
+
+
+
     Q.$('testheight').onclick = function() {
       Q.$('testdiv').innerHTML = '<div id="innerElement" style="width:100%; height: 100%; background-color: yellow;">innerHTML content</div>';
       console.log( innerElement.offsetHeight );
@@ -132,6 +142,8 @@
 <button id="show_in_dlg"> 对话框中的表格 </button> &nbsp;
 <button id="change2grid"> GRID模式 </button> &nbsp;
 <button id="change2list"> LIST模式 </button> &nbsp;
+<button id="change2noheader"> NOHEAD </button> &nbsp;
+<button id="change2header"> HEAD </button> &nbsp;
 <button id="testheight"> Test innerHTML Height </button> &nbsp;
 <br>
 <br>

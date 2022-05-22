@@ -503,6 +503,16 @@
 .q-table .q-column-header a:hover {text-decoration: none; background-colors: #F90;  }
 .q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-x: hidden;overflow-y: auto; border: 0px solid green; background-color: white;}
 
+.q-table.q-attr-no-header .q-group-header {
+  display: none;
+}
+
+.q-table.q-attr-no-header .q-group-header {
+  margin-top: 1px;
+}
+
+
+
 .q-table .q-table-cdata {
   PADDING:0; 
   OVERFLOW: hidden;
