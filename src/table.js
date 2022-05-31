@@ -1,4 +1,7 @@
 
+
+
+
 /** 数据管理类
  * @constructor
  * @param {Object} config - 构造参数
@@ -332,9 +335,11 @@ evtListener : {},
 store : null,
 selected_item: null,
 oldframewidth: 0,
-
+items_selected: null,
 __init__ : function(json) {
   var _this = this;
+  
+  _this.items_selected = new Q.HashMap;
   if( !window.scrollbarwidth )
   {
     window.scrollbarwidth = get_scrollbar_size( 1 );
@@ -1055,6 +1060,27 @@ item_set_selected : function(item, bSelected) {
   }  
 },
 
+get_items_selected : function() {
+  var _this = this;
+  var arr = [];
+  if( Q.hasClass( this.wnd, "q-attr-noselect") ) {
+    // do nothing
+  } else if( Q.hasClass(this.wnd, "q-attr-multiselect")) {
+    _this.items_selected.each(function(node, key){
+      arr.push(_this.items_selected.item(key));
+    });
+
+  } else {
+    arr.push(_this.selected_item);
+  }
+
+  return arr;
+},
+
+get_text : function(row, fieldName) {
+  var record = this.getRecord( row );
+  return record[fieldName];
+},
 /**
  * 获取行记录数据
  * @memberof Q.Table.prototype

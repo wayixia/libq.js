@@ -131,7 +131,7 @@ Q.ajax = function(json) {
   }
 
   function _data_handler( data ) {
-    var postdata = null;
+    var postdata = "";
     for(var name in data) {
       postdata += encodeURIComponent(name)+'='+encodeURIComponent(data[name])+'&'
     }
