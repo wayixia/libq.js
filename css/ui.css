@@ -4,6 +4,7 @@
  $ date: 20110409
 ------------------------------------------------------*/
 
+
 @import url('iconfont/iconfont.css');
 
 /* globals */
@@ -97,7 +98,7 @@
 }
 
 /* q-window's mask */
-.q-window-mask {position:absolute; background: #000000; display:; left:0;top:0;right:0;bottom:0;
+.q-window-mask {position:absolute; background: #000000; left:0;top:0;right:0;bottom:0;
   filter:alpha(opacity=10);-moz-opacity:0.1;-khtml-opacity: 0.1;opacity: 0.1;
 }
 .q-window-mask.q-top-mask 
@@ -377,7 +378,7 @@
   list-style:none;
   white-space: nowrap;
   overflow: auto;
-  background:url(../images/header.var.jpg) repeat-x bottom ;
+  /*background:url(../images/header.var.jpg) repeat-x bottom ;*/
 }
 
 .tabs li {
@@ -393,14 +394,13 @@
 
 .tabElementNormal {
   color:#e6f7ff;
-  background:url(../images/channelbg.jpg) repeat-x right bottom;
-
+  /*background:url(../images/channelbg.jpg) repeat-x right bottom;*/
 }
 
 .tabElementActive {
   color: Gray;
   width: 98px;
-  background: url("../../images/channelseled.jpg") repeat-x;
+  /*background: url("../images/channelseled.jpg") repeat-x;*/
 }
 
 /* Commented Backslash Hack hides rule from IE5-Mac \*/
@@ -415,13 +415,13 @@
 .tabs a:hover {
   /*background-position:0% -42px;*/
   height: 32px;
-  background: url(../images/channelseled.jpg) repeat-x;
+  /*background: url(../images/channelseled.jpg) repeat-x;*/
 }
 
 .tabs a:hover span {
   /*background-position:100% -42px;*/
   cursor: pointer;
-  background: url(../images/channelseled.jpg) repeat-x;
+  /*background: url(../images/channelseled.jpg) repeat-x; */
 }
 
 
@@ -449,7 +449,7 @@
 
 .q-table .q-table-titlebar 
 {
-  backgrounds: white URL(../images/table/grid_title.gif) repeat-x left -1px; 
+  /*backgrounds: white URL(../images/table/grid_title.gif) repeat-x left -1px; */
   font-weight: bold; 
   color: #15428B; 
   padding: 7px 3px 3px 1px;
@@ -549,7 +549,7 @@
 
 .q-table .q-table-toolbar {
   border-top: 1px solid #99BBE8; 
-  background: #DAEDF7 URL(../images/table/toolbars.gif) repeat-x left top; 
+  /*background: #DAEDF7 URL(../images/table/toolbars.gif) repeat-x left top; */
   font-weight: normal; 
   padding: 3px 3px 1px 1px; 
   height: 25px; width: 100%;
@@ -803,7 +803,7 @@
   background-color: #FFF;
 }
 
-.q-../images-box {
+.q-images-box {
   font-family: arial, 'helvetica neue', sans-serif;
   position: absolute;
   top: 0;
@@ -817,7 +817,7 @@
   padding-bottom: 15px;
 }
 
-.q-../images-box .q-box-item {
+.q-images-box .q-box-item {
   position: relative;
   padding: 0;
   margin: 5;
@@ -836,7 +836,7 @@
   -webkit-box-shadow:0 1px 5px rgba(0,0,0,.3) 
 }
 
-.q-../images-box .q-box-info
+.q-images-box .q-box-info
 {
   position:absolute;
   right:0;
@@ -850,18 +850,18 @@
   font-size: 14px;
 }
 
-.q-../images-box .q-box-item:hover
+.q-images-box .q-box-item:hover
 { 
   /*border:3px solid #F90; */
 }
 
-.q-../images-box .q-box-item:hover .q-../images-box .q-box-info
+.q-images-box .q-box-item:hover .q-images-box .q-box-info
 {
   background-color:#333;
   color:#FFF;
 }
 
-.q-../images-box .q-box-item .q-box-image {
+.q-images-box .q-box-item .q-box-image {
   border: none;
   height: 200px;
   width: 200px;
@@ -872,16 +872,16 @@
   left: 0;
 }
 
-.q-../images-box .q-box-item .q-box-image .image {
+.q-images-box .q-box-item .q-box-image .image {
   max-height: 200px;
   max-width: 200px;
 }
 
-.q-../images-box .q-box-item .q-box-image a {
+.q-images-box .q-box-item .q-box-image a {
   text-align: center;
 }
 
-.q-../images-box .q-box-item .wing-box {
+.q-images-box .q-box-item .wing-box {
   display: none;
   position:absolute;
   left:10px;
@@ -898,25 +898,25 @@
 }
 
 
-.q-../images-box .q-box-item.mouseout, .select-mask {display:none;}
+.q-images-box .q-box-item.mouseout, .select-mask {display:none;}
 
-.q-../images-box .q-box-item.mouseover .select-mask {
+.q-images-box .q-box-item.mouseover .select-mask {
   cursor: default;
   display: block;
   position:absolute;
   left:0; top:0; right:0;bottom:0;
   opacity: 0.5;
-  background: #FFF url(../images/../images-box/hover-picture.png) right top no-repeat;
+  background: #FFF url(../images/images-box/hover-picture.png) right top no-repeat;
 }
 
-.q-../images-box .q-box-item.mouseselected .select-mask 
+.q-images-box .q-box-item.mouseselected .select-mask 
 {
   cursor: default;
   display: block;
   position:absolute;
   left:0; top:0; right:0;bottom:0;
   opacity: 0.8;
-  background: #FFF  url(../images/../images-box/selected-picture.png) right top no-repeat; 
+  background: #FFF  url(../images/images-box/selected-picture.png) right top no-repeat; 
   /*#CFBAAA, #FF931E*/
 }
 
