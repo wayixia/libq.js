@@ -175,7 +175,7 @@ function $IsDesktopWindow(wndNode) {
   return (__GLOBALS.desktop == wndNode); 
 }
 
-function $IsWindow(wndNode) {
+window.$IsWindow = function(wndNode) {
   return (!$IsNull(wndNode)) && (wndNode.nodeType == Q.ELEMENT_NODE) && wndNode.getAttribute('__QWindow__');
 }
 
@@ -967,7 +967,7 @@ hwnd : null,
 __init__ : function(config) {
   config = config || {};
   var _this = this;
-  var title = config.title || 'not';
+  var title = config.title || 'Q.Window';
   var left  = config.left || 0;
   var top   = config.top || 0;
   var width = config.width || 600;
@@ -976,6 +976,7 @@ __init__ : function(config) {
   if(config.parent instanceof Q.Window) 
     parent_wnd = config.parent.wnd() || $GetDesktopWindow();
   this.hwnd = $CreateWindow(parent_wnd, title, config.wstyle, left, top, width, height, config.app);
+  this.hwnd.ownerClass = this;
   this.setContent(config.content);
   //this.hwnd.on_size     = Q.bind_handler(this, config.on_size || function(w, h) {});
   //this.hwnd.on_activate = Q.bind_handler(this, config.on_activate || function(activate) {});
@@ -1164,6 +1165,8 @@ __init__ : function(config) {
 
   config.on_create = Q.bind_handler( this, this._on_initdialog );
   Q.Window.prototype.__init__.call(this, config);
+  this.hwnd.ownerClass = this;
+
   this.old_window_proc = this.setWindowProc( (function(qwindow) {
     return function(hwnd, msgid, json) { return qwindow.window_proc(msgid, json);}
   })(this));
