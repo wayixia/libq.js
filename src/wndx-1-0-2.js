@@ -1,3 +1,4 @@
+
 /**
  * 常量定义
  * @readonly
@@ -1098,8 +1099,32 @@ activate : function() {
  *
  * @memberof Q.Window.prototype
  */
-adjust : function() {
-  $FitWindow(this.hwnd); 
+adjust : function( container ) {
+  if( container ) {
+    var height = container.scrollHeight;
+    var width = container.scrollWidth;
+    var wndNode = this.hwnd;
+    var client = $GetClient(wndNode);
+      
+    var lastHeight = height;
+    if( !$IsStyle(wndNode, CONST.no_title)) {
+      lastHeight = lastHeight + $GetTitle(wndNode).offsetHeight;
+    }
+      
+    if( $IsStyle(wndNode, CONST.with_bottom)) {
+      lastHeight = lastHeight + ($GetBottomBar(wndNode).offsetHeight);
+    }
+
+    // border
+
+    //lastHeight = lastHeight-( parseInt( wndNode.currentStyle.borderLeftWidth,10) + parseInt( wndNode.currentStyle.borderRightWidth, 10 ) );
+    lastHeight = lastHeight+( parseInt( wndNode.currentStyle.borderTopWidth,10) + parseInt( wndNode.currentStyle.borderBottomWidth, 10 ) )*2;
+      
+    $ResizeTo(wndNode, client.scrollWidth, lastHeight);  // 自适应内容长度
+  } else {
+    $FitWindow(this.hwnd); 
+  }
+  //$FitWindow(this.hwnd); 
 },
 
 /** 获取客户区q:id为q_id的元素
@@ -1317,88 +1342,104 @@ __init__: function(config) {
   return new _alert(json); 
 } // Q.alert
 
-/** wndx 模板加载器， 通过{@link Q.UI.template}方法获取指定id的dom克隆对象
- *
- * @constructor
- * @param {Object} json
- * @param {string} json.src - wndx模板文件路径， 引用路径时需要考虑的跨域问题，建议模板跟脚本一个路径
- * @param {Q.UI.callback} json.oncomplete - 加载结果回调
- */
-Q.UI = Q.extend({
-ui_iframe: null,
-/**
- * @callback Q.UI.callback
- * @param {bool} success - wndx模板加载是否成功 
- */
 
-__init__: function(json) {
-  json = json || {};
-  this.ui_iframe = document.createElement("IFRAME");
-  //this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
-  this.ui_iframe.onload = function() {    
-    json.oncomplete(true);
+
+/** 根据窗口客户区的元素，获得当前窗口类
+ * 
+ * @param o - 窗口类的DOM元素
+ * @return Q.Window or Q.Dialog or extend class 
+ */
+Q.getWinOwnerClass = function(o) {
+  var target_wnd = o.parentNode;
+  while(target_wnd && !$IsWindow(target_wnd) && (target_wnd != document.body)) {
+    target_wnd = target_wnd.parentNode;
   }
-  
-  this.ui_iframe.onerror= function() {
-    json.oncomplete(false);
-    document.body.removeChild(this);
-  }
-  this.ui_iframe.style.display = "none";
-  this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
-  document.body.appendChild(this.ui_iframe);
-},
 
-/** 获取模板指定id的元素的克隆副本 
- *
- * @memberof Q.UI.prototype
- * @param {string} id - 元素id
- * @returns {dom} 如果id元素存在则返回该元素的克隆副本
- */
-template: function(id) {
-  var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
-  var tpl = doc.getElementById(id);
-  if(tpl)
-    return tpl.cloneNode(true);
-
-  return null;
-},
-
-/** 应用模板的样式到用户界面, 可根据需求调用，建议调用
- *
- * @memberof Q.UI.prototype
- */
-bindCss : function() {
-  // get ui style
-	var heads = document.getElementsByTagName("head");
-  var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
-  for(var i=0; i < doc.styleSheets.length; i++) {
-    var sheet =doc.styleSheets[i];
-    if(!sheet) // no <style>
-      return;
-    var style;
-    if(sheet.ownerNode.innerHTML == "" && (!!sheet.href)) {
-      // link
-      style=document.createElement("link");
-	    style.setAttribute("type", "text/css");
-	    style.setAttribute("rel", "stylesheet");
-	    style.setAttribute("href", sheet.href);
-    } else {
-      var cssText = sheet.ownerNode.innerHTML;
-      style=document.createElement("style");
-	    style.setAttribute("type", "text/css");
-	    if(style.styleSheet){// IE
-		    style.styleSheet.cssText = cssText;
-	    } else {// w3c
-		    var textNode = doc.createTextNode(cssText);
-		    style.appendChild(textNode);
-	    }
-    }
-	  if(heads.length)
-		  heads[0].appendChild(style);
-	  else
-		  document.documentElement.appendChild(style);
-  } // for
-
+  return target_wnd.ownerClass;
 }
 
-}); // end of Q.ui
+///** wndx 模板加载器， 通过{@link Q.UI.template}方法获取指定id的dom克隆对象
+ //*
+ //* @constructor
+ //* @param {Object} json
+ //* @param {string} json.src - wndx模板文件路径， 引用路径时需要考虑的跨域问题，建议模板跟脚本一个路径
+ //* @param {Q.UI.callback} json.oncomplete - 加载结果回调
+ //*/
+//Q.UI = Q.extend({
+//ui_iframe: null,
+///**
+ //* @callback Q.UI.callback
+ //* @param {bool} success - wndx模板加载是否成功 
+ //*/
+
+//__init__: function(json) {
+  //json = json || {};
+  //this.ui_iframe = document.createElement("IFRAME");
+  ////this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
+  //this.ui_iframe.onload = function() {    
+    //json.oncomplete(true);
+  //}
+  
+  //this.ui_iframe.onerror= function() {
+    //json.oncomplete(false);
+    //document.body.removeChild(this);
+  //}
+  //this.ui_iframe.style.display = "none";
+  //this.ui_iframe.src=json.src + '?' + Math.floor(+new Date/1E7);
+  //document.body.appendChild(this.ui_iframe);
+//},
+
+///** 获取模板指定id的元素的克隆副本 
+ //*
+ //* @memberof Q.UI.prototype
+ //* @param {string} id - 元素id
+ //* @returns {dom} 如果id元素存在则返回该元素的克隆副本
+ //*/
+//template: function(id) {
+  //var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
+  //var tpl = doc.getElementById(id);
+  //if(tpl)
+    //return tpl.cloneNode(true);
+
+  //return null;
+//},
+
+///** 应用模板的样式到用户界面, 可根据需求调用，建议调用
+ //*
+ //* @memberof Q.UI.prototype
+ //*/
+//bindCss : function() {
+  //// get ui style
+	//var heads = document.getElementsByTagName("head");
+  //var doc = this.ui_iframe.contentDocument || this.ui_iframe.contentWindow.document;
+  //for(var i=0; i < doc.styleSheets.length; i++) {
+    //var sheet =doc.styleSheets[i];
+    //if(!sheet) // no <style>
+      //return;
+    //var style;
+    //if(sheet.ownerNode.innerHTML == "" && (!!sheet.href)) {
+      //// link
+      //style=document.createElement("link");
+	    //style.setAttribute("type", "text/css");
+	    //style.setAttribute("rel", "stylesheet");
+	    //style.setAttribute("href", sheet.href);
+    //} else {
+      //var cssText = sheet.ownerNode.innerHTML;
+      //style=document.createElement("style");
+	    //style.setAttribute("type", "text/css");
+	    //if(style.styleSheet){// IE
+		    //style.styleSheet.cssText = cssText;
+	    //} else {// w3c
+		    //var textNode = doc.createTextNode(cssText);
+		    //style.appendChild(textNode);
+	    //}
+    //}
+	  //if(heads.length)
+		  //heads[0].appendChild(style);
+	  //else
+		  //document.documentElement.appendChild(style);
+  //} // for
+
+//}
+
+//}); // end of Q.ui
