@@ -260,17 +260,17 @@
   line-height: 27px;
 }
 
+
+/*
 .q-simpletree .q-tree-item.q-root {
   backgrounds: url(../images/tree/expand_off.png) no-repeat top left; 
 }
+*/
 
 .q-simpletree .q-tree-item a  {
-  font-sizes: 14px;
-  line-heights: 14px;
   text-decoration: none;
   display: block;
   padding-left: 23px;
-  positions: relative;
   height: 27px;
   zoom: 1;
   white-space: nowrap;
@@ -289,12 +289,7 @@
 
 .q-simpletree .expand {
   position:absolute;
-  lefts:0;
   cursor: pointer;
-  padding: 2px 0;
-  widths: 21px; 
-  heights:18px;
-  line-heights:18px;
   margin: auto 0; 
   white-space: nowrap;
   z-index: 2;
@@ -327,20 +322,20 @@
 }
 */
 
-
-.q-simpletree.q-attr-no-icon .icon {
-  display: none;
+.q-simpletree .textNode {
+    font-size: 14px;
+    cursor: default;
 }
 
-.q-simpletree .icon {
-  positions: absolute;
-  clear: left;
-  float: left;
-  padding-tops: 5px;
-  width: 18px;
-  height: 21px;
+.q-simpletree .textNode.q-attr-no-icon {
+  background-image: none;
+  text-indent: 0;
+}
+
+.q-simpletree .textNode.q-attr-icon {
   background-repeat: no-repeat;
   background-position: left center;
+  text-indent: 20px;
 }
 
 .q-simpletree .default {
@@ -348,11 +343,7 @@
   display: inline-block;
 }
 
-.q-simpletree .textNode {
-    paddings-left:20px;
-    font-size: 14px;
-    cursor: default;
-}
+
 
 .q-moveline {
   position: absolute;

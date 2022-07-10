@@ -107,8 +107,7 @@ var __InitDragItem = Q.extend(
 });
 
 
-Q.Tree = Q.extend(
-{
+Q.Tree = Q.extend( {
 //! hwnd 树的主窗口容器， hwndTree： 树窗口
 //! 结构 
 //  <div class="simpletree_container simpletree">
@@ -148,14 +147,7 @@ __init__ : function(json) {
   _this.hwndTree = document.createElement('ul');
   _this.hwndMoveLine = document.createElement('fieldset');
   document.body.appendChild(_this.hwndMoveLine);
-
-  var nRootItem = this.createNode(-1, json.name, !!json.open);
-  var node = this.getItemNode(nRootItem);
-  Q.addClass(node.hwnd, "q-root");  
-  //! 隐藏根节点的expand
-  _this.hwndTree.appendChild(node.hwnd);
   _this.hwnd.appendChild(_this.hwndTree);
-        
   _this.hwnd.className = 'q-simpletree ' + json.wstyle;
   _this.hwndMoveLine.className = 'moveline';
   _this.hwndMoveLine.style.display = 'none';
@@ -329,7 +321,13 @@ getFirstChild : function(nItem) {
   return Node.firstChild;
 },
 
-createNode : function(parentId, text, isopen, isshow) {
+createNode2 : function( parentId, json ) {
+  json = json || {};
+
+  return this.createNode( parentId, json.text, json.isopen, json.isshow, json.icon, json.url, json.target );
+}, 
+
+createNode : function(parentId, text, isopen, isshow, icon, url, target ) {
   var _this = this;
   //! 
   var isLastChild = true;
@@ -388,25 +386,24 @@ createNode : function(parentId, text, isopen, isshow) {
   node.hwnd.idx = id;
   node.expand = document.createElement("DIV");
   node.link = document.createElement("A");
-  node.icon = document.createElement("SPAN");
-  node.textNode = document.createElement("SPAN");
-  node.subarea = document.createElement("ul");
+  node.textNode = document.createElement("DIV");
+  node.subarea = document.createElement("UL");
   node.expand.expandable = false;
     
   node.hwnd.className = 'q-tree-item';
   node.expand.className = 'expand last_child';
-  node.expand.style.left = ((level)*20)+'px';
-  node.link.style.paddingLeft = ((level)*20+25) + 'px';
+  node.expand.style.left = ((level)*15)+'px';
+  node.link.style.paddingLeft = ((level)*15+20) + 'px';
     
   //! link style
-  node.icon.className = 'icon default';
-  node.textNode.className = 'textNode';
+  icon = icon || "q-attr-icon default";
+  node.textNode.className = 'textNode ' + icon;
   node.subarea.className = '';    // line
     
   node.textNode.innerText = node.text;  // + '-' + id;
   node.textNode.href = '#';
   node.textNode.idx = id;
-   node.link.idx = id;
+  node.link.idx = id;
 
   /*
    new __InitDragItem(node.link, {
@@ -415,6 +412,12 @@ createNode : function(parentId, text, isopen, isshow) {
     'onStop':  function(evt, handler) { _this.onStop(evt, handler); }
   });
   */
+  if( url ) {
+    node.link.href = url;
+  }
+  if( target ) {
+    node.link.target = target;
+  }
   node.link.onclick = function() {
     _this.itemClick(this.idx);
     _this.setItemSelected(this.idx);
@@ -426,8 +429,8 @@ createNode : function(parentId, text, isopen, isshow) {
     _this.itemClick(this.idx);
     _this.setItemSelected(this.idx);
     _this.onContextMenu(this.idx, evt);
-    evt.preventDefault();
-    return false;
+    //evt.preventDefault();
+    //return false;
   };
   node.link.onselectstart = function(){ return false;};
   node.link.ondblclick=function(){
@@ -452,7 +455,7 @@ createNode : function(parentId, text, isopen, isshow) {
     }
   };
         
-  node.link.appendChild(node.icon);
+  //node.link.appendChild(node.icon);
   node.link.appendChild(node.textNode);
   node.hwnd.appendChild(node.expand);
   node.hwnd.appendChild(node.link);
@@ -463,7 +466,7 @@ createNode : function(parentId, text, isopen, isshow) {
   } else {
     _this.hwndTree.appendChild(node.hwnd);
   }
-    
+
   return id;    
 },
 
