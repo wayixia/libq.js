@@ -1,0 +1,25 @@
+{
+  "name": "libq.js",
+  "version": "1.2.0",
+  "description": "A Simple javascript libaray with UI components",
+  "main": "libq.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wayixia/libq.js.git"
+  },
+  "keywords": [
+    "javascript"
+  ],
+  "author": "wayixia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wayixia/libq.js/issues"
+  },
+  "homepage": "https://github.com/wayixia/libq.js#readme"
+}
