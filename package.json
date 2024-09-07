@@ -1,9 +1,9 @@
 {
-  "name": "libq.js",
+  "name": "libq",
   "version": "1.2.0",
   "description": "A Simple javascript libaray with UI components",
   "main": "dist/libq.cjs.js",
-  "files":[
+  "files": [
     "src",
     "dist/*.js"
   ],
