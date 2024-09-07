@@ -1,5 +1,5 @@
 {
-  "name": "libq",
+  "name": "libq.js",
   "version": "1.2.0",
   "description": "A Simple javascript libaray with UI components",
   "main": "dist/libq.cjs.js",
