@@ -2,7 +2,11 @@
   "name": "libq.js",
   "version": "1.2.0",
   "description": "A Simple javascript libaray with UI components",
-  "main": "libq.js",
+  "main": "dist/libq.cjs.js",
+  "files":[
+    "src",
+    "dist/*.js"
+  ],
   "directories": {
     "doc": "docs"
   },
