@@ -20,7 +20,7 @@ module.exports = {
   },
   "output": {
     path: path.resolve( __dirname, '../dist' ),
-    filename: 'libq.cjs.js',
+    filename: 'libq.js',
     publicPath: '/',
   },
   "module": {

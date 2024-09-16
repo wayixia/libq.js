@@ -5,45 +5,94 @@
  * @version 1.0
  */
 
-(function() {
-  window.undefined = window.undefined;
-  // check the name is used
-  if(window.Q) {
-    alert('conflict name for Q');
-    return;
+
+class Q 
+{
+  constructor() {
+    // check the name is used
+    if(window.Q) {
+      alert('conflict name for Q');
+      return;
+    }
+
+
+    // string prototype 
+    String.prototype.trim = function() { 
+      return this.replace(/(^\s*)|(\s*$)/g, ""); 
+    }
+
+    String.prototype.trim_left = function() { 
+      return this.replace(/(^\s*)/g,""); 
+    }
+    String.prototype.trim_right= function() { 
+      return this.replace(/(\s*$)/g,""); 
+    }
+ 
+    // fix Object.create not defined error
+    if (!Object.create) {
+      Object.create = function(proto, props) {
+        if (typeof props !== "undefined") {
+          throw "The multiple-argument version of Object.create is not provided";
+        }
+        function ctor() { }
+        ctor.prototype = proto;
+        return new ctor();
+      };
+    }
+
+
+      //为Firefox下的DOM对象增加innerText属性
+  if(this.isNS6()) { //firefox innerText define
+    HTMLElement.prototype.__defineGetter__("innerText", function() { 
+      return this.textContent; 
+    });
+    HTMLElement.prototype.__defineSetter__("innerText", function(sText) { 
+      this.textContent=sText; 
+    });
+    HTMLElement.prototype.__defineGetter__("currentStyle", function () { 
+      return this.ownerDocument.defaultView.getComputedStyle(this, null); 
+    });
+    // 兼容ff，ie的鼠标按键值
+    this.LBUTTON  = 0;
+    this.MBUTTON  = 1;
   }
     
-  /** 调试输出 */
-  var _debug = null;
-  /** dom elements cache */
-  var _domcache = {};    
-  /** QueryString */
-  var _querystring = {};
-  /**  on_page_load Message Queue */
-  var _on_page_load = [];
-
-  // string prototype
-  String.prototype.trim = function() { 
-    return this.replace(/(^\s*)|(\s*$)/g, ""); 
-  }
-  String.prototype.trim_left = function() { 
-    return this.replace(/(^\s*)/g,""); 
-  }
-  String.prototype.trim_right= function() { 
-    return this.replace(/(\s*$)/g,""); 
-  }
- 
-  // fix Object.create not defined error
-  if (!Object.create) {
-    Object.create = function(proto, props) {
-      if (typeof props !== "undefined") {
-        throw "The multiple-argument version of Object.create is not provided";
+  // 解析地址页面的查询字段
+  var query = location.search.slice(1).split('&');
+  for(var i=0; i < query.length; i++) {
+    var pos = query[i].indexOf( '=' );
+    if( pos >= 0 ) {
+      var name = query[i].substring( 0, pos );
+      var value = query[i].substring( pos + 1 );
+      _querystring[ name ] = value;
     }
-    function ctor() { }
-      ctor.prototype = proto;
-      return new ctor();
-    };
   }
+  
+  var tmr = setInterval( ( function( t, r ) { return function() {
+    if( document.readyState == 'complete' ) {
+      t.loaded = true;
+      t.delayDOMReady();
+      clearInterval( r );
+    }
+  } } )( this, tmr ), 100 );
+
+  this.addEvent(window, 'load', (evt) => {
+    if( !this.loaded ) {
+      this.loaded = true;
+      this.delayDOMReady();
+    }
+  } );
+  } // constructor
+
+    
+  /** 调试输出 */
+  _debug = null;
+  /** dom elements cache */
+  _domcache = {};    
+  /** QueryString */
+  _querystring = {};
+  /**  on_page_load Message Queue */
+  _on_page_load = [];
 
   /** 
    * 基于prototype的继承实现, 调用父类的（被重载的）同名函数调用需要借助
@@ -53,17 +102,18 @@
    ```
    * @namespace Q
    */
-  var Q = function() {};
-  Q.prototype.extend = function(props) {
-    var parent_class = this.prototype;  
-    var this_class = function() {
-      this.__init__.apply(this, arguments);
-    };
-    // sub class -> parent class 
-    this_class.prototype = Object.create(parent_class);
+  //var Q = function() {};
+  /*
+  extend(props) { 
+      var parent_class = this.prototype;  
+      var this_class = function() {
+        this.__init__.apply(this, arguments);
+      };
+      // sub class -> parent class 
+      this_class.prototype = Object.create(parent_class);
     
-    // copy properties
-    for(var name in props) {
+      // copy properties
+      for(var name in props) {
       this_class.prototype[name] = props[name];  
     }
     this_class.prototype.constructor = this_class;
@@ -71,7 +121,7 @@
 
     return this_class;
   }
-  
+   */
   /**
    * 类继承方法 
    * @function Q.extend
@@ -84,43 +134,43 @@ var subclass = Q.extend({
    // 构造函数
   }
 });
-   */
+   
   Q.extend = function(props) {
     return this.prototype.extend.call(this, props);
   }
+    */
 
-  window.Q = Q;
  
   /** 
    * DOM 元素节点类型 
    * @const {number} Q.ELEMENT_NODE
    */
-  Q.ELEMENT_NODE = 1;
+  ELEMENT_NODE = 1;
 
   /** 
    * DOM 文本节点类型 
    * @const {number} Q.ELEMENT_TEXTNODE
    */
-  Q.ELEMENT_TEXTNODE = 3;
+  ELEMENT_TEXTNODE = 3;
 
 
   /** 
    * 鼠标左键
    * @const {number} Q.LBUTTON
    */
-  Q.LBUTTON  = 1;
+  LBUTTON = 1;
   
   /** 
    * 鼠标右键 
    * @const {number} Q.RBUTTON
    */
-  Q.RBUTTON  = 2;
+  RBUTTON = 2;
   
   /** 
    * 鼠标滚轮 
    * @const {number} Q.MBUTTON
    */
-  Q.MBUTTON  = 4;
+  MBUTTON  = 4;
 
   /** 开启关闭调试功能
    *
@@ -128,7 +178,7 @@ var subclass = Q.extend({
    * @param output {dom} - 调试信息输出容器, 如果为null，则关闭调试
    * @return 无
    */
-  Q.setDebug = function(output) { _debug = output; }
+  setDebug(output) { _debug = output; }
 
   /** 打印调试日志信息
    * 
@@ -136,7 +186,7 @@ var subclass = Q.extend({
    * @param message {string} - 日志消息
    * @return 无
    */ 
-  Q.printf = function(message) {
+  printf(message) {
     if(_debug && _debug.nodeType === Q.ELEMENT_NODE) {
       _debug.innerHTML += '<br/>'+message;
       _debug.scrollTop = _debug.scrollHeight;
@@ -152,7 +202,7 @@ var subclass = Q.extend({
    * @param id {string|dom} - 网页元素id或者dom对象
    * @return element {dom} - 网页元素或者null
    */
-  Q.$ = function(id) {
+  $(id) {
     if(typeof(id) != 'string') { return id; }
     if(id && id.nodeType === Q.ELEMENT_NODE)
       return id;
@@ -174,7 +224,7 @@ var subclass = Q.extend({
    * @param object {object} - 类实例 
    * @param fn {function} - 类方法
    */
-  Q.bind_handler = function(object, fn) {
+  bind_handler(object, fn) {
     return function() {
       return fn.apply(object, arguments);
     };
@@ -189,8 +239,8 @@ var subclass = Q.extend({
    * @param useCapture {bool} -  是否使用捕捉, 一般使用false, 支持object
    * @return 无
    */
-  Q.addEvent = function(element, evtName, fnHandler, useCapture) {
-    var obj = Q.$(element);
+  addEvent(element, evtName, fnHandler, useCapture) {
+    var obj = this.$(element);
     if(obj.addEventListener) {
       obj.addEventListener(evtName, fnHandler, useCapture);
     } else if(obj.attachEvent) {
@@ -208,8 +258,8 @@ var subclass = Q.extend({
    * @param fnHandler {function} - 事件处理回调函数
    * @return 无
    */
-  Q.removeEvent = function(element, evtName, fnHandler) {
-    obj = Q.$(element); 
+  removeEvent(element, evtName, fnHandler) {
+    obj = this.$(element); 
     if (obj.removeEventListener) {
       obj.removeEventListener(evtName, fnHandler, false);
     } else if (obj.detachEvent) {
@@ -219,7 +269,7 @@ var subclass = Q.extend({
     }
   };
 
-  Q.fireEvent = function( element, evtName ) {
+  fireEvent( element, evtName ) {
     if( document.createEvent ) {
       var evObj = document.createEvent('MouseEvents');
       evObj.initEvent( evtName, true, false );
@@ -238,7 +288,7 @@ var subclass = Q.extend({
    * @param new_class {string} - 新的CSS样式，使用空格分割多个样式
    * @return element {dom} - 返回当前网页元素
    */
-  Q.addClass = function(element, new_class) {
+  addClass(element, new_class) {
     var arr = (element.className+" "+new_class).trim().split(/\s+/);
     var class_name = '';
     var collections = {};
@@ -257,7 +307,7 @@ var subclass = Q.extend({
    * @param remove_class {string} - 删除的CSS样式，使用空格分割多个样式
    * @return element {dom} - 返回当前网页元素
    */
-  Q.removeClass = function(element, remove_class) {
+  removeClass(element, remove_class) {
     var arr = (element.className+'').split(/\s+/);
     var arr2= (remove_class+'').split(/\s+/);
     var arr3= [];
@@ -281,7 +331,7 @@ var subclass = Q.extend({
    * @param class_name {string} - CSS样式名称，单个名称
    * @return exists {bool} - true 存在， false 不存在
    */
-  Q.hasClass = function(element, class_name) {
+  hasClass(element, class_name) {
     var class_names = (element.className+" ").split(/\s+/);
     for(var i=0;i < class_names.length; i++) {
       if(class_names[i] == class_name) {
@@ -300,7 +350,7 @@ var subclass = Q.extend({
    * @param dblclick {function} - 双击事件处理函数
    * @return 无
    */
-  Q.click = function(element, click, dblclick) {
+  click(element, click, dblclick) {
     element = Q.$(element);
     Q.addEvent(element, 'click', (function(r) { return function(evt) {
     if(r.__clickonce__) {
@@ -328,7 +378,7 @@ var subclass = Q.extend({
    * @param default_value {string} - 默认值 
    * @return {string} - 多语言值
    */
-  Q.locale_text = function(message_id, default_value) {
+  locale_text(message_id, default_value) {
     return default_value;
   }
 
@@ -338,7 +388,7 @@ var subclass = Q.extend({
    * @param fn {function} - 适配函数
    * @return 无
    */
-  Q.set_locale_text = function(fn) {
+  set_locale_text(fn) {
     if(typeof fn == 'function') {
       Q.locale_text = fn;
     }
@@ -351,7 +401,7 @@ var subclass = Q.extend({
    * @return {object} width 宽度, height 高度, left 绝对位置的水平定点位置， top 绝对位置的垂直定点位置
    * 
    */
-  Q.absPosition = function(element) {
+  absPosition(element) {
     var w = element.offsetWidth;
     var h = element.offsetHeight;
     var t = element.offsetTop;
@@ -371,9 +421,9 @@ var subclass = Q.extend({
    * @return {object} width 宽度, height 高度, left 绝对位置的水平定点位置， top 绝对位置的垂直定点位置
    * 
    */
-  Q.absPositionEx = function(element) {
+  absPositionEx(element) {
     if( !element.getBoundingClientRect ) {
-      return Q.absPosition(element);
+      return this.absPosition(element);
     }
     var rect = element.getBoundingClientRect();
     var l= rect.left+document.documentElement.scrollLeft;
@@ -390,7 +440,7 @@ var subclass = Q.extend({
    * @return {object} - t 垂直滚动条top位置，l 水平滚动条left位置， w 网页宽度包含隐藏部分， h 网页高度包含隐藏部分
    * 
    */
-  Q.scrollInfo = function() {
+  scrollInfo() {
     var t, l, w, h;
     if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft) ) { 
       t = document.documentElement.scrollTop;
@@ -415,7 +465,7 @@ var subclass = Q.extend({
    * @function Q.workspace
    * @return {size} 工作区大小
    */
-  Q.workspace = function() {
+  workspace() {
     var max_height = document.body.clientHeight;
     if( document.documentElement.clientHeight) {
       max_height = document.documentElement.clientHeight;
@@ -427,7 +477,7 @@ var subclass = Q.extend({
     }
    
     return  {width: max_width, height: max_height}
-  }, 
+  } 
 
   /** Object对象拷贝
    * 
@@ -435,7 +485,7 @@ var subclass = Q.extend({
    * @param src_object {object} - 源对象
    * @return {object} - 目标对象
    */
-  Q.copy = function(src_object) {
+  copy(src_object) {
     var target_object = {}; 
     for(var name in src_object) {
       target_object[name] = src_object[name];
@@ -444,7 +494,7 @@ var subclass = Q.extend({
   };
 
 
-  Q.template = function( tpl, record ) {
+  template( tpl, record ) {
     return tpl.replace( /\{([^\}]+)\}/ig, function(k) {
       return record[arguments[1]];
     });
@@ -456,11 +506,11 @@ var subclass = Q.extend({
    * @param key {string} - 字段名称
    * @return {string} - 字段值
    */
-  Q.query = function(key) { return _querystring[key]; };
+  query(key) { return _querystring[key]; };
   
   /** 当所有脚本都加载后开始执行Ready回调 */
-  Q.delayDOMReady = function() {
-    while(_on_page_load.length > 0) { _on_page_load.shift()(); }
+  delayDOMReady() {
+    while(this._on_page_load.length > 0) { this._on_page_load.shift()(); }
   };
 
   /**
@@ -470,12 +520,12 @@ var subclass = Q.extend({
    * @param f {function} - 函数对象
    * @param front {bool} - 追加或者置顶 
    */
-  Q.ready = function(f, front) {
+  ready (f, front) {
     var back = !front;
     if(back)
-      _on_page_load.push(f); 
+      this._on_page_load.push(f); 
     else 
-      _on_page_load.unshift(f); 
+      this._on_page_load.unshift(f); 
   };
 
   /** 加载js模块
@@ -484,7 +534,7 @@ var subclass = Q.extend({
    * @param src {string} - javascript模块地址
    * @param oncomplete(bool) {function} - 加载完成调用， ok 为true 加载成功，否则失败
    */
-  Q.loadModule = function(src, oncomplete) {
+  loadModule(src, oncomplete) {
     var header = document.getElementsByTagName("head")[0];
     var s = document.createElement("script");  
     s.type = "text/javascript";
@@ -519,7 +569,7 @@ var subclass = Q.extend({
    * @param src {string} - javascript模块地址
    * @param oncomplete(bool) {function} - 加载完成调用， ok 为true 加载成功，否则失败
    */
-  Q.loadCss = function(src, oncomplete) {
+  loadCss(src, oncomplete) {
     var header = document.getElementsByTagName("head")[0];
     //<link type="text/css" rel="stylesheet" href="../ui.css" />
     var s = document.createElement("link");  
@@ -555,7 +605,7 @@ var subclass = Q.extend({
    * @function Q.agent
    * @return {string} 浏览器版本信息
    */
-  Q.agent   = function() { 
+  agent() { 
     return navigator.userAgent.toLowerCase(); 
   }
 
@@ -564,7 +614,7 @@ var subclass = Q.extend({
    * @function Q.isW3C
    * @type {boolean}
    */
-  Q.isW3C   = function() { 
+  isW3C() { 
     return document.getElementById ? true:false; 
   }
 
@@ -573,8 +623,8 @@ var subclass = Q.extend({
    * @function Q.isIE
    * @return  {bool} - true 是， false 否 
    */
-  Q.isIE    = function() { 
-    var a = Q.agent(); 
+  isIE() { 
+    var a = this.agent(); 
     return ((a.indexOf("msie") != -1) && (a.indexOf("opera") == -1) && (a.indexOf("omniweb") == -1)); 
   }
 
@@ -584,8 +634,8 @@ var subclass = Q.extend({
    * @function Q.isOpera
    * @return  {bool} - true 是， false 否 
    */
-  Q.isOpera = function() { 
-    return Q.agent().indexOf("opera") != -1; 
+  isOpera() { 
+    return this.agent().indexOf("opera") != -1; 
   }
   
   /** 客户端是否是Netscape 
@@ -593,49 +643,9 @@ var subclass = Q.extend({
    * @function Q.isNS6
    * @return  {bool} - true 是， false 否 
    */
-  Q.isNS6   = function() { 
-    return Q.isW3C() && (navigator.appName=="Netscape"); 
+  isNS6 () { 
+    return this.isW3C() && (navigator.appName=="Netscape"); 
   }
+};
 
-  // get Browser
-  //为Firefox下的DOM对象增加innerText属性
-  if(Q.isNS6()) { //firefox innerText define
-    HTMLElement.prototype.__defineGetter__("innerText", function() { 
-      return this.textContent; 
-    });
-    HTMLElement.prototype.__defineSetter__("innerText", function(sText) { 
-      this.textContent=sText; 
-    });
-    HTMLElement.prototype.__defineGetter__("currentStyle", function () { 
-      return this.ownerDocument.defaultView.getComputedStyle(this, null); 
-    });
-    // 兼容ff，ie的鼠标按键值
-    Q.LBUTTON  = 0;
-    Q.MBUTTON  = 1;
-  }
-    
-  // 解析地址页面的查询字段
-  var query = location.search.slice(1).split('&');
-  for(var i=0; i < query.length; i++) {
-    var pos = query[i].indexOf( '=' );
-    if( pos >= 0 ) {
-      var name = query[i].substring( 0, pos );
-      var value = query[i].substring( pos + 1 );
-      _querystring[ name ] = value;
-    }
-  }
-  
-  var tmr = setInterval( ( function( t, r ) { return function() {
-    if( document.readyState == 'complete' ) {
-      t.loaded = true;
-      Q.delayDOMReady();
-      clearInterval( r );
-    }
-  } } )( Q, tmr ), 100 );
-  Q.addEvent(window, 'load', function(evt) {
-    if( !Q.loaded ) {
-      Q.loaded = true;
-      Q.delayDOMReady();
-    }
-  } );
-})();
+export default new Q;

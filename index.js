@@ -1,3 +1,3 @@
 
 
-export var Q = require( "./src/Q" );
+var Q = require( "./src/Q" );
