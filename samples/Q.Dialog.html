@@ -1,10 +1,10 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Q.Dialog | Q.js</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <!-- 使用QLib控件是必须包含样式表 -->
-  <link type="text/css" rel="stylesheet" href="../css/ui.css" />
+  <link type="text/css" rel="stylesheet" href="../assets/css/ui.css" />
   <!--  
   提示：src="{QLib目录}/Q.js" 
   根据实际存放路径， 测试代码都是在QLib目录的samples文件夹下，所以这里用的是"../Q.js" 
@@ -17,12 +17,13 @@
      background-color: yellow;
    }
   --></style>
-  <script type="text/javascript" src="../src/Q.js"></script>
+  <!--script type="text/javascript" src="../src/Q.js"></script>
   <script type="text/javascript" src="../src/stl.js"></script>
   <script type="text/javascript" src="../src/drag.js"></script>
-  <script type="text/javascript" src="../src/wndx-1-0-2.js"></script>
-  <script>
-  <!--
+  <script type="text/javascript" src="../src/wndx-1-0-2.js"></script-->
+  <script type="module">
+  import * as Q from "../dist/libq.js"
+  
   var g_test_messagebox;
   var g_test_dialog;
   Q.ready(function() {
@@ -73,8 +74,6 @@
     }
  
   });
-  
-  -->
   </script>
 </head>
 <body onselectstart="return false;" style=" -moz-user-select:none;-webkit-user-select: none;">

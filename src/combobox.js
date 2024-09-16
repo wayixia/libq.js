@@ -6,17 +6,17 @@
 ---------------------------------------------------------*/
 
 
-Q.ComboBox = Q.extend( {
-  hwnd : null,
-  editWnd : null,
-  arrowWnd: null,
-  dropWnd : null,
-  overitem : -1,
-  lastitem: -1,
-  textList : null,  // 下拉窗口列表数据
-  textListTemp : null,
-  textFilter : null,
-  __init__ : function( json ) {
+export class ComboBox {
+  hwnd = null;
+  editWnd = null;
+  arrowWnd = null;
+  dropWnd = null;
+  overitem = -1;
+  lastitem = -1;
+  textList = null;  // 下拉窗口列表数据
+  textListTemp = null;
+  textFilter = null;
+  constructor( json ) {
     var self = this;
     json = json || {};
     // 初始化数据
@@ -90,27 +90,27 @@ Q.ComboBox = Q.extend( {
     
     this.textListTemp = this.textList;
     this.textListTemp.sort();
-  },
+  }
   
-  push: function(item) {  //追加记录
+  push(item) {  //追加记录
     this.textList.push(item);
-  },
+  }
   
-  pushArray : function(arr) {
+  pushArray(arr) {
     for( var i=0; i < arr.length; i++) {
       this.textList.push(arr[i]);
     }
-  },
+  }
   
-  clear : function() {
+  clear() {
     this.textList = [];
-  },
+  }
   
-  setWndText : function(text) {
+  setWndText(text) {
     this.editWnd.value = text;
-  },
+  }
 
-  set_item_selected : function( index ) {
+  set_item_selected( index ) {
     if( index == this.overitem ) {
       return;
     }
@@ -125,9 +125,9 @@ Q.ComboBox = Q.extend( {
     }
 
     this.overitem = index;
-  },
+  }
   
-  updateDropWnd : function() {
+  updateDropWnd() {
     var self = this;
     this.textListTemp.sort();
     this.dropWnd.innerHTML = '';
@@ -160,9 +160,9 @@ Q.ComboBox = Q.extend( {
       } } )( self, self.textListTemp[i] );
       
     }
-  },
+  }
   
-  dropWindow : function(isDrop) {
+  dropWindow(isDrop) {
     if( !isDrop ) {
       this.dropWnd.style.display = 'none';
       this.overitem = -1;
@@ -177,9 +177,9 @@ Q.ComboBox = Q.extend( {
         display = '';
       }
     }
-  },
+  }
   
-  getAbsPosition : function(){
+  getAbsPosition(){
     var e = this.hwnd;
     var _x = e.offsetLeft;
     var _y = e.offsetTop;
@@ -195,18 +195,18 @@ Q.ComboBox = Q.extend( {
       top: _y,
       left: _x
     };
-  },
+  }
   
-  findItem : function(node) {
+  findItem(node) {
     var childNodes = this.dropWnd.childNodes;
     for( var i=0; i < childNodes.length; i++ ) {
       if( childNodes[i] == node )
         return i;    
     }
     return -1;
-  },
+  }
 
-  addfilter : function( text ) {
+  addfilter( text ) {
     for( var i=0; i < this.textFilter.length; i++ ) {
       if( this.textFilter[i] == text ) {
         return;
@@ -214,9 +214,9 @@ Q.ComboBox = Q.extend( {
     }
 
     this.textFilter.push( text );
-  },
+  }
 
-  removefilter: function( text ) {
+  removefilter( text ) {
     var t = [];
     for( var i=0; i < this.textFilter.length; i++ ) {
       if( this.textFilter[i] != text ) {
@@ -225,9 +225,9 @@ Q.ComboBox = Q.extend( {
     }
 
     this.textFilter = t;
-  },
+  }
 
-  isfilter: function( text ) {
+  isfilter( text ) {
     for( var i=0; i < this.textFilter.length; i++ ) {
       if( this.textFilter[i] == text ) {
         return true;
@@ -235,9 +235,9 @@ Q.ComboBox = Q.extend( {
     }
 
     return false;
-  },
+  }
   
-  autoComplete : function() {
+  autoComplete() {
     var text = this.editWnd.value;
     var count = 0;
     this.textListTemp = [];
@@ -253,9 +253,9 @@ Q.ComboBox = Q.extend( {
       }
     }
     this.dropWindow( count > 0 );
-  },
+  }
   
-  down : function() {
+  down() {
     // doNext;
     if( this.dropWnd.childNodes.length == 0 ) {
       return;
@@ -268,9 +268,9 @@ Q.ComboBox = Q.extend( {
       pos = this.mod((this.overitem + 1), this.textListTemp.length);
     }
     this.set_item_selected( pos );  
-  },
+  }
   
-  up : function(){
+  up(){
     // do preview
     if( this.dropWnd.childNodes.length == 0 ) {
       return;
@@ -284,13 +284,14 @@ Q.ComboBox = Q.extend( {
       pos = this.mod((this.overitem - 1), this.textListTemp.length);
     }
     this.set_item_selected( pos );  
-  },  
-  msgbox : function(str, color) {
+  } 
+
+  msgbox(str, color) {
     console.log( str + ", " + color );
-  },
+  }
   
-  mod : function(num, modern) {
+  mod(num, modern) {
     var r = (num % modern);
     return ((r >= 0)? r:(r+modern));
   }
-} );
+}

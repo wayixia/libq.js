@@ -94,52 +94,6 @@ class Q
   /**  on_page_load Message Queue */
   _on_page_load = [];
 
-  /** 
-   * 基于prototype的继承实现, 调用父类的（被重载的）同名函数调用需要借助
-   * 
-   ```
-   parent_class.prototype.method.call(this, arguments);
-   ```
-   * @namespace Q
-   */
-  //var Q = function() {};
-  /*
-  extend(props) { 
-      var parent_class = this.prototype;  
-      var this_class = function() {
-        this.__init__.apply(this, arguments);
-      };
-      // sub class -> parent class 
-      this_class.prototype = Object.create(parent_class);
-    
-      // copy properties
-      for(var name in props) {
-      this_class.prototype[name] = props[name];  
-    }
-    this_class.prototype.constructor = this_class;
-    this_class.extend = parent_class.extend;
-
-    return this_class;
-  }
-   */
-  /**
-   * 类继承方法 
-   * @function Q.extend
-   * @param props {object} - 派生类的属性
-   * @return {class} 返回派生类
-   * 
-   * @example <caption>派生一个新的class</caption>
-var subclass = Q.extend({
-  __init__ : function(json) {
-   // 构造函数
-  }
-});
-   
-  Q.extend = function(props) {
-    return this.prototype.extend.call(this, props);
-  }
-    */
-
  
   /** 
    * DOM 元素节点类型 
@@ -506,7 +460,7 @@ var subclass = Q.extend({
    * @param key {string} - 字段名称
    * @return {string} - 字段值
    */
-  query(key) { return _querystring[key]; };
+  query(key) { return this._querystring[key]; };
   
   /** 当所有脚本都加载后开始执行Ready回调 */
   delayDOMReady() {

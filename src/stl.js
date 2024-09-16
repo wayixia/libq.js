@@ -9,10 +9,15 @@
  * @property {Q.List.Node} head -  链表的头部
  * @property {number} length -  链表长度
  */
-Q.List = Q.extend({
-head : null,  
-length : 0,
-__init__ : function() {},
+export default class List 
+{
+head = null;  
+length = 0;
+
+constructor() {
+
+}
+
 /**
  * 节点结构
  * @class Q.List.Node
@@ -21,11 +26,11 @@ __init__ : function() {},
  * @property {any} next  - 绑定的数据
  * @param data {any} - 绑定的数据
  */
-Node : function(data) {
+Node (data) {
   this.next = null;
   this.prev = null;
   this.data = data;
-},
+}
 
 /** 
  * 获取链表开始节点 
@@ -33,18 +38,18 @@ Node : function(data) {
  * @type {Q.List.Node}
  * @return {Q.List.Node} - head节点， 如果为null，则说明链表为空
  */
-begin : function() {  
+begin () {  
   return this.head; 
-}, 
+}
 
 /** 
  * 获取链表结尾节点， 返回默认null 
  * @memberof Q.List.prototype
  * @return {null} 总是返回空节点
  */
-end : function() {  
+end () {  
   return null;  
-},
+}
 
 /** 
  * 返回链表长度 
@@ -52,17 +57,17 @@ end : function() {
  * @type {number}
  * @return {number}  链表长度 
  */
-size : function() {
+size () {
   return this.length;
-},
+}
 
 /**
  * 获取当前遍历位置的节点数据
  * @memberof Q.List.prototype
  */
-item : function() {
+item () {
   return this.current.data; 
-},
+}
 
 /**
  * 遍历链表元素回调函数
@@ -76,20 +81,20 @@ item : function() {
  * @memberof Q.List.prototype
  * @param fn {Q.List.each_handler} - 回调函数
  */
-each : function(fn) {
+each (fn) {
   if(typeof fn == 'function') {
     for(var node = this.begin(); node != this.end(); node = node.next) {
       if(!fn(node.data)) break;
     }
   }
-},
+}
 
 /**
  * 在链表末尾追加一个{@link Q.List.Node}节点
  * @memberof Q.List.prototype
  * @param data {any} - 绑定的数据
  */
-append : function(data) {
+append (data) {
   var node = new this.Node(data);
   if(!this.head) {
     this.head = node;
@@ -101,14 +106,14 @@ append : function(data) {
   }
 
   this.length++;
-},
+}
 
 /**
  * 删除链表的一个节点
  * @memberof Q.List.prototype
  * @param data {any} - 指定的数据
  */
-erase : function(data){
+erase (data){
   var node = this.find(data);
   if( node ) { 
     if(node != this.head) {
@@ -123,20 +128,20 @@ erase : function(data){
       }
     }
 
-    delete node;
+    //delete node;
     this.length--;
   }
-},
+}
 
 /**
  * 清空链表
  * @memberof Q.List.prototype
  */
-clear : function(){
+clear (){
   for(var node = this.begin(); node != this.end(); node = node.next){
     this.removeNode(node);
   }
-},
+}
 
 /**
  * 查找data所在的节点
@@ -145,14 +150,14 @@ clear : function(){
  * @param data {any} - 指定查询的数据
  * @return {Q.List.Node} 节点不存在则返回null
  */
-find : function(data){
+find (data){
   for(var node = this.begin(); node != this.end(); node = node.next){
     if( node.data == data )  return node;
   }
   return null;
 }
   
-});
+};
 
 /**
  * 哈希表类封装，提供添加删除遍历查找等操作
@@ -161,13 +166,13 @@ find : function(data){
  * @property length {number} - 元素个数
  * @property dataIndex {number} - 数据项索引, 初始值 0
  */
-Q.HashMap = Q.extend({
-base : null,
-length : 0,
-index : 0,
-__init__ : function() {
+class HashMap {
+base = null;
+length = 0;
+index = 0;
+constructor() {
   this.base = new Object();
-},
+}
   
 /**
  * 遍历哈希表元素回调函数
@@ -182,14 +187,14 @@ __init__ : function() {
  * @memberof Q.HashMap.prototype
  * @param fn {Q.HashMap.each_handler} - 回调函数
  */
-each : function(fn) {
+each (fn) {
   if(typeof fn != 'function') 
     return;
   for(var key in this.base) {
     if(fn(this.base[key], key) == 0) 
       break;
   }
-},
+}
 
 /**
  * 获取指定索引的对象
@@ -197,9 +202,9 @@ each : function(fn) {
  * @param index {number|string} 索引
  * @return {any} 返回指定索引项的值
  */
-item : function(index) {
+item (index) {
   return this.base[index];
-},
+}
 
 /**
  * 添加项
@@ -208,55 +213,55 @@ item : function(index) {
  * @param value {any} 值
  * @return 无
  */
-add : function(index, value) {
+add (index, value) {
   this.base[index] = value;
   this.length++;
-},
+}
  
 /**
  * 删除指定索引项
  * @memberof Q.HashMap.prototype
  * @param index {number|string} 索引
  */
-remove : function(key) {
+remove (key) {
   if(!this.has(key)) { return; }
   delete this.base[key];
   this.length--;
-},
+}
 
 /**
  * 清空哈希表
  * @memberof Q.HashMap.prototype
  */
-clear : function() {
+clear () {
   var _this = this;
   this.each(function(item, key){
     _this.remove(key);
   });
   this.length = 0;
-},
+}
   
 /**
  * 添加项，自动索引
  * @memberof Q.HashMap.prototype
  * @param value {any} 数据
  */
-push : function(value) {
+push (value) {
   this.base[this.index] = value;
   this.length++;
   this.index++;
-},
+}
   
 /**
  * 删除最后一个数字索引项
  * @memberof Q.HashMap.prototype
  */
-pop : function() {
+pop () {
   var re = this.base[this.dataIndex];
   delete this.base[this.dataIndex];
   this.length--;
   return re;
-},
+}
   
 /**
  * 查找value对应的索引
@@ -264,7 +269,7 @@ pop : function() {
  * @param value {value} 值
  * @return {number|string} 索引
  */
-find : function(value) {
+find (value) {
   var vkey = null;
   this.each(function(item, key){
     if(item == value) {
@@ -273,7 +278,7 @@ find : function(value) {
     }
   });
   return vkey;
-},
+}
   
 /**
  * 查找索引项是否存在
@@ -281,7 +286,8 @@ find : function(value) {
  * @param index {number|string} 索引
  * @return {bool} 该项是否存在
  */
-has : function(key) {
+has (key) {
   return !(typeof this.base[key] === 'undefined');
 }
-});
+
+};

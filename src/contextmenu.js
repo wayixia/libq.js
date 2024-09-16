@@ -20,29 +20,29 @@ window.MENU_ITEM_RADIO = "radio";
  * @param {string} json.style - 弹出子菜单窗口样式
  * @param {function} json.callback - 响应回调
  */
-Q.MenuItem = Q.extend(
+export class MenuItem 
 {
-hwnd : null,
-parentMenu : null,
-topMenu : null,
-titlewnd : null,
-subwnd : null,
-iconwnd : null,
-activeItem : null,
-type : -2,
-isAjust : false,
-clickHidden : true,
-items : null,
-data : null,
-isChecked : true,
-style: null,
+hwnd = null;
+parentMenu = null;
+topMenu = null;
+titlewnd = null;
+subwnd = null;
+iconwnd = null;
+activeItem = null;
+type = -2,
+isAjust = false,
+clickHidden = true,
+items = null;
+data = null;
+isChecked = true,
+style= null;
 /**
  * @callback Q.MenuItem.callback
  * @param {Q.MenuItem} item - 子菜单项
  * @returns {bool} true 关闭菜单，false 不关闭菜单
  */
 
-__init__ : function(json) {
+constructor(json) {
   json = json || {};
   var _this = this;
   _this.items = [];
@@ -125,7 +125,7 @@ __init__ : function(json) {
  * @memberof Q.MenuItem.prototype
  * @param {Q.MenuItem} subItem - 子菜单
  */
-addSubMenuItem : function(subItem) {
+addSubMenuItem (subItem) {
   if((this.type == MENU_SEPERATOR)
    || (this.type == MENU_ITEM_CHECKBOX))
   {
@@ -153,7 +153,7 @@ addSubMenuItem : function(subItem) {
   this.items.push(subItem);
 },
 
-setTopMenu : function(topMenu) {
+setTopMenu (topMenu) {
   this.topMenu = topMenu;
   var len = this.items.length;
   for(var i=0; i < len; i++) {
@@ -161,7 +161,7 @@ setTopMenu : function(topMenu) {
   }
 },
 
-hidePopup : function() {
+hidePopup () {
   if(!this.subwnd) 
     return
 
@@ -176,7 +176,7 @@ hidePopup : function() {
   }
 },
 
-showPopup : function() {
+showPopup () {
   if(!this.subwnd)  
     return; 
   Q.addClass(this.hwnd, "q-active");
@@ -205,7 +205,7 @@ showPopup : function() {
   this.subwnd.style.top = (si.t+y) + 'px';
 },
 
-data : function() {
+data () {
   return this.data;  
 }
 
@@ -219,30 +219,30 @@ data : function() {
  * @param {string} json.style - 菜单样式
  * @param {Q.Menu.callback} json.on_popup - 弹出菜单 
  */
-Q.Menu = Q.extend({
-hwnd : null,
-subwnd: null,
-timer : null,
-isajust : false,
-activeItem : null,
-items : null,
-_fHide : null,
-_fWheel: null,
-_fOnPopup : null,
+export class Menu {
+hwnd = null;
+subwnd= null;
+timer = null;
+isajust = false;
+activeItem = null;
+items = null;
+_fHide = null;
+_fWheel= null;
+_fOnPopup = null;
 
 /**
  * @callback Q.Menu.callback
  * @param {bool} popup - true 弹出, false 隐藏 
  */
 
-__init__ : function(json) {
+constructor(json) {
   json = json || {};
   var _this = this;
   this.items = [];
   this._fHide = (function(o, h) {
     return function(evt) {
       evt = evt || window.event;
-      var target = Q.isNS6() ? evt.target : evt.srcElement; // 获取鼠标悬停所在的对象句柄
+      var target = Q.isNS6() ? evt.target = evt.srcElement; // 获取鼠标悬停所在的对象句柄
       while(target && (!Q.hasClass(target,"q-contextmenu")) && (target != document.body)) {
         target = target.parentNode;
       }
@@ -265,7 +265,7 @@ __init__ : function(json) {
   this.initview(json);
 },
 
-initview : function(json) {
+initview (json) {
   this.hwnd = document.createElement('DIV');
   this.hwnd.className = 'q-contextmenu';
   document.body.appendChild(this.hwnd);
@@ -277,7 +277,7 @@ initview : function(json) {
  * 
  * @memberof Q.Menu.prototype
  */
-addMenuItem : function(item) {
+addMenuItem (item) {
   var _this = this;
   _this.hwnd.appendChild(item.hwnd);
   item.parentMenu = _this;
@@ -285,7 +285,7 @@ addMenuItem : function(item) {
   _this.items.push(item);
 },
 
-show : function(evt){
+show (evt){
   var _this = this;
   var scroll = Q.scrollInfo();
   var left = 0, top = 0;
@@ -320,7 +320,7 @@ show : function(evt){
   Q.addEvent(document, "mouseup", _this._fHide);
 },
 
-showElement : function(element, isClosed) {
+showElement (element, isClosed) {
   var _this = this;
   
   if(element.nodeType != Q.ELEMENT_NODE)  
@@ -366,7 +366,7 @@ showElement : function(element, isClosed) {
   _this.hwnd.style.top = (si.t + top) + 'px';
 },
 
-hide : function() {
+hide () {
   //Q.printf("hide context menu");
   this.hwnd.style.display = 'none';
   Q.removeEvent(window, "blur", this._fHide);
@@ -400,10 +400,10 @@ function fireMouseEvent(element, evtName) {
  * @constructor
  * @param {Object} json - 构造参数
  */
-Q.MenuBar = Q.extend({
-focus: null,
-items: null,
-__init__: function(json) {
+export class MenuBar {
+focus= null;
+items= null;
+constructor(json) {
   json = json || {};
   this.items = new Q.List();
   this._hide = Q.bind_handler(this, function() {
@@ -420,7 +420,7 @@ __init__: function(json) {
  * @param {dom} item - 渲染的菜单栏项
  * @param {Q.Menu} menu - 菜单的菜单栏项
  */
-append: function(item, menu) {
+append(item, menu) {
   item._menu = menu;
   item.onmousedown = (function(bar, i, m) { 
     return function(evt) {
@@ -453,7 +453,7 @@ append: function(item, menu) {
   this.items.append(item);
 },
 
-focus_item : function(item) {
+focus_item (item) {
   this.items.each(function(i) {
     if(item != i) {
       if(i._menu)

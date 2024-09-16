@@ -74,7 +74,7 @@ function XMLDocument(xmlfile) {
  * @param xmlString {string} - XML字符串 
  * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
  */
-Q.xml = function(xmlString){
+export function xml(xmlString){
 	var doc;
 	if (window.ActiveXObject) {
 		doc = new ActiveXObject("MSXML2.DOMDocument");
@@ -92,7 +92,7 @@ Q.xml = function(xmlString){
  * @param filename {string} - XML文件
  * @return {document} - IE下xmlDoc类型为Document, 其他浏览器为RootElement, 需要转换成Document类型
  */
-Q.xmlfile = function(filename) {
+export function xmlfile(filename) {
 	return XMLDocument(filename);
 }
 

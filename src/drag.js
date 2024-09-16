@@ -2,20 +2,21 @@
 /**
  * 拖拽封装，提供简单添加和删除完成元素的拖拽功能，只能创建一个实例
  */
-(function (Q) {
-  var draging = Q.extend({
-  capture_wnd : null,
-  is_drag : false,
-  x : 0,
-  y : 0,
-  begin_left : 0,
-  begin_top : 0,
-  mousedown_Hanlder : null,
-  mouseup_handler : null,
-  mousemove_handler : null,
-  is_moved : false,
-  timer : null,
-  __init__ : function(){
+class draging
+{
+  capture_wnd = null;
+  is_drag = false;
+  x = 0;
+  y = 0;
+  begin_left = 0;
+  begin_top = 0;
+  mousedown_Hanlder = null;
+  mouseup_handler = null;
+  mousemove_handler = null;
+  is_moved = false;
+  timer = null;
+  constructor()
+  {
     var _this = this;
 
     // 缓存时间
@@ -33,9 +34,9 @@
       }
     } )( this ), false );
 
-  },
+  }
 
-  attach_object : function(json) {
+  attach_object(json) {
     var config = json || {};
     var obj = Q.$(config.id);
     var config = config || {};
@@ -55,39 +56,39 @@
     for(var i=0; i < init_drag_objects.length; i++) {
       this.add_drag_handler(obj, Q.$(init_drag_objects[i]));
     }
-  },
+  }
 
-  deattach_object : function(obj_or_id) {
+  deattach_object(obj_or_id) {
     var obj = Q.$(obj_or_id);
     obj.removeAttribute('q-drag-object');
-  },
+  }
 
-  add_drag_handler : function(drag_object, handler) {
+  add_drag_handler(drag_object, handler) {
     drag_object.q_drag_objects.append(handler); 
-  },
+  }
   
-  remove_drag_handler : function(drag_object, handler) {
+  remove_drag_handler(drag_object, handler) {
     drag_object.q_drag_objects.erase(handler); 
-  },
+  }
   
-  is_drag_handler : function(drag_object, handler) {
+  is_drag_handler(drag_object, handler) {
     return this.is_dragable(drag_object) && drag_object.q_drag_objects.find(handler); 
-  },
+  }
 
-  is_dragable : function(drag_object) {
+  is_dragable(drag_object) {
     var obj = Q.$(drag_object);
     return obj && obj.getAttribute && !!obj.getAttribute('q-drag-object'); 
-  },
+  }
 
-  zoom : function(v) {
+  zoom (v) {
     if(this.capture_wnd && this.capture_wnd.style.zoom) {
       return (v / (this.capture_wnd.style.zoom * 1.0));
     } else {
       return v;
     }
-  },
+  }
 
-  _mousedown : function(evt) {
+  _mousedown(evt) {
     //Q.printf("touchstart or mousedown");
     evt = evt || window.event;
 
@@ -126,9 +127,9 @@
       //evt.preventDefault();
       return false; 
     }
-  },
+  }
     
-  _mousemove : function(evt){
+  _mousemove(evt){
     this.is_moved = true;
     evt = evt || window.event
     evt.preventDefault(); //阻止屏幕滚动的默认行为
@@ -153,9 +154,9 @@
       //return false; 
     }
     
-  },
+  }
 
-  _mouseup : function(evt) {
+  _mouseup(evt) {
     //Q.printf("touchend event");
     clearTimeout(this.timer);
     
@@ -170,7 +171,7 @@
     this.is_moved=false;
     
   }
-});
+}; // end drag class
 
 var instance;
 
@@ -213,7 +214,7 @@ Q.ready(function() {
 });
  
  */
-Q.drag = function(json) {
+export function drag(json) {
   if(!instance)  
     instance = new draging;
   instance.attach_object(json);
@@ -226,11 +227,9 @@ Q.drag = function(json) {
  * @example 
  * Q.dragno('test-drag');
  */
-Q.dragno = function(id) {
+export function dragno(id) {
   if(instance) {
     instance.deattach_object(id);
   }
 }
-
-})(window.Q);
 
