@@ -20,7 +20,7 @@ module.exports = {
   },
   "output": {
     path: path.resolve( __dirname, '../dist' ),
-    filename: 'libq.cjs.js',
+    filename: 'libq.js',
     publicPath: '/',
   },
   "module": {
@@ -88,16 +88,16 @@ module.exports = {
         //inject: false,
       //}
     //),
-//	  new CopyWebpackPlugin({
-      //patterns: [
-      ////{ from:"../src/manifest.json", to:"." },
-    //]
-    //})
+	  new CopyWebpackPlugin({
+      patterns: [
+      { from:"../samples", to:"./samples" },
+    ]
+    })
   ],
 
   devServer : {
-    static : path.resolve( __dirname, 'dist'),
-    //contentBase: path.resolve( __dirname, 'dist'),
+    static : path.resolve( __dirname, '..'),
+    //contentBase: path.resolve( __dirname, '../dist'),
     //contentBase: path.join(__dirname, ''),
     compress: true,
     host: devServerHost,
