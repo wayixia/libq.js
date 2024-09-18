@@ -88,11 +88,11 @@ module.exports = {
         //inject: false,
       //}
     //),
-	  new CopyWebpackPlugin({
-      patterns: [
-      { from:"../samples", to:"./samples" },
-    ]
-    })
+	  //new CopyWebpackPlugin({
+    //  patterns: [
+    //  { from:"../samples", to:"./samples" },
+    //]
+    //})
   ],
 
   devServer : {

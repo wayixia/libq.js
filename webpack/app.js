@@ -11,6 +11,7 @@ import "../src/wndx-1-0-2"
 import "../src/ajax"
 import "../src/table"
 import "../src/tree"
+import "../src/dropwindow"
 
 
 //import {app_service} from "./service";
