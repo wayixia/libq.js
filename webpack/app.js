@@ -12,6 +12,12 @@ import "../src/ajax"
 import "../src/table"
 import "../src/tree"
 import "../src/dropwindow"
+import "../src/dropdownlist"
+import "../src/contextmenu"
+import "../src/checkbox"
+import "../src/slider"
+
+
 
 
 //import {app_service} from "./service";
