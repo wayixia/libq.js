@@ -16,6 +16,7 @@ import "../src/dropdownlist"
 import "../src/contextmenu"
 import "../src/checkbox"
 import "../src/slider"
+import "../src/tabs"
 
 
 
