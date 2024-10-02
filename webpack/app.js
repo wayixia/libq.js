@@ -17,6 +17,7 @@ import "../src/contextmenu"
 import "../src/checkbox"
 import "../src/slider"
 import "../src/tabs"
+import "../src/placeholder"
 
 
 
