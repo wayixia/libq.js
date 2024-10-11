@@ -18,6 +18,7 @@ import "../src/checkbox"
 import "../src/slider"
 import "../src/tabs"
 import "../src/placeholder"
+import "../src/tween"
 
 
 
