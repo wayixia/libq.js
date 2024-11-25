@@ -667,7 +667,7 @@
 .q-contextmenu.q-contextmenu-bar .q-item:hover, 
 .q-contextmenu.q-contextmenu-bar .q-item.q-active
 {
-  background-color: #FFF;
+  background-color: #022edf;
 }
 /* select ui control */
 .qlib_ui_select {width:100px;height:24px;font-size:12px;text-overflow:ellipsis;white-space: nowrap;}
@@ -823,9 +823,11 @@
   margin:15px 0px 0 15px;
   background:#FFF;
   text-align:center;
+  /*
   box-shadow:0 1px 5px rgba(0,0,0,.3);
   -moz-box-shadow:0 1px 5px rgba(0,0,0,.3);
   -webkit-box-shadow:0 1px 5px rgba(0,0,0,.3) 
+  */
 }
 
 .q-images-box .q-box-info
@@ -898,7 +900,7 @@
   position:absolute;
   left:0; top:0; right:0;bottom:0;
   opacity: 0.5;
-  background: #FFF url(../images/images-box/hover-picture.png) right top no-repeat;
+  /*background: #FFF url(../images/images-box/hover-picture.png) right top no-repeat; */
 }
 
 .q-images-box .q-box-item.mouseselected .select-mask 
