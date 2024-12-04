@@ -22,7 +22,14 @@ Q.CheckBox = Q.extend({
     this.onchange = json.onchange || function(id) {}
     this.setCheck(!!json.checked);
     Q.addEvent( this.hwnd, 'click',  (function(t) { return function() {  
-      t.setCheck(!t.checked()); 
+      if( t.halfchecked() || t.checked() )
+      {
+        t.setCheck(false);
+      }
+      else
+      {
+        t.setCheck(true);
+      }
     }})(this));
   },
 
@@ -35,19 +42,36 @@ Q.CheckBox = Q.extend({
     return Q.hasClass(this.hwnd, "checked");
   },
 
+  halfchecked: function() {
+    return Q.hasClass(this.hwnd, "halfchecked");
+  },
+
   /** 设置勾选状态， 触发onchange事件
    *
    * @memberof Q.CheckBox.prototype
    * @param {bool} checked - 是否勾选
    */
-  setCheck : function(checked) {
-    if(this.checked() == checked) 
+  setCheck : function(checked, noevent) {
+    if( this.halfchecked() ) {
+      Q.removeClass(this.hwnd, "halfchecked");
+    } else if(this.checked() == checked ) {
       return;
+    }
+
     if(checked) {
       Q.addClass(this.hwnd, "checked");
     } else {
       Q.removeClass(this.hwnd, "checked");
     }
-    this.onchange(checked);
+
+    if( !noevent )
+    {
+      this.onchange(checked);
+    }
+  },
+
+  setHalfCheck: function() {
+    Q.removeClass(this.hwnd, "checked");
+    Q.addClass(this.hwnd, "halfchecked");
   }
 });
