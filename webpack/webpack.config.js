@@ -57,9 +57,10 @@ module.exports = {
      {
        test: /\.(eot|svg|ttf|woff|woff2)$/,
        use: {
-         loader: 'file-loader',
+         loader: 'url-loader',
          options: {
-           outputPath: 'assets/fonts/'
+            limit: 1024*1024,
+            outputPath: 'assets/fonts/',
          }
        }
      },

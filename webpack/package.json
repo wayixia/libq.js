@@ -32,7 +32,6 @@
   "devDependencies": {
     "copy-webpack-plugin": "^10.2.4",
     "html-webpack-plugin": "^5.5.0",
-    "node-sass": "^7.0.1",
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^4.9.1"
