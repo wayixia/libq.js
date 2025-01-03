@@ -16,17 +16,49 @@
   background: #F8F8F8;
 }
 
-.q-tabs-header {
+.property .q-tabs-header {
+  background-color: blue;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.q-tabs.property .q-tabs-header ul {
+  padding: 0 0 0 0;
+  list-style: none;
+  margin:0;
+}
+
+.q-tabs.property .q-tabs-header ul li {
+  line-height: 30px;
+  height: 30px;
+  margin:0;
+
+  display: inline-block;
+  padding: 0 5px;
+  border-radius: 5px 5px 0 0px;
+    border: 1px solid transparent;
+    border-bottom: 0px;
+}      
+
+.q-tabs.property .q-tabs-header ul:first {
+  margin-left: 5px;
+}
+
+.q-tabs.property .q-tabs-header ul li:hover, 
+.q-tabs.property .q-tabs-header ul li.q-selected {
+  background-color: white;
+  border: 1px solid #222;
+  border-bottom: 0px;
+}
+
+
+
+.v-property .q-tabs-header {
   background-color: blue;
   height: 100%;
 }
-
-
-.q-tabs.v-property {
-
-}
-
-
 
 .q-tabs.v-property .q-tabs-header {
   float: left; 
@@ -81,7 +113,8 @@ Q.ready(function() {
 
 
 var t = new Q.tabs({
-    action: "mouseover",
+    //action: "mouseover",
+    action: "click",
     active: Q.$('tab-1'),
     items: [
       {tab: Q.$('tab-1'), content: Q.$('panel-1')},
@@ -129,10 +162,10 @@ var t2 = new Q.tabs({
 
 <div class="q-tabs-header">
 	<ul>
-		<li id="tab-1-1" href="javascript:;"> Tab1 </li>
-		<li id="tab-1-2" href="javascript:;"> Tab2 </li>
-		<li id="tab-1-3" href="javascript:;"> Tab3 </li>
-		<li id="tab-1-4" href="javascript:;"> Tab4 </li>
+		<li id="tab-1-1"> Tab1 </li>
+		<li id="tab-1-2"> Tab2 </li>
+		<li id="tab-1-3"> Tab3 </li>
+		<li id="tab-1-4"> Tab4 </li>
 	</ul>
 </div>
 <div class="q-tabs-body">
@@ -156,11 +189,12 @@ var t2 = new Q.tabs({
 <div class="q-tabs property">
 
 <div class="q-tabs-header">
-&nbsp;
-<a id="tab-1" href="javascript:;"> Tab1 </a>
-<a id="tab-2" href="javascript:;"> Tab2 </a>
-<a id="tab-3" href="javascript:;"> Tab3 </a>
-<a id="tab-4" href="javascript:;"> Tab4 </a>
+<ul>
+<li id="tab-1"> Tab1 </li>
+<li id="tab-2"> Tab2 </li>
+<li id="tab-3"> Tab3 </li>
+<li id="tab-4"> Tab4 </li>
+</ul>
 </div>
 
 <div id="panel-1" class="q-panel">
