@@ -19,6 +19,8 @@ import "../src/slider"
 import "../src/tabs"
 import "../src/placeholder"
 import "../src/tween"
+import "../src/imagesbox"
+
 
 
 
