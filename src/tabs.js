@@ -9,9 +9,13 @@
 Q.tabs = Q.extend({
 items  : null,
 active : null,
+activeclass: "q-selected",
 __init__: function(json) {
   json = json || {};
   this.items = json.items || [];  // {tab: id, content: id}
+  if( json.activeclass ) {
+    this.activeclass = json.activeclass;
+  }
   this.onactive = json.onactive || function( tid ) {};
   this.each( ( function( this_ ) { return function(item) {
     var f = ( function( thiz, tab ) { 
@@ -36,7 +40,7 @@ __init__: function(json) {
             return function() { 
               console.log( "hide tab" ); 
               c.style.display="none";  
-              Q.removeClass( t, "q-selected");
+              Q.removeClass( t, thiz.activeclass);
             } } )( Q.$( tab ), Q.$( content ) ) ,
             200 
           );
@@ -73,7 +77,7 @@ set_active : function(tab_id) {
   this.each( ( function( thiz, tid ) { return function(item) {
     
     if( item.tab == tid ) {
-      Q.addClass(Q.$(item.tab), "q-selected");
+      Q.addClass(Q.$(item.tab), thiz.activeclass );
       if(Q.$(item.content)) {
         Q.$(item.content).style.display = '';
       }
@@ -86,7 +90,7 @@ set_active : function(tab_id) {
       }
 
     } else {
-      Q.removeClass(Q.$(item.tab), "q-selected");
+      Q.removeClass(Q.$(item.tab), thiz.activeclass);
       if(Q.$(item.content)) {
         Q.$(item.content).style.display = 'none';
       }
