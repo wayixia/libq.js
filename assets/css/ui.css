@@ -135,7 +135,9 @@
 .q-window .q-bottom-bar {position: absolute; bottom: 0; left:0; right:0;height:50px; line-height:50px; text-align:right;background: #FFF;border-top: 1px solid #e0e0e0; display: none;}
 .q-window.q-attr-with-bottom .q-bottom-bar {display: block;}
 .q-window.q-attr-with-bottom .q-window-client { bottom: 51px; }
-.q-bottom-bar button {
+
+/*
+.q-window .q-bottom-bar button {
   border: 1px solid transparent;
   height: 26px;
   line-height: 26px;
@@ -143,6 +145,7 @@
   margin-right: 6px;
   margin-top: 6px;
 }
+  */
 /*------------------------------------------------------
  $ context menu style
 --------------------------------------------------------*/
