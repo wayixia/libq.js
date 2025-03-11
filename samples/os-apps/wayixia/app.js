@@ -36,76 +36,76 @@ window.format_size = function( bytes ) {
 }
 
 
-const LENGTH = 1024 * 1024;//每次上传的大小 
+// const LENGTH = 1024 * 1024;//每次上传的大小 
 
-window.async_uploadfile = function( url, objprogress, fn )
-{
-  return function( file, start, end, res ) {
-    var c = arguments.callee;
-    if( start < file.size )
-    {
+// window.async_uploadfile = function( url, objprogress, fn )
+// {
+//   return function( file, start, end, res ) {
+//     var c = arguments.callee;
+//     if( start < file.size )
+//     {
       
-      fd = new FormData();//每一次需要重新创建 
-      blob = file.slice(start,end);//根据长度截取每次需要上传的数据 
-      fd.append('Filedata',blob);//添加数据到fd对象中 
-      fd.append('filename',file.name); //获取文件的名称 
-      fd.append('filesize',file.size); //获取文件的名称 
-      fd.append('finished',file.size <= end ); //获取文件的名称 
+//       fd = new FormData();//每一次需要重新创建 
+//       blob = file.slice(start,end);//根据长度截取每次需要上传的数据 
+//       fd.append('Filedata',blob);//添加数据到fd对象中 
+//       fd.append('filename',file.name); //获取文件的名称 
+//       fd.append('filesize',file.size); //获取文件的名称 
+//       fd.append('finished',file.size <= end ); //获取文件的名称 
 
-      try {
-        // timestamp
-        var r = Q.json_decode( res );
-        if( r && r.data && r.data.timestamp ) {
-          fd.append( 'timestamp', r.data.timestamp );
-        }
-      } catch( e ) {
+//       try {
+//         // timestamp
+//         var r = Q.json_decode( res );
+//         if( r && r.data && r.data.timestamp ) {
+//           fd.append( 'timestamp', r.data.timestamp );
+//         }
+//       } catch( e ) {
 
-      }
+//       }
 
 
-      var xhr = new XMLHttpRequest();//需要每次创建并设置参数 
-      xhr.open('POST', url, true); 
-      xhr.withCredentials = true;
-      xhr.onreadystatechange=function(){
-        if(this.readyState == 4 ) {
-          if( this.status == 200) {
-          //document.getElementById("output").innerText += xhr.responseText;
-            //arguments.callee.apply()
-            c( file, end, end + LENGTH, xhr.responseText );
-          } else {
-            fn( false, "" );
-          }
-        }
-      }
+//       var xhr = new XMLHttpRequest();//需要每次创建并设置参数 
+//       xhr.open('POST', url, true); 
+//       xhr.withCredentials = true;
+//       xhr.onreadystatechange=function(){
+//         if(this.readyState == 4 ) {
+//           if( this.status == 200) {
+//           //document.getElementById("output").innerText += xhr.responseText;
+//             //arguments.callee.apply()
+//             c( file, end, end + LENGTH, xhr.responseText );
+//           } else {
+//             fn( false, "" );
+//           }
+//         }
+//       }
  
 
-      // 监听文件上传进度
-      xhr.upload.addEventListener( 'progress', function (ev){
-        if(ev.lengthComputable){
-          var progress = ( start + ev.loaded )/file.size *100;
-          objprogress.style.width = progress + '%';
-          objprogress.innerText = progress + '%';
-        }
-      }, false );
+//       // 监听文件上传进度
+//       xhr.upload.addEventListener( 'progress', function (ev){
+//         if(ev.lengthComputable){
+//           var progress = ( start + ev.loaded )/file.size *100;
+//           objprogress.style.width = progress + '%';
+//           objprogress.innerText = progress + '%';
+//         }
+//       }, false );
 
-      xhr.send(fd);//将fd数据上传 
-    } else {
-      fn( true, res );
-    }
-  };
-}
+//       xhr.send(fd);//将fd数据上传 
+//     } else {
+//       fn( true, res );
+//     }
+//   };
+// }
 
-window.selfile = function( obj, objprogress, fn ){ 
-      const LENGTH = 1024 * 1024 * 10;//每次上传的大小 
-      var file = obj.files[0];//文件对象 
-      var filename=obj.files[0].name; 
-      var totalSize = file.size;//文件总大小 
-      var start = 0;//每次上传的开始字节 
-      var end = start + LENGTH;//每次上传的结尾字节 
+// window.selfile = function( obj, objprogress, fn ){ 
+//       const LENGTH = 1024 * 1024 * 10;//每次上传的大小 
+//       var file = obj.files[0];//文件对象 
+//       var filename=obj.files[0].name; 
+//       var totalSize = file.size;//文件总大小 
+//       var start = 0;//每次上传的开始字节 
+//       var end = start + LENGTH;//每次上传的结尾字节 
 
-      async_uploadfile( "https://www.wayixia.com/?mod=attachment&action=do-upload-file&inajax=true", objprogress, fn )( file, start, end, "" );
-      //async_uploadfile( "testupload.php", objprogress )( file, start, end );
-} 
+//       async_uploadfile( "https://www.wayixia.com/?mod=attachment&action=do-upload-file&inajax=true", objprogress, fn )( file, start, end, "" );
+//       //async_uploadfile( "testupload.php", objprogress )( file, start, end );
+// } 
 
 // 用于获取指定q:id属性的元素
 window.qid = function(p, q_id) {
