@@ -319,7 +319,7 @@ Q.Table = Q.extend({
 wndOwner: null,
 wndOwnerProc: null,
 wndOwnerOldProc: null,
-wndParent : null,
+renderer: null,
 wnd : null,
 wndTitleBar : null,
 wndFrame : null,
@@ -369,9 +369,9 @@ __init__ : function(json) {
   _this.item_ondblclick = (typeof json.item_ondblclick == 'function') ? json.item_ondblclick : function(item) {};
   _this.item_oninsert = (typeof json.item_oninsert == 'function') ? json.item_oninsert : function(item, record) {};
 
-  // 初始化父窗口 wndParent,用来显示jtable控件
+  // 初始化父窗口 renderer,用来显示jtable控件
   // 并初始化jtable视图
-  _this.wndParent = Q.$(json.id);
+  _this.renderer = json.renderer;
   _this.initview(json);
   _this.on_viewstyle_changed();
   _this.render();
@@ -465,7 +465,7 @@ initview : function(json) {
   
   _this.wndTitleBar.innerText = _this.title;
   // 在浏览器中渲染控件视图
-  _this.wndParent.appendChild(_this.wnd);
+  _this.renderer.appendChild(_this.wnd);
 
   // 初始化表头表格和数据表格
   _this.wndGroupBody.innerHTML = 
@@ -543,12 +543,12 @@ autosize : function() {
   //  return;
 
   var frame_width, frame_height;
-  var fullHeight = parseInt(_this.wndParent.offsetHeight, 10);
-  var fullWidth  = parseInt(_this.wndParent.offsetWidth, 10);
+  var fullHeight = parseInt(_this.renderer.offsetHeight, 10);
+  var fullWidth  = parseInt(_this.renderer.offsetWidth, 10);
 
   if( fullHeight == 0 || fullWidth == 0)
     return;
-  //var currentstyle = _this.wndParent.currentStyle;
+  //var currentstyle = _this.renderer.currentStyle;
   var currentstyle = _this.wnd.currentStyle;
   frame_height = fullHeight 
     - _this.wndTitleBar.offsetHeight 
