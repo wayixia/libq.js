@@ -1,0 +1,12 @@
+main {
+  margin: 0 auto;
+  height:100%;
+  background-color: yellowgreen;
+}
+
+aside {
+  background-color: lightblue;
+  width: 200px;
+  height: 100%;
+  float: left;
+}

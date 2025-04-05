@@ -25,13 +25,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev2": "webpack --mode development",
     "dev": "webpack serve --hot --env develop --config webpack.config.js --mode development",
-    "build": "webpack-cli --mode production"
+    "dev3": "samples=true webpack serve --hot --env develop --config webpack.config.js --mode development",
+    "build": "webpack-cli --mode production",
+    "build3": "samples=true webpack-cli --mode production"
   },
   "author": "Q",
   "license": "ISC",
   "devDependencies": {
     "copy-webpack-plugin": "^10.2.4",
     "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^4.9.1"

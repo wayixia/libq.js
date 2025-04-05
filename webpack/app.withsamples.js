@@ -25,9 +25,29 @@ import "../src/imagesbox"
 
 
 
-//import {app_service} from "./service";
-//import  "../src/css/style.css";
 import  "../assets/css/ui.css";
+import  "../samples/style.css";
+
+window.process_tags = function( renderer, obj ) {
+  const tags = renderer.querySelectorAll('[tag]');
+  console.log( tags );
+}
+
+window.uirouter = Q.extend({
+  __init__: function(params) {
+
+  }
+});
+
+
+window.uiapp = Q.extend({
+  renderer: null,
+  __init__:function(params) {
+    this.renderer = document.querySelector(params.renderer);
+    const page = require( '../samples/app.page' )({ renderer: this.renderer });
+  },
+});
+
 
 
 

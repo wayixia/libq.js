@@ -181,31 +181,6 @@
 }
 
 /* button system */
-/*.q-sysokbtn {
-  background: #3b5998;
-  border-width: 1px;
-  border-style: outset;
-  color: white;
-  height: 26px;
-  line-height: 26px;
-  padding: 0 15px ; 
-  margin-right: 5px;
-  margin-top:2px;
-}
-
-.q-syscancelbtn { 
-  background:#EEE; 
-  border-width:1px; 
-  border-style:outset;
-  color:#333; 
-  height:26px;
-  margin:5px; 
-  line-height:26px;
-  padding: 0 15px ; 
-  margin-right: 5px;
-  margin-top:2px;
-}
-*/
 .q-window .q-sysokbtn,
 .q-window .q-syscancelbtn
 {
