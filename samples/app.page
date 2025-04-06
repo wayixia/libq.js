@@ -1,12 +1,27 @@
 <template>
 <!-- 页眉内容 -->
-<header><p>Q.Window | Q.Dialog</p></header>
+<header><h3>libq.js</h3></header>
 
 <!-- 页眉内容 -->
 <nav>
     <!-- 导航菜单 -->
 </nav>
-<main>
+<div class="container"> 
+  <aside>
+    <!-- 侧边栏内容 -->
+    <div class="libq-menuclass">
+      <ul>
+      <li>Q.extend</li>
+      <li>Q.ajax</li>
+      <li>Q.drag</li>
+      <li>Q.Window</li>
+      <li>Q.Dialog</li>
+    </ul>
+    </div>
+    
+  </aside>
+  <main>
+    <div>
     <!-- 页面主要内容的区域 -->
     <h1>文章标题</h1>
     <p>文章正文内容...</p>
@@ -43,17 +58,11 @@
   dom content
 </div>
 </div>
-</main>
-<aside>
-    <!-- 侧边栏内容 -->
-    <ul>
-      <li>Q.extend</li>
-      <li>Q.ajax</li>
-      <li>Q.drag</li>
-      <li>Q.Window</li>
-      <li>Q.Dialog</li>
-    </ul>
-</aside>
+</div>
+  </main>
+
+</div>
+
 <footer>
     <!-- 页脚内容 -->
 </footer>

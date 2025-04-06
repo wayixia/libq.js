@@ -1,12 +1,57 @@
+html {
+  margin:0;
+  padding:0;
+}
+
+#app {
+  margin: 0;
+  height:100%;
+  background-color: #f0f0f0;
+}
+
+#app .container {
+  display: flex;
+}
+
+header {
+  background-color: blue;
+  height: 50px;
+  line-height: 50px;
+  color: white;
+  text-indent: 20px;
+}
+
 main {
   margin: 0 auto;
   height:100%;
-  background-color: yellowgreen;
+  background-color: white;
+  flex: 1;
 }
 
 aside {
-  background-color: lightblue;
-  width: 200px;
+  width: 175px;
   height: 100%;
-  float: left;
+}
+
+
+.libq-menuclass {
+  background-color: transparent;
+}
+
+.libq-menuclass ul {
+  list-style-type: none;
+  padding: 0;
+  margin:0;
+}
+
+.libq-menuclass ul li {
+  padding: 10px;
+  border-bottom: 1px solid #EEE;
+}
+.libq-menuclass ul li:hover {
+  background-color: #f0f0f0;
+}
+.libq-menuclass ul li a {
+  text-decoration: none;
+  color: black;
 }
