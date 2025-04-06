@@ -1,7 +1,9 @@
-html {
+html, body{
   margin:0;
   padding:0;
 }
+
+
 
 #app {
   margin: 0;
@@ -13,6 +15,10 @@ html {
   display: flex;
 }
 
+.container {
+  margin:0 auto;
+}
+
 header {
   background-color: blue;
   height: 50px;
@@ -20,6 +26,11 @@ header {
   color: white;
   text-indent: 20px;
 }
+
+header h3 {
+  margin: 0;
+}
+
 
 main {
   margin: 0 auto;
