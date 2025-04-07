@@ -8,7 +8,6 @@ html, body{
 #app {
   margin: 0;
   height:100%;
-  background-color: #f0f0f0;
 }
 
 #app .container {
@@ -16,7 +15,8 @@ html, body{
 }
 
 .container {
-  margin:0 auto;
+  margin:30px auto;
+  width: 90%;
 }
 
 header {
@@ -37,6 +37,7 @@ main {
   height:100%;
   background-color: white;
   flex: 1;
+  padding:10px;
 }
 
 aside {
@@ -56,13 +57,22 @@ aside {
 }
 
 .libq-menuclass ul li {
-  padding: 10px;
-  border-bottom: 1px solid #EEE;
+  padding: 0px 10px;
+
 }
-.libq-menuclass ul li:hover {
+.libq-menuclass ul li a:hover {
   background-color: #f0f0f0;
 }
 .libq-menuclass ul li a {
   text-decoration: none;
   color: black;
+  display:block;  
+  height: 30px;
+  line-height: 30px;
+  text-indent: 10px;;
+}
+
+
+.libq-split {
+  border-left: 1px solid #ccc;
 }

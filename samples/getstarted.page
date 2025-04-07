@@ -1,0 +1,80 @@
+<template>
+<div>
+  <!-- 页面主要内容的区域 -->
+  <h1>文章标题</h1>
+  <p>文章正文内容...</p>
+<hr>
+<br>
+<button id="btnOpenWindow">Q.Window窗口</button>
+<button id="btnOpenMultiWindow">Q.Window多窗口</button>
+
+<br>
+<!-- wndx template -->
+<button id="test-domodal" style="display:none;">DoModal</button>
+
+<div __qwindow__="" class="q-window undefined q-attr-fixed q-attr-no-min q-attr-no-max q-attr-with-bottom" style="top: 143px; left: 214px; width: 600px; height: 400px; display: none;" q-drag-object="true">
+<div class="q-title">
+  <div class="q-icon"></div>
+  <div class="q-title-content">提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口</div>
+  <button class="q-padding">&nbsp;</button>
+  <button class="q-close">&nbsp;</button>
+  <button class="q-max">&nbsp;</button>
+  <button class="q-min">&nbsp;</button>
+</div>
+<div class="q-window-client">
+  <button id="test-domodal">DoModal</button>
+</div>
+<div class="q-bottom-bar"></div>
+<div class="q-window-mask alpha_1" style="display: none;"></div>
+</div>
+
+<br>
+<div style="position: relative; width: 300px;height: 200px;">
+<div id="progress" style="position:absolute; left: 0; top:0; right:0; bottom:0;">
+dom content
+</div>
+</div>
+</div>
+</template>
+<script>
+Q.extend({
+  __init__: function(params) {
+    // 初始化代码
+    this.initWindow();
+  },
+  initWindow: function() {
+    var self = this;
+    Q.$('btnOpenWindow').onclick = function() {
+      self.openWindow();
+    };
+    Q.$('btnOpenMultiWindow').onclick = function() {
+      self.openMultiWindow();
+    };
+  },
+  openWindow: function() {
+    var wnd = new Q.Window({
+      title: '提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口提示窗口',
+      width: 600,
+      height: 400,
+      modal: true,
+      content: '<button id="test-domodal">DoModal</button>'
+    });
+    wnd.show();
+  },
+  openMultiWindow: function() {
+    var wnd1 = new Q.Window({
+      title: '多窗口1',
+      width: 300,
+      height: 200
+    });
+    wnd1.show();
+
+    var wnd2 = new Q.Window({
+      title: '多窗口2',
+      width: 300,
+      height: 200
+    });
+    wnd2.show();
+  }
+});
+</script>

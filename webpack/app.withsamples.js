@@ -42,6 +42,7 @@ window.uirouter = Q.extend({
 
 window.uiapp = Q.extend({
   renderer: null,
+  router: null,
   __init__:function(params) {
     this.renderer = document.querySelector(params.renderer);
     const page = require( '../samples/app.page' )({ renderer: this.renderer });
