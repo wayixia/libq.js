@@ -2,54 +2,42 @@
  $ module: viewloader2 for libq.js
  $ date:   2022-01-15 21:23:28
  $ author: Q
- $ last modified: 2015-01-15 22:06:58
+ $ last modified: 2025-04-08 22:06:58
  $ copyright www.wayixia.com
 ----------------------------------------------------------------------*/
 
 const cheerio = require('cheerio');
 
 
-/** \brief replace template item, for example:  {#template}
- * 
- */
-// function template( tpl, record ) {
-//   return tpl.replace( /\{#([^\}]+)\}/ig, function(k) {
-//     return record[arguments[1]];
-//   });
-// };
-
-
 module.exports = function (src) {
   //src = src.replace( /\"/g, "\\\"");
   //src = src.replace( /\s$/g, '');
   //src = src.replace(/\r|\n/g,"");
-  if(1) {
-    const $ = cheerio.load(src);
-    //console.log($);
-    //console.log( $('style').html() );
-    //console.log( $('template').html() );
-    //console.log( $('script').html() );
-    tpl = '<style>' + $('style').html()  + '</style>'+ $('template').html();
-    tpl.replace(/'/g, '\\\'');
-    script = 
-    'function( args ) {\
-      var cls=' + $('script').html() + ';\
-      args.content=\''+tpl.replace(/\r|\n/g,"") +'\';\
-      return new cls(args);\
-    }';
 
-    //console.log( script);
+  const $ = cheerio.load(src);
+  //console.log($);
+  //console.log( $('template').html() );
+  //console.log( $('script').html() );
 
-    //script = $('script').html();
-    //script = template( script, { 
-    //  template: tpl.replace(/\r|\n/g,"") 
-    //} );
+  tpl = $('template').html()
+        .replace(/'/g, '\\\'')
+        .replace(/\r|\n/g,"");
+  script = 'function( args ) {\
+      var cls=' + $('script').html()+';\
+      var template=\''+ tpl +'\'; \
+      var o=null; \
+      if( args.renderer ) { \
+        var o = new cls(args);\
+        args.renderer.innerHTML = template; \
+        o.onload(); \
+        /*app.render2( o, template, ()=>{ o.onload(); } );*/ \
+      } else {\
+        args.content=template; \
+        o = new cls(args);\
+      }\
+      return o;\
+  }';
 
-    //console.log( script );
-    return "module.exports="+script;
-    //return "exports = "+script;
-  } else {
-    src = src.replace(/\r|\n/g,"");
-    return "module.exports = \""+src+"\"";
-  }
+  //console.log( script );
+  return "module.exports="+script;
 }

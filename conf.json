@@ -19,6 +19,6 @@
        	"googleAnalytics": "UA-63273490-1",
         "cleverLinks": false,
         "monospaceLinks": false,
-        "applicationName" : "Q.js"
+        "applicationName" : "libqjs"
     }
 }

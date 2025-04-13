@@ -1,6 +1,7 @@
 
 
+class libqjs {
 
+}
 
-
-export var Q = require( "./src/Q" );
+export default libqjs;
