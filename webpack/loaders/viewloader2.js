@@ -29,8 +29,6 @@ module.exports = function (src) {
       if( args.renderer ) { \
         var o = new cls(args);\
         args.app.render_template(o, args.renderer, template);\
-        /*args.renderer.innerHTML = template; \
-        args.app.get_tags(args.renderer);*/\
         o.onload(); \
       } else {\
         args.content=template; \
