@@ -536,7 +536,7 @@ on_viewstyle_changed: function() {
  * @memberof Q.Table.prototype
  */
 autosize : function() {
-  Q.printf("table auto size");
+  //Q.printf("table auto size");
   var _this = this;
 
   //if( !_this.isVisible )
@@ -905,7 +905,7 @@ _column_setwidth: function( nCol, width ) {
 
 _column_autosize: function() {
   var fullwidth = this.wndFrame.offsetWidth;
-  Q.printf( "current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
+  Q.printf( "column autosize -> current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
 
   // get dynamic cols
   var dynamic = this._column_dynamic( -1 );
@@ -930,6 +930,7 @@ _column_autosize: function() {
     var div = this.wndTableHeaderRow.cells[index].firstChild;
     div.style.width = (this.columns[index].width ) + 'px';
   }
+  console.log( this.columns );
 
   var _this = this;
   this.items_each( function(item) {
