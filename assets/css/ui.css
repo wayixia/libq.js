@@ -485,10 +485,8 @@
 .q-table .q-column-header a:hover {text-decoration: none; background-colors: #F90;  }
 .q-table .q-group-body {
   position:relative;  
-  margin-tops: 31px; 
   height:100%; 
-  overflow-x: hidden;
-  overflow-y: auto; 
+  overflow: auto; 
   border: 0px solid green; 
   background-color: white;
 }
