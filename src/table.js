@@ -559,9 +559,9 @@ autosize : function() {
   _this.wndFrame.style.height = frame_height+'px';
   if( Q.hasClass( this.wnd, "q-attr-grid") ) {
     _this.wndGroupBody.style.height = (frame_height)+'px';
-    _this.wndGroupBody.style.marginTop = 0;
+    //_this.wndGroupBody.style.marginTop = 0;
   } else {
-    _this.wndGroupBody.style.marginTop = _this.wndGroupHeader.offsetHeight + 'px';
+    //_this.wndGroupBody.style.marginTop = _this.wndGroupHeader.offsetHeight + 'px';
     _this.wndGroupBody.style.height = (frame_height - _this.wndGroupHeader.offsetHeight)+'px';
     _this._column_autosize();
   }

@@ -444,11 +444,24 @@
 
 }
 
-.q-table .q-table-frame {overflow:hidden; position:relative; border:0px solid blue; background-color: #83caf2; border: 0px solid red;}
-.q-table .q-group-header  {position:absolute;overflows:hidden;height:30px;border-bottom: 0px solid #CCC;}
+.q-table .q-table-frame {
+  overflow:hidden; 
+  position:relative; 
+  border:0px solid blue; 
+  background-color: #83caf2; 
+  border: 0px solid red;
+}
+
+
+.q-table .q-group-header  {
+  positions:absolute;
+  overflows:hidden;
+  height:30px;
+  border-bottom: 0px solid #CCC;
+}
 
 .q-table .q-column-header {
-  position:relative;
+  positions:relative;
   OVERFLOW:hidden; 
   height:30px;
   line-height:30px; 
@@ -470,7 +483,15 @@
 
 .q-table .q-column-header a { display:block; margin-right: 1px; color: #FFF;}
 .q-table .q-column-header a:hover {text-decoration: none; background-colors: #F90;  }
-.q-table .q-group-body {position :relative;  margin-top: 31px; height:100%; overflow-x: hidden;overflow-y: auto; border: 0px solid green; background-color: white;}
+.q-table .q-group-body {
+  position:relative;  
+  margin-tops: 31px; 
+  height:100%; 
+  overflow-x: hidden;
+  overflow-y: auto; 
+  border: 0px solid green; 
+  background-color: white;
+}
 
 .q-table.q-attr-no-header .q-group-header {
   display: none;
