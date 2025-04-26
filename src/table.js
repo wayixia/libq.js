@@ -262,9 +262,29 @@ Q.TableColumn = Q.extend({
 window.SELECT_MODE_CTRL  = 1;
 window.SELECT_MODE_SHIFT  = 2;
 
+window.get_scrollbar_size = function(r) {
+  // 创建⼀个临时的元素
+  const outer = document.createElement('div');
+  outer.style.visibility = 'hidden';
+  outer.style.overflow = 'scroll'; // 强制出现滚动条
+  outer.style.width = '100px'; // 设置宽度
+  outer.style.height = '100px'; // 设置⾼度
+  document.body.appendChild(outer);
+  // 创建⼀个内部元素
+  const inner = document.createElement('div');
+  inner.style.width = '100%'; // 设置宽度为100%
+  inner.style.height = '100%'; // 设置⾼度为100%
+  outer.appendChild(inner);
+  // 计算滚动条宽度
+  const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+  // 移除临时元素
+  outer.parentNode.removeChild(outer);
+  
+  return scrollbarWidth;
+ }
 
 //window.cached;
-window.get_scrollbar_size = function (fresh) {
+window.get_scrollbar_size2 = function (fresh) {
     const inner = document.createElement('div');
     inner.style.width = '100%';
     inner.style.height = '200px';
@@ -340,7 +360,7 @@ __init__ : function(json) {
   var _this = this;
   
   _this.items_selected = new Q.HashMap;
-  if( !window.scrollbarwidth )
+  //if( !window.scrollbarwidth )
   {
     window.scrollbarwidth = get_scrollbar_size( 1 );
     console.log( "scrollbar size " + window.scrollbarwidth );
@@ -904,7 +924,8 @@ _column_setwidth: function( nCol, width ) {
 },
 
 _column_autosize: function() {
-  var fullwidth = this.wndFrame.offsetWidth;
+  var fullwidth = this.wndFrame.offsetWidth-this.columns.length;
+  var oldframewidth = this.oldframewidth - this.columns.length;
   Q.printf( "column autosize -> current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
 
   // get dynamic cols
@@ -918,7 +939,7 @@ _column_autosize: function() {
     var index = cols[i];
 
     var oldwidth = this.columns[index].width;
-    var f = oldwidth / this.oldframewidth;
+    var f = oldwidth / oldframewidth;
     if( i == ( cols.length - 1 ) ) {
       //this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
       this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
@@ -928,17 +949,17 @@ _column_autosize: function() {
     }
     
     var div = this.wndTableHeaderRow.cells[index].firstChild;
-    div.style.width = (this.columns[index].width ) + 'px';
+    div.style.width = (this.columns[index].width) + 'px';
   }
-  console.log( this.columns );
+  console.log( Object.values(this.columns) );
 
   var _this = this;
   this.items_each( function(item) {
     for( var i = 0; i < cols.length; i++ )
     {
       var index = cols[i];
-      var div = item.cells[index].childNodes[0];
-      div.style.width = _this.columns[index].width+'px'; 
+      var div = item.cells[index].firstChild;
+      div.style.width = (_this.columns[index].width)+'px'; 
     }
   });
 },

@@ -505,14 +505,11 @@
   PADDING:0; 
   OVERFLOW: hidden;
   BORDER-BOTTOM: #EEE 1px solid; 
-  border-RIGHT: transparent 1px solid; 
+  border-RIGHT: transparent 0px solid; 
   WHITE-SPACE: nowrap;
   font-size: 12px;
-  height: 30px;
-  line-height: 30px;
   text-indent:5px;
   text-overflow:ellipsis;
-  heights:100%;
 }
 
 .q-table TR.q-selected .q-table-cdata,
