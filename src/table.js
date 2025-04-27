@@ -644,6 +644,7 @@ append : function(nIndex, record) {
     });
     _this.wndGridData.appendChild( ROW );
   } else {
+    var has_vscroll = (_this.wndGroupBody.offsetHeight < _this.wndGroupBody.scrollHeight);
     ROW = _this.wndTableData.insertRow(-1);
     var len = _this.wndTableHeaderRow.cells.length;
     for(var j = 0; j < len; j++) {
@@ -664,6 +665,14 @@ append : function(nIndex, record) {
       });
       TD.style.display = theader.style.display;
       TD.appendChild(cell);
+    }
+
+    var has_vscroll2 = (_this.wndGroupBody.offsetHeight < _this.wndGroupBody.scrollHeight);
+    if( has_vscroll != has_vscroll2 ) {
+      //var rows = _this.wndTableData.rows.length
+      //alert("scrollbar changed, rows: " + rows);
+      //_this.columns[_this.columns.length-1].width = window.scrollbarwidth-3;
+      _this.autosize();
     }
   }
 
@@ -773,7 +782,7 @@ _load_columns : function() {
   var totalwidth = 0;
   // Push last fix column with end
   // 1px border-width, 1px is adjust 
-  this.columns.push( { title: "", width: window.scrollbarwidth-3, fixed: true, renderer: function(r) { return ''; }, islast: true } );
+  this.columns.push( { title: "", width: 0, fixed: true, renderer: function(r) { return ''; }, islast: true } );
   for(var i=0; i < this.columns.length; i++) {
     var column = this.columns[i];
     column.width = parseInt(column.width, 10);
@@ -927,7 +936,16 @@ _column_autosize: function() {
   var fullwidth = this.wndFrame.offsetWidth-this.columns.length;
   var oldframewidth = this.oldframewidth - this.columns.length;
   Q.printf( "column autosize -> current: " + this.wndFrame.offsetWidth + ", old: " + this.oldframewidth );
+  // scrollbar width
+  var hscrollwidth = 0;
+  if( this.wndGroupBody.offsetHeight < this.wndGroupBody.scrollHeight ) { 
+    hscrollwidth = window.scrollbarwidth; 
+  }
 
+  fullwidth -= hscrollwidth;
+  oldframewidth -= hscrollwidth;
+
+  
   // get dynamic cols
   var dynamic = this._column_dynamic( -1 );
   var cols = dynamic.cols;
@@ -942,7 +960,9 @@ _column_autosize: function() {
     var f = oldwidth / oldframewidth;
     if( i == ( cols.length - 1 ) ) {
       //this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
-      this.columns[index].width = restwidth-1;  //// last calculate column not include borider-right-width
+      // 最后一列需要加上滚动条宽度, 因为column宽度是包含滚动条的, 
+      // (hscrollwidth-1) 是为了防止内容已出现水平滚动条
+      this.columns[index].width = restwidth-1+(hscrollwidth-1);  //// last calculate column not include borider-right-width
     } else {
       this.columns[index].width = Math.floor( f * fullwidth );
       restwidth -= this.columns[index].width; // with border-right-width
