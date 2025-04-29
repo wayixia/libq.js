@@ -879,57 +879,12 @@ _column_dynamic : function( exclude_col ) {
 },
 
 _column_setwidth: function( nCol, width ) {
-  var fullwidth = this.wndFrame.offsetWidth;
-  var restwidth = width - this.columns[nCol].width;
-  var dx = 0;
-
-  // get dynamic cols
-  var dynamic = this._column_dynamic( nCol );
-  var cols = dynamic.cols;
-  var fixedwidth = dynamic.fixedwidth;
-  var restwidth = width - this.columns[nCol].width; 
-
-  // calculate dx
-  if( cols.length > 1 )
-  {
-    dx = Math.floor( restwidth/cols.length );
+  if( this.columns[nCol].fixed ) {
+    return;
   }
-
-  var dump = { fullwidth: fullwidth, restwidth:restwidth, dx:dx, cols: cols };
-  console.log( dump );
-
-
 
   this.columns[nCol].width = width;
-
-  for( var i = 0; i < cols.length; i++ )
-  {
-    var index = cols[i];
-    if( i == ( cols.length - 1 ) ) {
-      this.columns[index].width -= restwidth;  // last calculate column
-      restwidth -= restwidth;
-    } else {
-      this.columns[index].width -= dx;  // border-right-width
-      restwidth -= dx;
-    }
-    console.log( restwidth );
-    var div = this.wndTableHeaderRow.cells[index].firstChild;
-    div.style.width = this.columns[index].width + 'px';
-  }
-
-
-  console.log( this.columns );
-
-  var _this = this;
-  cols.push(nCol);
-  _this.items_each( function(item) {
-    for( var i = 0; i < cols.length; i++ )
-    {
-      var index = cols[i];
-      var div = item.cells[index].childNodes[0];
-      div.style.width = _this.columns[index].width+'px'; 
-    }
-  });
+  this._column_autosize();
 },
 
 _column_autosize: function() {
@@ -971,7 +926,8 @@ _column_autosize: function() {
     var div = this.wndTableHeaderRow.cells[index].firstChild;
     div.style.width = (this.columns[index].width) + 'px';
   }
-  console.log( Object.values(this.columns) );
+  
+  //console.log( Object.values(this.columns) );
 
   var _this = this;
   this.items_each( function(item) {
