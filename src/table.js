@@ -1090,6 +1090,14 @@ getRecord : function(item) {
   return this.store.records.item(dataIndex);
 },
 
+getData : function( index ) {
+  if( index < 0 && index >= this.store.records.length ) {
+    return null;
+  } else {
+    return this.store.records.item(index);
+  }
+},
+
 addToolButton : function( json ) {
   
 },
