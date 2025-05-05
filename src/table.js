@@ -1,3 +1,8 @@
+/**
+ * 表格控件 Q.Table
+ * @author Q
+ * @version 1.0
+ */
 
 
 
@@ -411,27 +416,6 @@ __init__ : function(json) {
       _this.autosize();
     } );
   }
-
-
-//  // 开始观察
-  //this.io = new IntersectionObserver(([change]) => {
-    //console.log(change.isVisible) // 被覆盖就是false，反之true
-    //_this.isVisible = change.isVisible;
-  //}, {
-    //threshold: [0, 1.0],
-    //delay: 1000, 
-    //trackVisibility: true,
-  //} ).observe( this.wnd);
-
-
-  // 开始观察
-  //this.io.observe(this.wnd);
-
-  // 停止观察
-  //this.io.unobserve(element);
-
-  // 关闭观察器
-  //this.io.disconnect();
 },
 
 /** dialog procedure
@@ -1102,6 +1086,63 @@ addToolButton : function( json ) {
   
 },
 
+
+loadPageData : function(data) { 
+  var _this = this; 
+  // if(_this.isstyle(WS_CHECKBOX)) {
+	// 		_this.table_header_row.cells[0].childNodes[0].childNodes[0].checked = false;
+	// }
+
+  
+  //_this.rows_selected.each(function(n, key){ _this.row_set_unselected(_this.rows_selected.item(key)); });
+		// 清楚选中数据
+	//_this.rows_selected.clear();
+	//_this.checkboxes.clear();
+	var dsize = data.length;
+	var tsize =_this.wndTableData.rows.length;
+	var minsize = Math.min(dsize, tsize);
+	var csize = _this.columns.length;
+	for(var i=0; i < minsize; i++) {
+		var ROW	= _this.wndTableData.rows[i];
+		var record = data.item(i);
+		ROW.setAttribute('dataIndex', parseInt(record['dataIndex'], 10));
+		
+		for(var j=0; j<csize; j++) {
+			var theader = _this.table_header_row.cells[j];
+			var config  = _this.columns[theader.getAttribute('name')];
+			var TD = ROW.cells[j];
+			var content = record[config.name];
+			TD.style.display = theader.style.display;
+			if(typeof config.renderer == 'function') {
+				content = config.renderer(record);
+			}
+			
+			if(config.isHTML) {
+				TD.childNodes[0].innerHTML = content;
+			} else {
+				TD.childNodes[0].innerText = content;
+			}
+		}
+		if(_this.isstyle(WS_CHECKBOX)) {
+			_this.checkboxes.add(record['dataIndex'], ROW.cells[0].childNodes[0].childNodes[0]);
+		}
+	}
+		
+	if(dsize > tsize ) {	// 数据多余表格函数，插入行
+		while(dsize != _this.wndTableData.rows.length) {
+			_this.insertrow(-1, data.item(_this.wndTableData.rows.length));
+		}	
+	} else {
+		while(dsize != _this.wndTableData.rows.length) {
+			_this.wndTableData.deleteRow(dsize);
+		}
+	}
+	
+  if(_this.wndTableData.rows.length > 0) {
+		_this.row_height = _this.wndTableData.rows[0].offsetHeight;
+  }
+},
+	
 sync_scroll : function() {
   this.wndGroupHeader.scrollLeft = this.wndGroupBody.scrollLeft;
 }
