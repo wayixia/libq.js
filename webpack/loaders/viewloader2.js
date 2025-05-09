@@ -19,16 +19,25 @@ module.exports = function (src) {
   //console.log( $('template').html() );
   //console.log( $('script').html() );
 
-  tpl = $('template').html()
-        .replace(/'/g, '\\\'')
-        .replace(/\r|\n/g,"");
+  if($('template').html()) {
+    tpl = $('template').html()
+          .replace(/'/g, '\\\'')
+          .replace(/\r|\n/g,"");
+  } else {
+    tpl = "";
+  }
+
   script = 'function( args ) {\
       var cls=' + $('script').html()+';\
       var template=\''+ tpl +'\'; \
       var o=null; \
       if( args.renderer ) { \
         var o = new cls(args);\
-        args.app.render_template(o, args.renderer, template);\
+        if( o.isTag && o.isTag() ) { \
+          /*  tag is not support template */ \
+        } else { \
+          args.app.render_template(o, args.renderer, template);\
+        }\
         o.onload(); \
       } else {\
         args.content=template; \
