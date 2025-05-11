@@ -33,6 +33,10 @@ __init__ : function(config) {
   }
 },
 
+updatepager : function() {
+
+},
+
 /** 清空数据
  *
  * @memberof Q.Store.prototype
@@ -361,6 +365,7 @@ store : null,
 selected_item: null,
 oldframewidth: 0,
 items_selected: null,
+pagesize: -1,
 __init__ : function(json) {
   var _this = this;
   
@@ -1145,6 +1150,23 @@ loadPageData : function(data) {
 	
 sync_scroll : function() {
   this.wndGroupHeader.scrollLeft = this.wndGroupBody.scrollLeft;
+},
+
+set_page_size : function(pagesize) {
+  this.pagesize = pagesize;
+},
+
+page_size : function() {
+  if( this.pagesize == -1) {
+    return this.store.records.length>0 ? this.store.records.length : 30;
+  } else {
+    return this.pagesize;
+  }
+},
+
+total_size: function() {
+  return this.store.records.length;
 }
+
 }); 
 

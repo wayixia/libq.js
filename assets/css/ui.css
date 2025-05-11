@@ -537,7 +537,7 @@
   border-top: 1px solid #99BBE8; 
   /*background: #DAEDF7 URL(../images/table/toolbars.gif) repeat-x left top; */
   font-weight: normal; 
-  padding: 3px 3px 1px 1px; 
+  /*padding: 3px 3px 1px 1px; */
   height: 25px; width: 100%;
   overflow: hidden; 
   white-space: nowrap; 

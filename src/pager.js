@@ -1,15 +1,15 @@
 /*------------------------------------------------------------------------------------
  $ Q.pager
- $ date: 2009-5-11 16:31
- $ author: LovelyLife http://onlyaa.com
+ $ date: 2025-5-11 16:31
+ $ author: Q 
  $ description: implement the paging of the jtable component
 ---------------------------------------------------------------------------------------*/
 Q.pager = Q.extend({
 	hwnd : null,
 	ctrlHandler : null,
-	pagesize : 50,
-	rowcount : 0,
-	pagecount : 0,
+	//pagesize : 50,
+	//rowcount : 0,
+	//pagecount : 0,
 	currentpage : 0,
 	
 	// dom elements
@@ -27,13 +27,25 @@ Q.pager = Q.extend({
 		var _this = this;
 		_this.ctrlHandler = args.table;
 		_this.hwnd = args.renderer;
-		_this.rowcount  = _this.ctrlHandler.store.records.length;
-		if(!isNaN(_this.ctrlHandler.pagesize)) { _this.pagesize = _this.ctrlHandler.pagesize; }
-		_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
+		//_this.rowcount  = _this.ctrlHandler.totalsize();;
+		//_this.pagesize = _this.ctrlHandler.pagesize();
+		//_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
 		_this.initview();
 		_this.update_table_rows();
 	},
-	
+
+	__rowcount : function() {
+		return this.ctrlHandler.total_size();
+	},
+
+	__pagesize : function() {
+		return this.ctrlHandler.page_size();
+	},
+
+	__pagecount : function() {
+		return Math.ceil(this.__rowcount()/ this.__pagesize());
+	},
+
 	
 	initview : function() {
 		var _this = this;
@@ -65,7 +77,7 @@ Q.pager = Q.extend({
 		//divPage.style.cssText = "position: relative; top: -3px; margin: 0px 3px 0px 3px; font-weight: normal;";
 		 
 		_this.labelPageCount.style.cssText = "font-size: 13px;";
-		_this.labelPageCount.innerHTML = " / "+_this.pagecount+"页";
+		_this.labelPageCount.innerHTML = " / "+_this.__pagecount()+"页";
 		
 
 		_this.inputPage.style.cssText = "height:18px;padding:0px;text-align:center;width:40px;";
@@ -98,7 +110,7 @@ Q.pager = Q.extend({
 		_this.inputPageSize = document.createElement("input");
 		divPageRight.appendChild(textNode3);
 		divPageRight.appendChild(_this.inputPageSize);
-		_this.inputPageSize.value = _this.pagesize;
+		_this.inputPageSize.value = _this.__pagesize();
 		_this.inputPageSize.onkeydown = function(evt) {
 			evt = evt || event;
 			var keyCode = evt.keyCode||evt.which;
@@ -110,8 +122,9 @@ Q.pager = Q.extend({
 					var pagesize = parseInt(this.value, 10);
 					if(!isNaN(pagesize)) {
 						if(pagesize > 0) {
-							_this.pagesize = _this.ctrlHandler.pagesize = pagesize;
-							_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
+							//_this.pagesize = _this.ctrlHandler.pagesize = pagesize;
+							_this.ctrlHandler.set_page_size(pagesize);
+							//_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
 							_this.currentpage = 0;
 							_this.update_table_rows();
 						}
@@ -126,7 +139,7 @@ Q.pager = Q.extend({
 		_this.labelRowCount = document.createElement('font');
 		divPageRight.appendChild(_this.labelRowCount);
 		_this.labelRowCount.style.cssText = 'color: red; font-weight: bold; font-size: 13px;'
-		_this.labelRowCount.innerText = _this.rowcount;
+		_this.labelRowCount.innerText = _this.__rowcount();
 		var textNode5 = document.createTextNode(' 条记录');
 		divPageRight.appendChild(textNode5);
 	},
@@ -171,8 +184,8 @@ Q.pager = Q.extend({
 		    _this.btnLast.className  = 'jtable_plugin_page_last';
 		}
 		
-		_this.labelPageCount.innerText = " / "+_this.pagecount+"页";
-		_this.labelRowCount.innerText  = _this.rowcount;
+		_this.labelPageCount.innerText = " / "+_this.__pagecount()+"页";
+		_this.labelRowCount.innerText  = _this.__rowcount();
 	},
 	
 	update_table_rows : function() {
@@ -182,10 +195,6 @@ Q.pager = Q.extend({
 		var iMoreRow = _this.pagesize+iCurrentrowcount > _this.rowcount ? _this.pagesize+iCurrentrowcount - _this.rowcount : 0;
 		_this.ctrlHandler.store.loadPage(_this.currentpage+1, _this.pagesize, function(arr) {
 			_this.ctrlHandler.loadPageData(arr);
-			_this.rowcount = _this.ctrlHandler.store.length;
-			//alert('tag::'+_this.rowcount);
-			_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
-			
 			_this.updateview();
 			_this.ctrlHandler.render();	
 		});
@@ -193,7 +202,7 @@ Q.pager = Q.extend({
 	
 	/* 下一页 */
 	nextPage : function() {
-		if(this.currentpage + 1 < this.pagecount) {
+		if(this.currentpage + 1 < this.__pagecount()) {
 			this.currentpage += 1;
 			this.update_table_rows();
 		}
@@ -214,15 +223,15 @@ Q.pager = Q.extend({
 	},
 	/* 尾页 */
 	lastPage : function() {
-		if(this.currentpage+1 != this.pagecount) {
-			this.currentpage = this.pagecount - 1;
+		if(this.currentpage+1 != this.__pagecount()) {
+			this.currentpage = this.__pagecount() - 1;
 			this.update_table_rows();
 		}
 	},
 	/* 页定位方法 */
 	goPage : function(iPageIndex) {
-		if(iPageIndex > this.pagecount-1) {
-			this.currentpage = this.pagecount - 1;
+		if(iPageIndex > this.__pagecount()-1) {
+			this.currentpage = this.__pagecount() - 1;
 		} else if(this.currentpage < 0) {
 			this.currentpage = 0;
 		} else {
