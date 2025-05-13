@@ -11,38 +11,37 @@
  * @constructor
  * @param {Object} config - 构造参数
  * @param {array=} config.data - 数据数组
- * @param {string} config.proxy - 远程数据接口
+ * @param {Object} config.proxy - 远程数据接口
  */
 Q.Store = Q.extend({
-records : null,  // 记录集
-proxy : null,
-currentpage : -1,
-fromproxy: false,
+__records : null,  // 记录集
+__proxy : null,
+__currentpage : -1,
+__proxy_total_size: 0,
+__proxy_page_size: 0,
+__proxy_page_current: 0,
 __init__ : function(config) {
   config = config || {}; 
-  this.records = new Q.HashMap;
+  this.__records = new Q.HashMap;
   if(config.data) {
-    this.fromproxy = false;
-    this.append_data(config.data);
-  }
-  
-  if(config.proxy) { 
-    this.proxy = config.proxy; 
-    //this.loadRemote(0, 30, null);
-    this.fromproxy = true;
+    this.append(config.data);
+  } else if(config.proxy) { 
+    this.__proxy = config.proxy;
+    this.__load_remote(0, config.proxy.page_size, function(arr) {
+      for(var i=0; i<arr.length; i++) {
+        this.push(arr[i]);
+      }
+    } );
   }
 },
 
-updatepager : function() {
-
-},
 
 /** 清空数据
  *
  * @memberof Q.Store.prototype
  */
 clear : function() {
-  this.records = new Q.HashMap;
+  this.__records = new Q.HashMap;
 },
 
 /** 加载json数据记录集
@@ -50,7 +49,7 @@ clear : function() {
  * @memberof Q.Store.prototype
  * @param {Object[]} arr - 数据集
  */
-append_data : function(arr) {
+append : function(arr) {
   for(var i=0; i<arr.length; i++) {
     this.push(arr[i]);
   }
@@ -60,16 +59,25 @@ append_data : function(arr) {
  *
  * @memberof Q.Store.prototype
  */
-loadRemote : function(page, pagesize, callback) {
+__load_remote : function(page, pagesize, callback) {
   var _this = this;
+  if( !_this.__proxy ) {
+    callback([]);
+    return;
+  }
+
+  // Load remote data
   Q.ajax({
-    command: _this.proxy+'&page='+page+'&size='+pagesize,
+    command: _this.__proxy.page_url(page,pagesize),
     oncomplete : function(xmlhttp) {
+
       var s = Q.json_decode(xmlhttp.responseText);
-      if(typeof callback == 'function' && ( s.data instanceof Array ) && ( s.data.length > 0 ) ) { 
-        var start = _this.records.index;
-        _this.append_data( s.data );
-        callback( start, s.data.length );
+      if( s && s.data ) {
+        // save proxy info
+        _this.__proxy_total_size = s.totalsize;
+        _this.__proxy_page_size = pagesize;
+        _this.__proxy_page_current = page;
+        callback( s.data );
       }
     }
   });
@@ -82,17 +90,17 @@ loadRemote : function(page, pagesize, callback) {
  * @param pagesize {number} - 页大小
  * @param callback {function} - 回调
  */
-loadPage : function(page, pagesize, callback) {
+load_page : function(page, pagesize, callback) {
   var fnCallback = callback || function(arr) {};
   var _this = this;
     
-  if(_this.proxy) {
-    _this.loadRemote(page, pagesize, fnCallback);
+  if(_this.__proxy) {
+    _this.__load_remote(page, pagesize, fnCallback);
   } else {
     var pagedata = new Q.HashMap;
     for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
-      if(i >= _this.records.length) { break; }
-      pagedata.push(_this.records.item(i));
+      if(i >= _this.__records.length) { break; }
+      pagedata.push(_this.__records.item(i));
     }
     fnCallback(pagedata);
   }
@@ -105,8 +113,8 @@ loadPage : function(page, pagesize, callback) {
  */
 push : function(record) {
   var _this = this;
-  record["__dataindex__"] = _this.records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
-  _this.records.push(record);
+  record["__dataindex__"] = _this.__records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
+  _this.__records.push(record);
 },
  
 /** 删除一条记录
@@ -115,8 +123,8 @@ push : function(record) {
  * @param record {object} - 删除的记录
  */
 remove : function(record) {
-  var key = this.records.find(record);
-  this.records.remove(key);
+  var key = this.__records.find(record);
+  this.__records.remove(key);
 },
 
 /** 渲染数据接口
@@ -125,7 +133,7 @@ remove : function(record) {
  * @param fnHandler {Q.HashMap.each_handler} - 处理记录数据
  */
 each : function(fnHanlder) {
-  this.records.each(fnHanlder);
+  this.__records.each(fnHanlder);
 },
  
 /** 获取指定索引数据
@@ -135,7 +143,15 @@ each : function(fnHanlder) {
  * @return {object} 记录
  */
 item : function(index) {
-  return this.records.item(index);
+  return this.__records.item(index);
+},
+
+total_size: function() {
+  if( this.__proxy ) {
+    return this.__proxy_total_size;
+  } else {
+    return this.__records.length;
+  }
 }
 
 });
@@ -750,7 +766,7 @@ clear : function() {
  */
 
 append_data : function(data) {
-  this.store.append_data(data);
+  this.store.append(data);
 },
 
 render : function() {
@@ -1076,19 +1092,22 @@ get_text : function(row, fieldName) {
  */
 getRecord : function(item) {
   var dataIndex = this.item_index(item);
-  return this.store.records.item(dataIndex);
+  return this.store.item(dataIndex);
 },
 
 getData : function( index ) {
-  if( index < 0 && index >= this.store.records.length ) {
+  if( index < 0 && index >= this.store.total_size() ) {
     return null;
   } else {
-    return this.store.records.item(index);
+    return this.store.item(index);
   }
 },
 
-addToolButton : function( json ) {
-  
+loadPage : function(pageIndex, pageSize) {
+  var _this = this;
+  this.store.load_page(pageIndex, pageSize, function(data) {
+    _this.loadPageData(data);
+  } );
 },
 
 
@@ -1158,14 +1177,14 @@ set_page_size : function(pagesize) {
 
 page_size : function() {
   if( this.pagesize == -1) {
-    return this.store.records.length>0 ? this.store.records.length : 30;
+    return this.store.total_size()>0 ? this.store.total_size() : 30;
   } else {
     return this.pagesize;
   }
 },
 
 total_size: function() {
-  return this.store.records.length;
+  return this.store.total_size();
 }
 
 }); 

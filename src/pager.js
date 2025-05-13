@@ -193,10 +193,8 @@ Q.pager = Q.extend({
 		
 		var iCurrentrowcount = _this.pagesize * _this.currentpage;
 		var iMoreRow = _this.pagesize+iCurrentrowcount > _this.rowcount ? _this.pagesize+iCurrentrowcount - _this.rowcount : 0;
-		_this.ctrlHandler.store.loadPage(_this.currentpage+1, _this.pagesize, function(arr) {
-			_this.ctrlHandler.loadPageData(arr);
+		_this.ctrlHandler.loadPage(_this.currentpage+1, _this.pagesize, function() {
 			_this.updateview();
-			_this.ctrlHandler.render();	
 		});
 	},
 	
