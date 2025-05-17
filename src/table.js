@@ -17,8 +17,8 @@ Q.Store = Q.extend({
 __records : null,  // 记录集
 __proxy : null,
 __currentpage : -1,
+__page_size: 0,
 __proxy_total_size: 0,
-__proxy_page_size: 0,
 __proxy_page_current: 0,
 __init__ : function(config) {
   config = config || {}; 
@@ -27,11 +27,13 @@ __init__ : function(config) {
     this.append(config.data);
   } else if(config.proxy) { 
     this.__proxy = config.proxy;
-    this.__load_remote(0, config.proxy.page_size, function(arr) {
+    /*
+    this.__load_remote(0, config.proxy.page_size, (arr) => {
       for(var i=0; i<arr.length; i++) {
         this.push(arr[i]);
       }
     } );
+     */
   }
 },
 
@@ -59,13 +61,14 @@ append : function(arr) {
  *
  * @memberof Q.Store.prototype
  */
-__load_remote : function(page, pagesize, callback) {
+__load_remote : function(page, callback) {
   var _this = this;
   if( !_this.__proxy ) {
     callback([]);
     return;
   }
 
+  const pagesize = _this.__page_size;
   // Load remote data
   Q.ajax({
     command: _this.__proxy.page_url(page,pagesize),
@@ -75,7 +78,7 @@ __load_remote : function(page, pagesize, callback) {
       if( s && s.data ) {
         // save proxy info
         _this.__proxy_total_size = s.totalsize;
-        _this.__proxy_page_size = pagesize;
+        _this.__page_size = pagesize;
         _this.__proxy_page_current = page;
         callback( s.data );
       }
@@ -87,18 +90,16 @@ __load_remote : function(page, pagesize, callback) {
  * 
  * @memberof Q.Store.prototype
  * @param page {number} - 指定页
- * @param pagesize {number} - 页大小
  * @param callback {function} - 回调
  */
-load_page : function(page, pagesize, callback) {
+load_page : function(page, callback) {
   var fnCallback = callback || function(arr) {};
   var _this = this;
-    
   if(_this.__proxy) {
-    _this.__load_remote(page, pagesize, fnCallback);
+    _this.__load_remote(page, fnCallback);
   } else {
     var pagedata = new Q.HashMap;
-    for(var i=(page-1) * pagesize; i < (page * pagesize); i++) {
+    for(var i=(page-1) * _this.__page_size; i < (page * _this.__page_size); i++) {
       if(i >= _this.__records.length) { break; }
       pagedata.push(_this.__records.item(i));
     }
@@ -1103,9 +1104,9 @@ getData : function( index ) {
   }
 },
 
-loadPage : function(pageIndex, pageSize) {
+loadPage : function(pageIndex) {
   var _this = this;
-  this.store.load_page(pageIndex, pageSize, function(data) {
+  this.store.load_page(pageIndex, function(data) {
     _this.loadPageData(data);
   } );
 },
@@ -1114,25 +1115,28 @@ loadPage : function(pageIndex, pageSize) {
 loadPageData : function(data) { 
   var _this = this; 
   // if(_this.isstyle(WS_CHECKBOX)) {
-	// 		_this.table_header_row.cells[0].childNodes[0].childNodes[0].checked = false;
-	// }
+  // 		_this.table_header_row.cells[0].childNodes[0].childNodes[0].checked = false;
+  // }
 
   
   //_this.rows_selected.each(function(n, key){ _this.row_set_unselected(_this.rows_selected.item(key)); });
-		// 清楚选中数据
-	//_this.rows_selected.clear();
-	//_this.checkboxes.clear();
+  // 清楚选中数据
+  //_this.rows_selected.clear();
+  //_this.checkboxes.clear();
 	var dsize = data.length;
 	var tsize =_this.wndTableData.rows.length;
 	var minsize = Math.min(dsize, tsize);
 	var csize = _this.columns.length;
-	for(var i=0; i < minsize; i++) {
-		var ROW	= _this.wndTableData.rows[i];
-		var record = data.item(i);
+  for(var i=0; i < minsize; i++) {
+    //var ROW	= _this.wndTableData.rows[i];
+    var record = data[i];
+    this.append(-1, record);
+
+    /*
 		ROW.setAttribute('dataIndex', parseInt(record['dataIndex'], 10));
 		
 		for(var j=0; j<csize; j++) {
-			var theader = _this.table_header_row.cells[j];
+			var theader = _this.wndTableHeaderRow.cells[j];
 			var config  = _this.columns[theader.getAttribute('name')];
 			var TD = ROW.cells[j];
 			var content = record[config.name];
@@ -1150,8 +1154,10 @@ loadPageData : function(data) {
 		if(_this.isstyle(WS_CHECKBOX)) {
 			_this.checkboxes.add(record['dataIndex'], ROW.cells[0].childNodes[0].childNodes[0]);
 		}
+      */
 	}
 		
+  /*
 	if(dsize > tsize ) {	// 数据多余表格函数，插入行
 		while(dsize != _this.wndTableData.rows.length) {
 			_this.insertrow(-1, data.item(_this.wndTableData.rows.length));
@@ -1165,6 +1171,7 @@ loadPageData : function(data) {
   if(_this.wndTableData.rows.length > 0) {
 		_this.row_height = _this.wndTableData.rows[0].offsetHeight;
   }
+    */
 },
 	
 sync_scroll : function() {
