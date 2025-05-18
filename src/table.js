@@ -11,6 +11,7 @@
  * @constructor
  * @param {Object} config - 构造参数
  * @param {array=} config.data - 数据数组
+ * @param {String=} config.keyname - 数据索引字段名
  * @param {Object} config.proxy - 远程数据接口
  */
 Q.Store = Q.extend({
@@ -20,20 +21,15 @@ __currentpage : -1,
 __page_size: 0,
 __proxy_total_size: 0,
 __proxy_page_current: 0,
+__keyname : null,
 __init__ : function(config) {
   config = config || {}; 
+  this.__keyname = config.keyname || '';
   this.__records = new Q.HashMap;
   if(config.data) {
-    this.append(config.data);
+    this.append_array(config.data);
   } else if(config.proxy) { 
     this.__proxy = config.proxy;
-    /*
-    this.__load_remote(0, config.proxy.page_size, (arr) => {
-      for(var i=0; i<arr.length; i++) {
-        this.push(arr[i]);
-      }
-    } );
-     */
   }
 },
 
@@ -51,7 +47,7 @@ clear : function() {
  * @memberof Q.Store.prototype
  * @param {Object[]} arr - 数据集
  */
-append : function(arr) {
+append_array : function(arr) {
   for(var i=0; i<arr.length; i++) {
     this.push(arr[i]);
   }
@@ -112,10 +108,14 @@ load_page : function(page, callback) {
  * @memberof Q.Store.prototype
  * @param record {object} - 记录数据
  */
-push : function(record) {
+push : function(record, isrender) {
   var _this = this;
   record["__dataindex__"] = _this.__records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
   _this.__records.push(record);
+
+  if( isrender ) {
+    this.controller.append(record);
+  }
 },
  
 /** 删除一条记录
@@ -1041,6 +1041,7 @@ item_insert : function(index, record) {
 item_index : function(item) { 
   return parseInt(item.getAttribute('__dataindex__'),10); 
 },
+
 item_is_enabled  : function(item) { return item && (!item.getAttribute('_disabled')); },
 item_is_selected : function(item) { return Q.hasClass(item, "q-selected"); },
 
@@ -1123,11 +1124,13 @@ loadPageData : function(data) {
   // 清楚选中数据
   //_this.rows_selected.clear();
   //_this.checkboxes.clear();
+
+  _this.clear();
 	var dsize = data.length;
 	var tsize =_this.wndTableData.rows.length;
-	var minsize = Math.min(dsize, tsize);
+	//var minsize = Math.min(dsize, tsize);
 	var csize = _this.columns.length;
-  for(var i=0; i < minsize; i++) {
+  for(var i=0; i < dsize; i++) {
     //var ROW	= _this.wndTableData.rows[i];
     var record = data[i];
     this.append(-1, record);
