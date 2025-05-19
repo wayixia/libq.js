@@ -108,14 +108,11 @@ load_page : function(page, callback) {
  * @memberof Q.Store.prototype
  * @param record {object} - 记录数据
  */
-push : function(record, isrender) {
-  var _this = this;
-  record["__dataindex__"] = _this.__records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
-  _this.__records.push(record);
+push : function(record) {
+  record["__dataindex__"] = this.__records.index; // 存储数据索引， 用于确定改记录在记录集中的位置
+  this.__records.push(record);
 
-  if( isrender ) {
-    this.controller.append(record);
-  }
+  return record["__dataindex__"];
 },
  
 /** 删除一条记录
@@ -123,9 +120,8 @@ push : function(record, isrender) {
  * @memberof Q.Store.prototype
  * @param record {object} - 删除的记录
  */
-remove : function(record) {
-  var key = this.__records.find(record);
-  this.__records.remove(key);
+remove : function(index) {
+  this.__records.remove(index);
 },
 
 /** 渲染数据接口
@@ -628,11 +624,12 @@ removeStyle: function(wstyle) {
 /** 在指定行添加一行
  * @memberof Q.Table.prototype
  * @param nIndex {number} - 插入行位置
- * @param record {object} - 初始化行数据
+ * @param record {object} - 初始化行数据, record 必须是store的记录
  * @return 无
  */
 append : function(nIndex, record) {
-  var _this = this;  
+  var _this = this;
+
   var ROW = null;
   if( this.viewStyle == "grid") {
 
@@ -682,7 +679,7 @@ append : function(nIndex, record) {
     }
   }
 
-  ROW.setAttribute('__dataindex__', record['__dataindex__']);  // 设置数据索引
+  ROW.setAttribute('q:dataindex', record['__dataindex__']);  // 设置数据索引
   ROW.data = record;
   ROW.onmouseover = (function(t, r) { return function() { 
     if(!t.item_is_enabled(r))
@@ -1027,8 +1024,8 @@ item_remove : function(item) {
   } else {
     _this.wndTableData.deleteRow(item.rowIndex);
   }
-  _this.store.remove(record);
-  _this.autosize();
+  //_this.store.remove(record);
+  //_this.autosize();
 },
   
 item_insert : function(index, record) {
@@ -1039,7 +1036,7 @@ item_insert : function(index, record) {
 },
 
 item_index : function(item) { 
-  return parseInt(item.getAttribute('__dataindex__'),10); 
+  return parseInt(item.getAttribute('q:dataindex'),10); 
 },
 
 item_is_enabled  : function(item) { return item && (!item.getAttribute('_disabled')); },
@@ -1097,11 +1094,26 @@ getRecord : function(item) {
   return this.store.item(dataIndex);
 },
 
+getItem : function( dataIndex ) {
+  var self = this;
+  var item = self.wndTableData.querySelector('[q:dataindex="'+dataIndex+'"]');
+  alert(item);
+  return item;
+},
+
 getData : function( index ) {
   if( index < 0 && index >= this.store.total_size() ) {
     return null;
   } else {
     return this.store.item(index);
+  }
+},
+
+removeItem : function( dataIndex ) {
+  var self = this;
+  var item = self.getItem( dataIndex );
+  if( item) {
+    self.wndTableData.removeChild( self.getItem( dataIndex ) );
   }
 },
 
@@ -1132,8 +1144,10 @@ loadPageData : function(data) {
 	var csize = _this.columns.length;
   for(var i=0; i < dsize; i++) {
     //var ROW	= _this.wndTableData.rows[i];
-    var record = data[i];
-    this.append(-1, record);
+    var dd = data[i];
+    var rindex = this.store.push(dd);
+    record = _this.getData(rindex);
+    this.append( -1, record );
 
     /*
 		ROW.setAttribute('dataIndex', parseInt(record['dataIndex'], 10));
