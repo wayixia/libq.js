@@ -31,6 +31,10 @@ __init__ : function(config) {
   } else if(config.proxy) { 
     this.__proxy = config.proxy;
   }
+
+  if( config.pagesize ) {
+    this.__page_size = config.pagesize;
+  }
 },
 
 
@@ -417,7 +421,6 @@ __init__ : function(json) {
   _this.renderer = json.renderer;
   _this.initview(json);
   _this.on_viewstyle_changed();
-  _this.render();
   //_this.autosize();
 
   if( _this.wndOwner )
@@ -627,7 +630,7 @@ removeStyle: function(wstyle) {
  * @param record {object} - 初始化行数据, record 必须是store的记录
  * @return 无
  */
-append : function(nIndex, record) {
+insertItem : function(nIndex, record) {
   var _this = this;
 
   var ROW = null;
@@ -757,30 +760,6 @@ clear : function() {
   }
 },
 
-/** 追加数据到表格视图 
- *
- * @memberof Q.Table.prototype
- * @param data {Object[]} - 数据记录集
- */
-
-append_data : function(data) {
-  this.store.append(data);
-},
-
-render : function() {
-  if( this.store.fromproxy ) {
-    this.store.loadPage( 0 , 30,  ( function(t) { return function( start, count ) {
-      for( var i=start; i< (start+count); i++) {
-        t.append(i, t.store.item(i) );
-      }
-    } } )(this) );
-  } else{
-    this.store.each((function(t) { return function(record, index) {
-      t.append(index, record);
-    }})(this));
-  }
-},
-
 _load_columns : function() {
   var totalwidth = 0;
   // Push last fix column with end
@@ -794,13 +773,13 @@ _load_columns : function() {
     {
       column.fixed = true;
     }
-    this.insert_column(i, column);
+    this.insertColumn(i, column);
   }
 
   this.oldframewidth = totalwidth;
 },
 
-insert_column : function(arrIndex, json) {
+insertColumn : function(arrIndex, json) {
   var _this = this;
   var TD = _this.wndTableHeaderRow.insertCell(-1);
   
@@ -933,7 +912,7 @@ _column_autosize: function() {
   //console.log( Object.values(this.columns) );
 
   var _this = this;
-  this.items_each( function(item) {
+  this.each( function(item) {
     for( var i = 0; i < cols.length; i++ )
     {
       var index = cols[i];
@@ -1003,22 +982,16 @@ _items_ondblclick : function(item) {
 },
   
 
-items_each : function(callback) {
+each : function(callback) {
   var _this = this;
   for(var i=0; i < _this.wndTableData.rows.length; i++) {
     callback(_this.wndTableData.rows[i]);
   }
 },
 
-item_enable : function(item, enabled) {
-  var _this = this;
-  // 设置选中颜色
-  //item.style.backgroundColor = '#DFE8F6'; //'#A2CAEA'
-},
-  
-item_remove : function(item) {
-  var _this = this;
-  var record = _this.getRecord(item);
+removeItem : function(dataindex) {
+  var self = this;
+  var item = self.getItem( dataindex );
   if( this.viewStyle == "grid") {
     item.parentNode.removeChild( item );
   } else {
@@ -1045,7 +1018,7 @@ item_is_selected : function(item) { return Q.hasClass(item, "q-selected"); },
 // 设置选择
 items_selected_all : function(bSelectAll) {
   var _this = this;
-  _this.items_each(function(item) {
+  _this.each(function(item) {
     _this.item_set_selected(item, bSelectAll);
   });
 },  
@@ -1079,21 +1052,7 @@ get_items_selected : function() {
   return arr;
 },
 
-get_text : function(row, fieldName) {
-  var record = this.getRecord( row );
-  return record[fieldName];
-},
-/**
- * 获取行记录数据
- * @memberof Q.Table.prototype
- * @param {dom} item - 行元素
- * @return {Object} 返回行记录
- */
-getRecord : function(item) {
-  var dataIndex = this.item_index(item);
-  return this.store.item(dataIndex);
-},
-
+/** */
 getItem : function( dataIndex ) {
   var self = this;
   var item = self.wndTableData.querySelector('[q:dataindex="'+dataIndex+'"]');
@@ -1101,19 +1060,11 @@ getItem : function( dataIndex ) {
   return item;
 },
 
-getData : function( index ) {
+getItemData : function( index ) {
   if( index < 0 && index >= this.store.total_size() ) {
     return null;
   } else {
     return this.store.item(index);
-  }
-},
-
-removeItem : function( dataIndex ) {
-  var self = this;
-  var item = self.getItem( dataIndex );
-  if( item) {
-    self.wndTableData.removeChild( self.getItem( dataIndex ) );
   }
 },
 
@@ -1146,8 +1097,8 @@ loadPageData : function(data) {
     //var ROW	= _this.wndTableData.rows[i];
     var dd = data[i];
     var rindex = this.store.push(dd);
-    record = _this.getData(rindex);
-    this.append( -1, record );
+    record = _this.getItemData(rindex);
+    this.insertItem( -1, record );
 
     /*
 		ROW.setAttribute('dataIndex', parseInt(record['dataIndex'], 10));
