@@ -76,11 +76,12 @@ __load_remote : function(page, callback) {
 
       var s = Q.json_decode(xmlhttp.responseText);
       if( s && s.data ) {
+
         // save proxy info
-        _this.__proxy_total_size = s.totalsize;
+        _this.__proxy_total_size = s.data.total;
         _this.__page_size = pagesize;
         _this.__proxy_page_current = page;
-        callback( s.data );
+        callback( s.data.data );
       }
     }
   });
