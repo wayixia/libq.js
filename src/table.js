@@ -13,6 +13,7 @@
  * @param {array=} config.data - 数据数组
  * @param {String=} config.keyname - 数据索引字段名
  * @param {Object} config.proxy - 远程数据接口
+ * @param {Function} config.proxy.fetch - 获取远程数据
  */
 Q.Store = Q.extend({
 __records : null,  // 记录集
@@ -62,29 +63,26 @@ append_array : function(arr) {
  * @memberof Q.Store.prototype
  */
 __load_remote : function(page, callback) {
-  var _this = this;
-  if( !_this.__proxy ) {
+  var self = this;
+  if( !self.__proxy ) {
     callback([]);
     return;
   }
 
-  const pagesize = _this.__page_size;
-  // Load remote data
-  Q.ajax({
-    command: _this.__proxy.page_url(page,pagesize),
-    oncomplete : function(xmlhttp) {
+  const pagesize = self.__page_size;
 
-      var s = Q.json_decode(xmlhttp.responseText);
-      if( s && s.data ) {
-
-        // save proxy info
-        _this.__proxy_total_size = s.data.total;
-        _this.__page_size = pagesize;
-        _this.__proxy_page_current = page;
-        callback( s.data.data );
-      }
+  self.__proxy.fetch( page, pagesize, function( err, res ) {
+    if(err) {
+      console.error("load remote data error: " + err);
+      return;
     }
-  });
+
+    // save proxy info
+    self.__proxy_total_size = parseInt(res.total,10);
+    self.__page_size = pagesize;
+    self.__proxy_page_current = page;
+    callback( res.data );
+  } )
 },
  
 /** 加载页
@@ -1069,10 +1067,11 @@ getItemData : function( index ) {
   }
 },
 
-loadPage : function(pageIndex) {
+loadPage : function(pageIndex, callback ) {
   var _this = this;
   this.store.load_page(pageIndex, function(data) {
     _this.loadPageData(data);
+    callback();
   } );
 },
 

@@ -176,7 +176,7 @@ Q.pager = Q.extend({
 		    _this.btnFirst.className = 'jtable_plugin_page_first';
 		}
 		
-		if( _this.pagecount-1 == _this.currentpage) {
+		if( _this.__pagecount()-1 == _this.currentpage) {
 			_this.btnNext.className  = 'jtable_plugin_page_next_disabled';
 		    _this.btnLast.className  = 'jtable_plugin_page_last_disabled';
 		} else {
