@@ -19,7 +19,7 @@ Q.Store = Q.extend({
 __records : null,  // 记录集
 __proxy : null,
 __currentpage : -1,
-__page_size: 0,
+__page_size: -1,
 __proxy_total_size: 0,
 __proxy_page_current: 0,
 __keyname : null,
@@ -104,6 +104,14 @@ load_page : function(page, callback) {
     }
     fnCallback(pagedata);
   }
+},
+
+set_page_size: function(pagesize) {
+  this.__page_size = pagesize;
+},
+
+page_size: function() {
+  return this.__page_size == -1 ? this.__records.length : this.__page_size;
 },
 
 /** 添加记录
@@ -1147,15 +1155,13 @@ sync_scroll : function() {
 },
 
 set_page_size : function(pagesize) {
-  this.pagesize = pagesize;
+  this.store.set_page_size(pagesize);
 },
 
+
+
 page_size : function() {
-  if( this.pagesize == -1) {
-    return this.store.total_size()>0 ? this.store.total_size() : 30;
-  } else {
-    return this.pagesize;
-  }
+  return this.store.page_size();
 },
 
 total_size: function() {

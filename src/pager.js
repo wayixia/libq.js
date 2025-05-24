@@ -7,9 +7,6 @@
 Q.pager = Q.extend({
 	hwnd : null,
 	ctrlHandler : null,
-	//pagesize : 50,
-	//rowcount : 0,
-	//pagecount : 0,
 	currentpage : 0,
 	
 	// dom elements
@@ -27,9 +24,6 @@ Q.pager = Q.extend({
 		var _this = this;
 		_this.ctrlHandler = args.table;
 		_this.hwnd = args.renderer;
-		//_this.rowcount  = _this.ctrlHandler.totalsize();;
-		//_this.pagesize = _this.ctrlHandler.pagesize();
-		//_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
 		_this.initview();
 		_this.update_table_rows();
 	},
@@ -43,7 +37,7 @@ Q.pager = Q.extend({
 	},
 
 	__pagecount : function() {
-		return Math.ceil(this.__rowcount()/ this.__pagesize());
+		return  Math.ceil(this.__rowcount()/ this.__pagesize());
 	},
 
 	
@@ -58,7 +52,7 @@ Q.pager = Q.extend({
 		_this.wstable.border = 0;
 		_this.wstable.cellSpacing = 1;
 		_this.wstable.cellPadding = 0;
-		_this.wstable.style.cssText = 'height: 16px; border:0px solid red;';
+		_this.wstable.style.cssText = 'height: 18px; border:0px solid red;';
 		_this.hwnd.appendChild(_this.wstable);
 		var _trow = _this.wstable.insertRow(-1);
 		_this.btnFirst	= _trow.insertCell(-1);
@@ -76,7 +70,7 @@ Q.pager = Q.extend({
 		_this.inputPage.type = 'text';
 		//divPage.style.cssText = "position: relative; top: -3px; margin: 0px 3px 0px 3px; font-weight: normal;";
 		 
-		_this.labelPageCount.style.cssText = "font-size: 13px;";
+		//_this.labelPageCount.style.cssText = "font-size: 13px;";
 		_this.labelPageCount.innerHTML = " / "+_this.__pagecount()+"页";
 		
 
@@ -101,7 +95,7 @@ Q.pager = Q.extend({
 		_this.btnLast.onclick  = function() { _this.lastPage(); }
 
 		var divPageRight = _trow.insertCell(-1);
-		divPageRight.className = 'jtable_plugin_hwnd_split';
+		divPageRight.className = 'plugin hwnd_split';
 		//divPageRight.style.width = '300px';
 		
 		//_this.hwnd.appendChild(divPageRight);
@@ -122,9 +116,7 @@ Q.pager = Q.extend({
 					var pagesize = parseInt(this.value, 10);
 					if(!isNaN(pagesize)) {
 						if(pagesize > 0) {
-							//_this.pagesize = _this.ctrlHandler.pagesize = pagesize;
 							_this.ctrlHandler.set_page_size(pagesize);
-							//_this.pagecount = Math.ceil(_this.rowcount / _this.pagesize);
 							_this.currentpage = 0;
 							_this.update_table_rows();
 						}
@@ -133,12 +125,12 @@ Q.pager = Q.extend({
 			}
 		}
 				
-		_this.inputPageSize.style.cssText = "height: 16px;padding: 0px; font-size: 11px; text-align: center; width: 40px;";
+		_this.inputPageSize.style.cssText = "height: 18px;padding: 0px; text-align: center; width: 40px;";
 		var textNode4 = document.createTextNode(" 条 共有 ");
 		divPageRight.appendChild(textNode4);
 		_this.labelRowCount = document.createElement('font');
 		divPageRight.appendChild(_this.labelRowCount);
-		_this.labelRowCount.style.cssText = 'color: red; font-weight: bold; font-size: 13px;'
+		_this.labelRowCount.style.cssText = 'color: red; font-weight: bold; '
 		_this.labelRowCount.innerText = _this.__rowcount();
 		var textNode5 = document.createTextNode(' 条记录');
 		divPageRight.appendChild(textNode5);
@@ -150,38 +142,38 @@ Q.pager = Q.extend({
 		
 		// 更新按钮图片状态
 		/*
+		var IMAGES_PATH = "";
 		if(_this.currentpage==0) {
-			_this.
-		    _this.btnPrev.src  = IMAGES_PATH + "/pages/page-prev-disabled.gif";
-		    _this.btnFirst.src = IMAGES_PATH + "/pages/page-first-disabled.gif";
+		  _this.btnPrev.src  = IMAGES_PATH + "/pages/page-prev-disabled.gif";
+		  _this.btnFirst.src = IMAGES_PATH + "/pages/page-first-disabled.gif";
 		} else {
 			_this.btnPrev.src  = IMAGES_PATH + "/pages/page-prev.gif";
-		    _this.btnFirst.src = IMAGES_PATH + "/pages/page-first.gif";
+		  _this.btnFirst.src = IMAGES_PATH + "/pages/page-first.gif";
 		}
 		
 		if( _this.pagecount-1 == _this.currentpage) {
 			_this.btnNext.src  = IMAGES_PATH + "/pages/page-next-disabled.gif";
-		    _this.btnLast.src  = IMAGES_PATH + "/pages/page-last-disabled.gif";
+		  _this.btnLast.src  = IMAGES_PATH + "/pages/page-last-disabled.gif";
 		} else {
 			_this.btnNext.src  = IMAGES_PATH + "/pages/page-next.gif";
-		    _this.btnLast.src  = IMAGES_PATH + "/pages/page-last.gif";
+		  _this.btnLast.src  = IMAGES_PATH + "/pages/page-last.gif";
 		}
 		*/
 		
 		if(_this.currentpage==0) {
-		    _this.btnPrev.className  = 'jtable_plugin_page_prev_disabled';
-		    _this.btnFirst.className = 'jtable_plugin_page_first_disabled';
+		  _this.btnPrev.className  = 'plugin page_prev_disabled';
+		  _this.btnFirst.className = 'plugin page_first_disabled';
 		} else {
-			_this.btnPrev.className  = 'jtable_plugin_page_prev';
-		    _this.btnFirst.className = 'jtable_plugin_page_first';
+			_this.btnPrev.className  = 'plugin page_prev';
+		  _this.btnFirst.className = 'plugin page_first';
 		}
 		
 		if( _this.__pagecount()-1 == _this.currentpage) {
-			_this.btnNext.className  = 'jtable_plugin_page_next_disabled';
-		    _this.btnLast.className  = 'jtable_plugin_page_last_disabled';
+			_this.btnNext.className  = 'plugin page_next_disabled';
+		  _this.btnLast.className  = 'plugin page_last_disabled';
 		} else {
-			_this.btnNext.className  = 'jtable_plugin_page_next';
-		    _this.btnLast.className  = 'jtable_plugin_page_last';
+			_this.btnNext.className  = 'plugin page_next';
+		  _this.btnLast.className  = 'plugin page_last';
 		}
 		
 		_this.labelPageCount.innerText = " / "+_this.__pagecount()+"页";
@@ -191,8 +183,8 @@ Q.pager = Q.extend({
 	update_table_rows : function() {
 		var _this = this;
 		
-		var iCurrentrowcount = _this.pagesize * _this.currentpage;
-		var iMoreRow = _this.pagesize+iCurrentrowcount > _this.rowcount ? _this.pagesize+iCurrentrowcount - _this.rowcount : 0;
+		var iCurrentrowcount = _this.__pagesize() * _this.currentpage;
+		var iMoreRow = _this.__pagesize()+iCurrentrowcount > _this.__rowcount() ? _this.__pagesize()+iCurrentrowcount - _this.__rowcount() : 0;
 		_this.ctrlHandler.loadPage(_this.currentpage+1, function() {
 			_this.updateview();
 		});
