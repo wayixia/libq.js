@@ -1,0 +1,87 @@
+/* combobox style started */
+
+.q-combobox {
+	border: 1px solid #999;
+	BACKGROUND: WHITE;
+  position: relative;
+  height: 23px;
+}
+
+
+
+.q-combobox .q-combobox-editwnd-container {
+	border: 0px solid #999;
+  outline: 0;
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  right: 18px;
+  bottom: 1px;
+}
+
+.q-combobox .q-combobox-editwnd {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-width:0;
+  outline:0;
+}
+
+.q-combobox .q-combobox-arrowwnd {
+	background: #CCC;
+	font-size: 13px;
+  font-family:Webdings;
+	text-align: center;
+  line-height: 21px;
+  border-width:0;
+  outline:0;
+  position: absolute;
+  cursor: default; 
+  top: 1px;
+  right: 1px;
+  bottom:1px;
+	width: 20px;
+}
+
+
+.q-combobox .q-combobox-arrowwnd:active
+{
+  outline:0;background-image:none;-webkit-box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);
+}
+
+
+.q-combobox-dropwnd {
+
+	border: 1px solid #CCC;
+	position: absolute;
+	margin: 0px;
+	font-size: 13px;
+	BACKGROUND: WHITE;
+  padding: 0;
+
+   -webkit-box-shadow:1px 1px 3px #ededed; box-shadow:1px 1px 3px #ededed;a:  5px 5px 20px #bdbdbd; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
+}
+
+.q-combobox.q-combobox-noarrow .q-combobox-arrowwnd {
+  display: none;
+}
+
+
+.q-combobox.q-combobox-noarrow .q-combobox-editwnd-container {
+  right: 2px;
+}
+
+
+.q-combobox-dropwnd li {
+  word-break:break-all;
+	padding: 3px 0;
+	display: block;
+  cursor:hand;
+}
+
+.q-combobox-dropwnd li:hover, 
+.q-combobox-dropwnd li.q-combobox-itemover {
+	background-color: #F1F1F1;
+}
+
+/* combobox style end*/

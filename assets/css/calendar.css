@@ -1,0 +1,64 @@
+
+
+/*
+  qlib calendar
+*/
+#calendar td {
+  width: 20px;
+  height: 20px;
+  font-size:13px;
+}
+
+#calendar .header {
+  font: 12px Arial, Tahoma !important;
+  font-weight: bold !important;
+  font: 11px Arial, Tahoma;
+  font-weight: bold;
+  color: #FFF;
+  background:#F90;
+  height: 25px;
+  padding-left: 0px;
+}
+
+#calendar .header td {}
+#calendar .header a {color: #FFF;}
+#calendar .header input {background:none;vertical-align: middle;height: 16px;}
+
+#calendar .category {
+  font: 12px Arial, Tahoma !important;
+  font: 11px Arial, Tahoma;
+  color: #59677f;
+  height:24px;
+  background: #F1F1F1;
+}
+
+#calendar .category td {
+  border-bottom: 1px solid #DEDEB8;
+}
+
+#calendar .expire, #calendar .expire a:link, #calendar .expire a:visited {
+  color: #999999;
+}
+
+#calendar .default, #calendar .default a:link, #calendar .default a:visited {
+  color: #000000;
+}
+#calendar .checked, #calendar .checked a:link, #calendar .checked a:visited {
+  color: #FF0000;
+}
+
+#calendar .today, #calendar .today a:link, #calendar .today a:visited {
+  color: #00BB00;
+}
+#calendar_year {display: none;line-height: 130%;background: #FFFFFF;position: absolute;z-index: 10;}
+#calendar_year .col {float: left;background: #FFFFFF;margin-left: 1px;border: 1px solid #59677f;padding: 4px;}
+#calendar_month {display: none;background: #FFFFFF;line-height: 130%;border: 1px solid #59677f;padding: 4px;position: absolute;z-index: 11;}
+#calendar .tableborder {
+  background: white;
+  border: 1px solid #59677f;
+  -webkit-box-shadow: 0px 5px 30px #505050; 
+  filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
+}
+#year,#month{padding-right:10px;background:url(../images/calendar/onbottom.gif) no-repeat center right;}/*ͼƬ·�����Ըĳ��Լ���*/
+/*Date*/
+

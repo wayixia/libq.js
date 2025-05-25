@@ -15,11 +15,11 @@
 
 .q-table .q-table-titlebar 
 {
-  /*backgrounds: white URL(../images/table/grid_title.gif) repeat-x left -1px; */
+  background: transparent URL(../images/table/grid_title.gif) repeat-x left -1px;
   font-weight: bold; 
   color: #15428B; 
   padding: 7px 3px 3px 1px;
-  height: 18px; width: 100%;
+  width: 100%;
   overflow: hidden; 
   white-space: nowrap; 
   text-overflow:ellipsis; 

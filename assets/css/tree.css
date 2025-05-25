@@ -1,0 +1,112 @@
+
+/* simple tree  */
+.q-simpletree, .q-simpletree *{ 
+  margin: 0; 
+  padding: 0;
+  border:0;
+  list-style-type: none;
+}
+
+.q-simpletree {
+  overflow-y:auto;
+  overflow-x:hidden;
+  position:relative;
+  height: 100%;
+}
+
+
+.q-simpletree .q-tree-item {
+  position:relative;
+  line-height: 27px;
+}
+
+
+/*
+.q-simpletree .q-tree-item.q-root {
+  backgrounds: url(../images/tree/expand_off.png) no-repeat top left; 
+}
+*/
+
+.q-simpletree .q-tree-item a  {
+  text-decoration: none;
+  display: block;
+  padding-left: 23px;
+  height: 27px;
+  zoom: 1;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.q-simpletree .q-tree-item a:hover  {
+  background: #F8F8F8;
+}
+.q-tree-item.q-selected > a,
+.q-tree-item.q-selected > a:visited,
+.q-tree-item.q-selected > a:hover
+ {
+  background: #EEEEEE;
+}
+
+.q-simpletree .expand {
+  position:absolute;
+  cursor: pointer;
+  margin: auto 0; 
+  white-space: nowrap;
+  z-index: 2;
+}
+
+
+/*
+.q-simpletree .expand.child {
+  backgrounds: url(../images/tree/child.png) no-repeat top left; 
+}
+
+.q-simpletree .expand.last_child {
+  backgrounds: url(../images/tree/lastchild.png) no-repeat top left; 
+}
+
+.q-simpletree .expand.expand_on {
+  background: url(../images/tree/expand_on.png) no-repeat center center; 
+}
+
+.q-simpletree .expand.expand_off {
+  background: url(../images/tree/expand_off.png) no-repeat center center; 
+}
+
+.q-simpletree .expand.last_expand_on {
+  background: url(../images/tree/expand_on.png) no-repeat center center; 
+}
+
+.q-simpletree .expand.last_expand_off {
+  background: url(../images/tree/expand_off.png) no-repeat center center; 
+}
+*/
+
+.q-simpletree .textNode {
+    font-size: 14px;
+    cursor: default;
+}
+
+.q-simpletree .textNode.q-attr-no-icon {
+  background-image: none;
+  text-indent: 0;
+}
+
+.q-simpletree .textNode.q-attr-icon {
+  background-repeat: no-repeat;
+  background-position: left center;
+  text-indent: 20px;
+}
+
+.q-simpletree .default {
+  background-image: url(../images/tree/icon.png);
+  display: inline-block;
+}
+
+
+
+.q-moveline {
+  position: absolute;
+  border: 1px solid #000;
+  z-Index: 1000;
+}

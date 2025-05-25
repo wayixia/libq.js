@@ -1,0 +1,156 @@
+/*----------------------------------------------------
+ $ ui framework style sheet
+ $ author: Q
+ $ date: 20250525
+------------------------------------------------------*/
+
+/*------------------------------------------------------
+ $ window style
+--------------------------------------------------------*/
+
+.q-window { 
+  position:absolute; background:#fff; overflow:hidden; margin:0 auto; cursor:default; min-width: 200px;  
+  z-index:100; outline: 0; -webkit-box-shadow: 0px 5px 30px #505050; box-shadow: 0px 5px 30px #505050; filter:progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC, Strength=3, Direction=135);
+}
+
+.q-window .q-title { 
+  position:relative; margin:0; padding:0; height:49px; line-height:49px; font-size:14px; color:black; white-space:nowrap; border-width: 0px; -khtml-user-select: none; -moz-user-select: none;
+  background-color: #FFF;
+  border-bottom: 1px solid #EEE;
+
+}
+
+.q-window-border {
+  border-radius: 5px;
+  border:3px solid transparent;
+}
+
+.q-window.q-status-max { border-width:0; }
+
+/* title bar attibute */
+.q-window.q-attr-inactive-title .q-title { backgrounds: #CCC; }
+.q-window.q-attr-no-title .q-title { display: none; }
+.q-window.q-attr-inactive-title { opacity: 0.7; }
+
+
+/* icon attribute */
+/* title content attribute */
+.q-window .q-title-content{ position: absolute; left: 30px; right:120px; height:49px; overflow:hidden; text-overflow:ellipsis; cursor: default;}
+.q-window.q-attr-no-icon .q-title-content { left: 6px;}
+
+/* title ctrl buttons */
+.q-window .q-title button { float:right; background-color: transparent;color: #999; outline: 0; border: none; height:100%; paddings:15px 10px;}
+.q-window .q-title button:hover   {  color: #000; }
+.q-window .q-title button.q-min   { background-position: 0 0}
+.q-window .q-title button.q-max   { background-position: -16px 0}
+.q-window .q-title button.q-normal{ background-position: -32px 0}
+.q-window .q-title button.q-close { background-position: -46px 0}
+.q-window .q-title button.q-padding{ background: none; width: 12px;}
+.q-window .q-title button span.iconfont { font-size:20px; }
+
+.q-window .q-title button.q-icon  { 
+    /*position: absolute; width:16px; height:16px; left:6px; top: 16px; border-width: 0; background: transparent url(../images/wnd/q-icon.png) no-repeat center center; */
+    float: left;
+    paddings: 13px 6px;
+  }
+.q-window.q-attr-no-icon .q-icon { display: none;}
+
+
+
+.q-window.q-attr-no-min .q-title button.q-min,
+.q-window.q-attr-no-max .q-title button.q-max,
+.q-window.q-attr-no-normal .q-title button.q-normal,
+.q-window.q-attr-no-close .q-title button.q-close,
+.q-window.q-attr-fixed .q-title button.q-max,
+.q-window.q-attr-fixed .q-title button.q-normal
+{
+  display: none;
+}
+
+/* q-window's mask */
+.q-window-mask {position:absolute; background: #000000; left:0;top:0;right:0;bottom:0;
+  filter:alpha(opacity=10);-moz-opacity:0.1;-khtml-opacity: 0.1;opacity: 0.1;
+}
+.q-window-mask.q-top-mask 
+{
+  z-index: 100000;
+  position: fixed;
+}
+
+.q-top-mask {
+  -webkit-animation-name: fademask;
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-fill-mode: forwards;
+  animation-name: fademask;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes fademask {
+  from {opacity: 0} 
+  to {opacity: .5}
+}
+
+@keyframes fademask {
+  from {opacity: 0} 
+  to {opacity: .5}
+}
+
+
+/* q-window's cient area */
+.q-window .q-window-client { overflow: hidden; position:absolute; left:0; top:50px; right:0; bottom:0;margin:0;padding:0; font-sizes: 11pt;}
+.q-window.q-attr-no-title .q-window-client { top:0px; }
+
+/* bottom bar attribute */
+.q-window .q-bottom-bar {position: absolute; bottom: 0; left:0; right:0;height:50px; line-height:50px; text-align:right;background: #FFF;border-top: 1px solid #e0e0e0; display: none;}
+.q-window.q-attr-with-bottom .q-bottom-bar {display: block;}
+.q-window.q-attr-with-bottom .q-window-client { bottom: 51px; }
+
+/*
+.q-window .q-bottom-bar button {
+  border: 1px solid transparent;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 15px;
+  margin-right: 6px;
+  margin-top: 6px;
+}
+  */
+
+
+/* button system */
+.q-window .q-sysokbtn,
+.q-window .q-syscancelbtn
+{
+  background-color: #007bff;
+  color: #FFF;
+  outline: 0;
+  border-radius: 3px;
+  border-radius: 3px;
+  height: 36px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.q-window .q-syscancelbtn {
+  background-color: #EEE;
+  color: #000;
+}
+
+
+.q-sysinput { 
+  border:1px solid #CCC;  
+  color:#3b5998;
+  height: 20px;
+}
+
+.bottomLine { 
+  border-bottom: 1px solid #CCC; 
+}
+
+
+.q-sysokbtn:active,
+.q-syscancelbtn:active
+{
+  outline:0;background-image:none;-webkit-box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);box-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.225);
+}

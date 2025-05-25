@@ -1,0 +1,118 @@
+.q-images-box {
+  font-family: arial, 'helvetica neue', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFF;
+  opacity: 1;
+  hasLayout: -1;
+  overflow:auto;
+  padding-bottom: 15px;
+}
+
+.q-images-box .q-box-item {
+  position: relative;
+  padding: 0;
+  margin: 5;
+  float: left;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  z-index: 10002;
+  text-align: center;
+  overflow: hidden;
+  margin:15px 0px 0 15px;
+  background:#FFF;
+  text-align:center;
+  /*
+  box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -moz-box-shadow:0 1px 5px rgba(0,0,0,.3);
+  -webkit-box-shadow:0 1px 5px rgba(0,0,0,.3) 
+  */
+}
+
+.q-images-box .q-box-info
+{
+  position:absolute;
+  right:0;
+  bottom:0;
+  border-top-left-radius:5px;
+  background-color:#333;
+  padding:2px 4px 0;
+  color:#FFF;
+  opacity: 0.8;
+  z-index: 1;
+  font-size: 14px;
+}
+
+.q-images-box .q-box-item:hover
+{ 
+  /*border:3px solid #F90; */
+}
+
+.q-images-box .q-box-item:hover .q-images-box .q-box-info
+{
+  background-color:#333;
+  color:#FFF;
+}
+
+.q-images-box .q-box-item .q-box-image {
+  border: none;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.q-images-box .q-box-item .q-box-image .image {
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.q-images-box .q-box-item .q-box-image a {
+  text-align: center;
+}
+
+.q-images-box .q-box-item .wing-box {
+  display: none;
+  position:absolute;
+  left:10px;
+  top:70px;
+  right:10px;
+  bottom:0px; 
+  height:50px;
+  border-radius:5px;
+  border:1px solid #F1F1F1;
+  line-height:50px;
+  font-size:14px;
+  font-family:arial;
+  text-align:left;
+}
+
+
+.q-images-box .q-box-item.mouseout, .select-mask {display:none;}
+
+.q-images-box .q-box-item.mouseover .select-mask {
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.5;
+  /*background: #FFF url(../images/images-box/hover-picture.png) right top no-repeat; */
+}
+
+.q-images-box .q-box-item.mouseselected .select-mask 
+{
+  cursor: default;
+  display: block;
+  position:absolute;
+  left:0; top:0; right:0;bottom:0;
+  opacity: 0.8;
+  background: #FFF  url(../images/images-box/selected-picture.png) right top no-repeat; 
+  /*#CFBAAA, #FF931E*/
+}

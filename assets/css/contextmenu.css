@@ -1,0 +1,172 @@
+/*----------------------------------------------------
+ $ name: contextmenu.css
+ $ description: contextmenu style 
+ $ author: Q 
+ $ date: 20250525
+------------------------------------------------------*/
+
+
+.clsContextMenu {
+  position:absolute;
+  display: none;
+  background: #FFF;
+  padding: 2;
+  width: 200px;
+  border: 1px solid #999;
+  z-Index: 10000;
+  text-align: left;
+  /*filter:progid:DXImageTransform.Microsoft.Shadow(color=#999999, Strength=2, Direction=135);*/
+}
+
+.clsMenuItemOut {
+  width: 100%;
+  padding: 4px 4px 4px 5px;
+  display: block;
+  background: white;
+  color: #000;
+  text-align: left;
+}
+
+.clsMenuItemOver {
+  background: #369;
+  color: white;
+  width: 100%;
+  padding: 4px 4px 4px 5px;
+  display: block;
+  text-align: left;
+}
+
+
+
+
+/* q-contextmenu style */
+.q-contextmenu  {
+  z-index: 100;
+  min-width: 150px;
+  margin: 0px; 
+  padding: 2px 0;
+  position: absolute; 
+  list-style: none; 
+  background: #F8F8F8 url(../images/contextmenu/menuleft.gif) repeat-y left top; 
+  border: 1px solid #718bb7;
+  -khtml-user-select: none; 
+  -moz-user-select: none;
+  border: 1px solid #718BB7;
+  z-index: 910000;
+}
+
+/* menu item */
+.q-contextmenu .q-item,
+.q-contextmenu .q-item-seperator
+{
+  position: relative; width: 100%; white-space: nowrap;padding: 0px; margin: 0px; display: block; cursor: default; border: 0px solid blue;
+}
+
+.q-contextmenu .q-item:hover,
+.q-contextmenu .q-item.q-active
+{
+  background-color: #047AEC;
+}
+
+/* meun item icon */
+.q-contextmenu .q-item .q-item-icon, 
+.q-contextmenu .q-item.q-more .q-item-icon 
+{
+  width: 35px;
+  background-color: transparent;
+  border-width: 0;
+  outline: 0;
+}
+
+
+.q-contextmenu .q-item .q-item-title, 
+.q-contextmenu .q-item.q-more .q-item-title 
+{
+  height: 28px; 
+  line-height: 28px;
+  font-size: 13px;
+}
+
+.q-contextmenu .q-item:hover .q-item-title,
+.q-contextmenu .q-item.q-active .q-item-title
+{
+  color: #FFF;
+}
+
+
+.q-contextmenu .q-item.q-more {
+  background-image : url(../images/contextmenu/moreitem.gif);
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+
+.q-contextmenu .q-item-seperator { height: 5px; }
+
+.q-contextmenu .q-item-seperator .q-line {
+  position: absolute; height: 1px; line-height: 1px; left: 35px; right: 5px; top: 2px; padding: 0px; background: rgb(195, 218, 249);
+} 
+
+
+.q-contextmenu .checked { 
+  background : url(../images/contextmenu/checked.gif) no-repeat center center;
+}
+
+.q-contextmenu .unchecked {
+  background : url(../images/contextmenu/unchecked.gif) no-repeat center center;
+}
+
+.q-contextmenu.q-contextmenu-bar {
+  background: none;
+  border: 0;
+  height: 30px;
+  padding: 0px;
+}
+
+.q-contextmenu.q-contextmenu-bar .q-item {
+  width: auto;
+  /*background-color: transparent;*/ 
+}
+
+.q-contextmenu.q-contextmenu-bar .q-item 
+{
+  display: inline-block;
+  padding-right: 15px;
+  padding-left: 15px;
+  height: 30px;
+  outline: 0;
+}
+
+.q-contextmenu.q-contextmenu-bar .q-item:hover, 
+.q-contextmenu.q-contextmenu-bar .q-item.q-active
+{
+  background-color: #022edf;
+}
+
+
+
+
+
+/* start menu */
+.q-contextmenu.os-start-menu {
+  border-width: 0;
+  box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -moz-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  -webkit-box-shadow:0 1px 15px rgba(0,0,0,.2);
+  min-width: 200px;
+  background-image: url(../images/contextmenu/menuleft.gif);
+  background-repeat: repeat-y;
+  background-position: left top;
+  z-index: 910000;
+}
+
+.q-contextmenu.os-start-menu .q-item {
+  height: 50px;
+  line-height: 50px;
+}
+
+.q-contextmenu.os-start-menu .q-item.q-seperator,
+.q-contextmenu.os-start-menu .q-item.q-seperator:hover
+{
+  height: 15px;
+  background-color: none;
+}
